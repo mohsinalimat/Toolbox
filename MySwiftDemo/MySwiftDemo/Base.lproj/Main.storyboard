@@ -95,13 +95,6 @@
                     <view key="view" contentMode="scaleToFill" id="zRk-67-8wm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="npN-8U-LXV">
-                                <frame key="frameInset" minX="164" minY="278" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="JwO-ag-7mM"/>
@@ -113,7 +106,7 @@
         <!--View Controller-->
         <scene sceneID="PmZ-dY-1bW">
             <objects>
-                <viewController id="Ax0-Ta-yzS" customClass="ViewController" customModule="MySwiftDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ax0-Ta-yzS" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bZN-Su-gx6"/>
                         <viewControllerLayoutGuide type="bottom" id="0Cz-TQ-rLm"/>

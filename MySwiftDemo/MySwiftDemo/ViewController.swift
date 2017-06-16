@@ -7,21 +7,41 @@
 //
 
 import UIKit
+import Foundation
 
-class ViewController: UIViewController ,UITableViewDelegate,UITableViewDataSource{
+import Alamofire
+
+class ViewController: BaseVCWithListController{
     
-    var dataArray:NSArray = []
+//    var dataArray:NSArray = []
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-
+//
+        let _index:Int! = tabBarController?.selectedIndex
+        
+        switch _index {
+        case 0:
+            itemTitle = "首页"
+        case 1:
+            itemTitle = "发现"
+        case 2:
+            itemTitle = "+"
+        case 3:
+            itemTitle = "消息"
+        default:
+            itemTitle = ""
+        }
+        
+        
         let textAttributes = [NSFontAttributeName:UIFont.systemFont(ofSize: 16),NSForegroundColorAttributeName:UIColor.black]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         self.navigationController?.navigationBar.isTranslucent = true
         
-         self.navigationController?.navigationBar.setBackgroundImage(imageWithColor(color: UIColor.white.withAlphaComponent(0)), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage.init()
+         self.navigationController?.navigationBar.setBackgroundImage(imageWithColor(UIColor.white.withAlphaComponent(0)), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
 //        let rightItem = UIBarButtonItem (title: "设置", style: .plain, target: self, action: nil)
 //         self.navigationItem.rightBarButtonItem = rightItem
@@ -33,47 +53,67 @@ class ViewController: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         navigationItem.rightBarButtonItems = [item2]
         
         initSubviews()
-        dataArray = UIFont.familyNames as NSArray
+        dataArray = UIFont.familyNames
         
+//        test()
     }
 
-    func click()
+    
+    
+    func test(){
+        //(() -> ())没有参数，没有返回值的闭包
+        let `default` :String = {
+            print("default");
+            
+            return "result"
+        }()
+        
+        print(`default`)
+
+        //
+        do {
+           _  = try click();
+            print("123")
+        }catch{
+            print(error);
+        }
+        
+
+        //
+        let utilityQueue = DispatchQueue.global(qos: .utility)
+        
+        Alamofire.request("https://httpbin.org/get").responseJSON(queue: utilityQueue) { response in
+            print("Executing response handler on utility queue")
+        }
+
+    }
+
+    enum PrinterError: Error {
+        case OutOfPaper
+        case NoToner
+        case OnFire
+    }
+
+    func click() throws
     {
+        throw PrinterError.OutOfPaper
+        
         print("click");
     }
     
-    func imageWithColor(color:UIColor) -> UIImage {
-        
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        
-        UIGraphicsBeginImageContext(rect.size)
-        
-        let content = UIGraphicsGetCurrentContext()
-        
-        content?.setFillColor(color.cgColor)
-        
-        content?.fill(rect)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        
-        UIGraphicsEndImageContext()
-        
-        return image!
-        
-    }
-    
-    
+
+    //MARK:
     func initSubviews()
     {
-        let tableview = UITableView (frame: CGRect.init(x: 0, y: 64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50 - 64), style: .plain)
-        tableview.delegate = self
-        tableview.dataSource = self
+        _tableView = UITableView (frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50 - 0), style: .grouped)
+        _tableView.delegate = self
+        _tableView.dataSource = self
         
-        view .addSubview(tableview)//cellID
-        tableview .register(UINib.init(nibName: "MyTableViewCell", bundle: nil), forCellReuseIdentifier: "cellID")
+        view .addSubview(_tableView)//cellID
+        _tableView .register(UINib.init(nibName: "MyTableViewCell", bundle: nil), forCellReuseIdentifier: "cellID")
         
-        tableview.showsVerticalScrollIndicator = true
-        tableview.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 0, 0)
+        _tableView.showsVerticalScrollIndicator = true
+        _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,45 +123,16 @@ class ViewController: UIViewController ,UITableViewDelegate,UITableViewDataSourc
 
 
     //MARK:
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 15
     }
+
     
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! MyTableViewCell
-        
-        cell.title.text = dataArray[indexPath.row] as? String
-        
-        return cell
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = SecondViewController()
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-    
-    
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset.y
-        if offset > 64{
-        self.navigationController?.navigationBar.setBackgroundImage(imageWithColor(color: UIColor.white.withAlphaComponent(1)), for: UIBarMetrics.default)
-            self.navigationController?.navigationBar.isTranslucent = false
-            scrollView.frame =  CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50 - 64)
-            self.navigationController?.navigationBar.shadowImage = nil
-            navigationItem.title = "消息列表"
-    }else
-        {
-            self.navigationController?.navigationBar.setBackgroundImage(imageWithColor(color: UIColor.white.withAlphaComponent(0)), for: UIBarMetrics.default)
-            self.navigationController?.navigationBar.isTranslucent = true
-            
-            scrollView.frame =  CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50)
-            self.navigationController?.navigationBar.shadowImage = UIImage.init()
-            navigationItem.title = nil
-        }
-    
-    }
-    
 }
 
 

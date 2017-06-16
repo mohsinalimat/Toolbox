@@ -16,11 +16,10 @@ class BaseNavigationController: UINavigationController {
         
         navigationBar.isTranslucent = false
         
-        
         let textAttributes = [NSFontAttributeName:UIFont.systemFont(ofSize: 18),NSForegroundColorAttributeName:UIColor.white]
         UINavigationBar.appearance().titleTextAttributes = textAttributes
         
-        UINavigationBar.appearance().tintColor = UIColor.white
+//        UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().barTintColor = UIColor(red: 63.0/255.0, green: 67.0/255.0, blue: 76.0/255.0, alpha: 1.0)
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent;
         
