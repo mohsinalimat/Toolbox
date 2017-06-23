@@ -17,7 +17,6 @@ class SecondViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        
         test()
     }
 

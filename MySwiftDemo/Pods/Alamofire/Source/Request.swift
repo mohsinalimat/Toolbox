@@ -207,6 +207,7 @@ open class Request {
             object: self,
             userInfo: [Notification.Key.Task: task]
         )
+        
     }
 
     /// Suspends the request.
