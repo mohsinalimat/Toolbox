@@ -19,8 +19,6 @@ class BaseTabbarController: UITabBarController {
         
     }
 
-    
-    //[UIColor colorWithRed:0.275 green:0.275 blue:0.275 alpha:1]
     func initTabar() {
         tabBar.barTintColor = kBartintColor
         
@@ -41,27 +39,31 @@ class BaseTabbarController: UITabBarController {
             "tabicon_bookmarks",
             "tabicon_manager"]
         
-        let vcname = ["AirplaneController","PublicationController","TOCViewController","ViewerController","HistoryController","BookmarkController","ManagerController"]
+        let vcname =
+            [
+                "AirplaneController",
+                "PublicationController",
+                "TOCViewController",
+                "ViewerController",
+                "HistoryController",
+                "BookmarkController",
+                "ManagerController"]
         
         var viewControllerArr:Array = [UIViewController]()
 
         for i in 0...6{
-            
             let appname = Bundle.main.infoDictionary!["CFBundleExecutable"] as! String
-            
             let cls  =  NSClassFromString(appname + "." + vcname[i]) as! BaseViewController.Type
             let vc = cls.init()
             
             vc.tabBarItem = UITabBarItem (title: itemtitleArr[i], image: UIImage (named: itemimg[i]), tag: 0)
             
             let navigationvc = BaseNavigationController(rootViewController:vc)
-            
             viewControllerArr.append(navigationvc)
         }
 
         
         viewControllers = viewControllerArr
-        
     }
     
     

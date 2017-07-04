@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1024" height="70"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ga0-Ke-kFW" id="IZE-xl-BoA">
-                <frame key="frameInset" width="1024" height="69"/>
+                <frame key="frameInset" width="1024" height="70"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1v3-X9-JNe">
@@ -111,7 +111,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EuY-oU-q6K">
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EuY-oU-q6K">
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="0N8-1C-0bz"/>
                                     <constraint firstAttribute="height" constant="40" id="6iv-kS-Irf"/>
@@ -157,14 +157,26 @@
                     <constraint firstAttribute="bottom" secondItem="1v3-X9-JNe" secondAttribute="bottom" id="7Ka-Ro-44Q"/>
                     <constraint firstAttribute="trailing" secondItem="aZY-Tj-Kzs" secondAttribute="trailing" id="96d-z8-TS6"/>
                     <constraint firstItem="aZY-Tj-Kzs" firstAttribute="top" secondItem="IZE-xl-BoA" secondAttribute="top" id="EwC-zo-Gmt"/>
+                    <constraint firstAttribute="bottom" secondItem="IQq-3A-aOx" secondAttribute="bottom" id="UqV-a6-fyJ"/>
                     <constraint firstItem="1v3-X9-JNe" firstAttribute="leading" secondItem="IZE-xl-BoA" secondAttribute="leading" id="V2f-D3-3hu"/>
                     <constraint firstItem="IQq-3A-aOx" firstAttribute="top" secondItem="IZE-xl-BoA" secondAttribute="top" id="WfV-c9-c6l"/>
                     <constraint firstItem="aZY-Tj-Kzs" firstAttribute="leading" secondItem="IQq-3A-aOx" secondAttribute="trailing" id="mpe-bG-bae"/>
                     <constraint firstItem="IQq-3A-aOx" firstAttribute="leading" secondItem="1v3-X9-JNe" secondAttribute="trailing" id="pGy-th-hoA"/>
-                    <constraint firstAttribute="bottom" secondItem="IQq-3A-aOx" secondAttribute="bottom" id="vEf-7e-sNa"/>
                     <constraint firstItem="1v3-X9-JNe" firstAttribute="top" secondItem="IZE-xl-BoA" secondAttribute="top" id="wqs-BF-6Ik"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="bgView" destination="aZY-Tj-Kzs" id="QD2-F4-r7w"/>
+                <outlet property="colorFlagLable" destination="1v3-X9-JNe" id="kJo-aW-UFb"/>
+                <outlet property="openButton" destination="EuY-oU-q6K" id="kmt-xb-fPV"/>
+                <outlet property="sdateLable" destination="FKE-qB-YmP" id="A0t-A2-mFM"/>
+                <outlet property="sdocLable" destination="Fbw-Rc-ydY" id="cOE-TP-mdM"/>
+                <outlet property="smodelLable" destination="tfP-no-KAS" id="PFL-9s-I7S"/>
+                <outlet property="sownerLable" destination="XCO-7e-ygC" id="Vxr-H9-YOs"/>
+                <outlet property="srevLable" destination="Uvo-kx-j1q" id="Lb1-tR-Zqs"/>
+                <outlet property="stitleLable" destination="e4M-h2-P5b" id="bSq-3e-wi4"/>
+                <outlet property="titleLable" destination="IQq-3A-aOx" id="NKI-ov-sy8"/>
+            </connections>
             <point key="canvasLocation" x="-327" y="-88"/>
         </tableViewCell>
     </objects>

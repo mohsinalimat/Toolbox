@@ -19,15 +19,16 @@ class AirplaneController:BaseViewControllerWithTable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-
+        
+        navigationItem.titleView = nil
+        
     }
 
     
     override func initSubview(){
     
         title = "Aiplane Selector"
+
         let topview : UIView  = {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 60))
             v.backgroundColor = UIColor.white
@@ -64,20 +65,14 @@ class AirplaneController:BaseViewControllerWithTable {
         view.addSubview(topview)
         
         tableview?.frame = CGRect (x: 0, y: topview.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 60)
-        sectionHeadtitle =  "  Air China 196"
-        tableViewRegisterCell()
+        sectionHeadtitle =  "Air China"
+        tableview?.register(UINib(nibName: "AirplaneCell", bundle: nil), forCellReuseIdentifier: "AirplaneCellIdentifierId")
+        tableview?.register(UINib (nibName:"AirplaneSubCell", bundle: nil), forCellReuseIdentifier: "AirplaneSubCellIdentifierId")
         
         //...test data
         dataArray = dataArray + [111,222,333,444,555,666,777,888,999]
     }
-    
-    
-    func tableViewRegisterCell() {
-        tableview?.register(UINib(nibName: "AirplaneCell", bundle: nil), forCellReuseIdentifier: "AirplaneCellIdentifierId")
-        tableview?.register(UINib (nibName:"AirplaneSubCell", bundle: nil), forCellReuseIdentifier: "AirplaneSubCellIdentifierId")
-    }
-    
-    
+
     
     //popView选择排序项
     func popButtonAction(_ button:UIButton)
@@ -85,6 +80,7 @@ class AirplaneController:BaseViewControllerWithTable {
         let vc = BaseViewControllerWithTable.init()
         let rect =  CGRect (x: 0, y: 0, width: 280, height: 44 * popViewDataArray.count)
         //...先赋值？才会走到 viewDidLoad
+        vc.needtitleView = false
         vc.view.frame = rect
         vc.dataArray = popViewDataArray
         vc.navigationItem.rightBarButtonItems = nil
@@ -95,8 +91,7 @@ class AirplaneController:BaseViewControllerWithTable {
         vc.tableview?.bounces = false
         vc.tableview?.showsVerticalScrollIndicator = false
         vc.cellSelectedIndex = popViewselectedIndex
-        vc.cellSelectedAction = {
-            index in
+        vc.cellSelectedAction = {index in
             self.popViewselectedIndex = index
             button.setTitle(self.popViewDataArray[index], for: .normal)
             //...刷新列表

@@ -17,8 +17,10 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     var cellSelectedAction:((Int) -> (Void))?
     var cellSelectedIndex : Int?
 
-    private var headSectionHeight = 30.0
+    var needtitleView:Bool = true
     
+    private var headSectionHeight = 30.0
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,13 +33,48 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         view.addSubview(tableview!)
         
         initSubview();
+        
+        guard needtitleView else {
+            return
+        }
+        
+        let button = UIButton (frame: CGRect (x: 0, y: 0, width: 200, height: 40))
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)//15 .13
+        button.setTitle("Registry B-1638", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.setImage(UIImage (named: "cheveron-normal_gry"), for: .normal)
+        button.addTarget(self, action: #selector(popPresentControllerButtonAction(_:)), for: .touchUpInside)
+        button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20)
+        button.imageEdgeInsets = UIEdgeInsetsMake(18, button.frame.width - 22 , 12, 10)
+        
+        navigationItem.titleView = button
     }
 
+    func popPresentControllerButtonAction(_ button:UIButton){
+        
+        let rect = CGRect (x: 0, y: 0, width: 320, height: 160)
+        
+        let vc = PopViewController.init(nibName: "PopViewController", bundle: nil)
+        vc.view.frame = rect
+        vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.sourceView = button//指定原点，固定pop
+        vc.popoverPresentationController?.sourceRect = CGRect (x: 0, y: 0, width: 200, height: 40)//pop的箭头位置在这个区域中间
+        vc.preferredContentSize = CGSize (width: 320, height: 160)
+        
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    
+    
     public func initSubview(){
     
     }
     
+    
+    
+    
     //MARK: - UITableViewDataSource
+    //以下大多用于pop中的列表，其他情况下都在子类中重写
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -65,13 +102,14 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
             v.backgroundColor = kTableviewHeadViewBgColor
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
-            title.text = sectionHeadtitle
+            title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count)"
             
             v.addSubview(title)
             return v

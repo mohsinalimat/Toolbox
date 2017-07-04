@@ -10,11 +10,14 @@ import UIKit
 
 class PublicationController: BaseViewControllerWithTable {
 
+     var selectButton : UIButton?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
+
     }
 
     
@@ -33,12 +36,11 @@ class PublicationController: BaseViewControllerWithTable {
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
         
         //....统计文档数量
-        sectionHeadtitle =  "  Publications 10"
+        sectionHeadtitle =  "Publications"
         
         //...test data
         dataArray = dataArray + ["1","2","3","4"]
     }
-    
     
     
     

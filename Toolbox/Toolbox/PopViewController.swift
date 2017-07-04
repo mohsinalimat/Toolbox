@@ -1,27 +1,19 @@
 //
-//  BaseNavigationController.swift
+//  PopViewController.swift
 //  Toolbox
 //
-//  Created by gener on 17/6/26.
+//  Created by gener on 17/7/3.
 //  Copyright © 2017年 Light. All rights reserved.
 //
 
 import UIKit
 
-class BaseNavigationController: UINavigationController {
+class PopViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationBar.barTintColor = kBartintColor
-        navigationBar.isTranslucent = false
-        navigationBar.tintColor = UIColor.white
-        
-        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white,NSFontAttributeName:UIFont.boldSystemFont(ofSize: 18)]
-
-//        UINavigationBar.appearance().tintColor = UIColor.white
-        
-        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent;
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

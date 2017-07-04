@@ -24,7 +24,7 @@ class ManagerController: BaseViewControllerWithTable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+         navigationItem.titleView = nil
         // Do any additional setup after loading the view.
     }
 
@@ -71,7 +71,7 @@ class ManagerController: BaseViewControllerWithTable {
         dataArray = dataArray + [111,222,333,444]
         
         tableview?.frame = CGRect (x: 0, y: topview.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 60)
-        sectionHeadtitle =  "  Publications on Devices \(4)"
+        sectionHeadtitle =  "Publications on Devices"
         tableViewRegisterCell()
         
     }
@@ -90,6 +90,7 @@ class ManagerController: BaseViewControllerWithTable {
         let vc = BaseViewControllerWithTable.init()
         let rect =  CGRect (x: 0, y: 0, width: 280, height: 44 * popViewDataArray.count)
         //...先赋值？才会走到 viewDidLoad
+        vc.needtitleView = false
         vc.view.frame = rect
         vc.dataArray = popViewDataArray
         vc.navigationItem.rightBarButtonItems = nil
@@ -130,32 +131,9 @@ class ManagerController: BaseViewControllerWithTable {
         else
         {
             let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
-            //        cell.textLabel?.text = dataArray[indexPath.row] as? String
             cell.selectionStyle = .none
-            
-            /*
-            if self.selectedDataArray.index(of: value!) != nil{
-                cell.cellSelectedInit()
-            }
-            
-            
-            cell.clickCellBtnAction = {
-                isSelected in
-                if isSelected{
-                    self.dataArray.insert(0, at: indexPath.row + 1)
-                    //...保存模型唯一标示
-                    self.selectedDataArray.append(self.dataArray[indexPath.row] as! Int)
-                    //                    self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
-                }
-                else{
-                    self.dataArray.remove(at: indexPath.row + 1)
-                    self.selectedDataArray.remove(at: self.selectedDataArray.index(of: value!)!)
-                    //                    self.tableview?.deleteRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.fade)
-                }
-                
-                self.tableview?.reloadData()
-            }
-            */
+
+            cell.cellIsSelected(self.selectedDataArray.index(of: value!) != nil)
             
             return cell
         }
@@ -176,8 +154,27 @@ class ManagerController: BaseViewControllerWithTable {
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+       
+        guard dataArray[indexPath.row] as? Int != 0 else {
+            return
+        }
 
+     let value = dataArray[indexPath.row] as! Int
+        
+       if self.selectedDataArray.index(of: value) != nil {
+            selectedDataArray.remove(at: selectedDataArray.index(of: value)!)
+            self.dataArray.remove(at: indexPath.row + 1)
+        }
+        
+        else
+       {
+         selectedDataArray.append(value)
+         self.dataArray.insert(0, at: indexPath.row + 1)
+        }
+       
+        
+        self.tableview?.reloadData()
+        
     }
     
     

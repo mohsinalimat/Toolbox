@@ -30,6 +30,19 @@
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
+		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
+		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
+		A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */; };
+		A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C06BC91F0A2D2800A29620 /* PopViewController.swift */; };
+		A1C06BCC1F0A2D2800A29620 /* PopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */; };
+		A1C06BCF1F0A356400A29620 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCD1F0A356400A29620 /* cancel.png */; };
+		A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCE1F0A356400A29620 /* cancel@2x.png */; };
+		A1C06BD71F0A35AC00A29620 /* deleteBookmarkButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */; };
+		A1C06BD81F0A35AC00A29620 /* deleteBookmarkButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */; };
+		A1C06BD91F0A35AC00A29620 /* deletePub.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD31F0A35AC00A29620 /* deletePub.png */; };
+		A1C06BDA1F0A35AC00A29620 /* deletePub@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */; };
+		A1C06BDB1F0A35AC00A29620 /* donwload_data_button.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */; };
+		A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */; };
 		A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1AB0A1F037A9400C29333 /* BaseTableViewController.swift */; };
 		A1C1AB0D1F037D2900C29333 /* BaseViewControllerWithTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1AB0C1F037D2900C29333 /* BaseViewControllerWithTable.swift */; };
 		A1C1BD5D1F00A0AA002FC0E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */; };
@@ -54,7 +67,6 @@
 		A1C1BDAB1F00FF85002FC0E0 /* downSleft.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDA91F00FF85002FC0E0 /* downSleft.png */; };
 		A1C1BDAC1F00FF85002FC0E0 /* downSleft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */; };
 		A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */; };
-		A1E658F51F06583200F99DAC /* PopPlaneInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E658F41F06583200F99DAC /* PopPlaneInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +110,19 @@
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
+		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
+		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
+		A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "11-00-00-01B.html"; sourceTree = "<group>"; };
+		A1C06BC91F0A2D2800A29620 /* PopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopViewController.swift; sourceTree = "<group>"; };
+		A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopViewController.xib; sourceTree = "<group>"; };
+		A1C06BCD1F0A356400A29620 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cancel.png; path = "1-icon/cancel.png"; sourceTree = "<group>"; };
+		A1C06BCE1F0A356400A29620 /* cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancel@2x.png"; path = "1-icon/cancel@2x.png"; sourceTree = "<group>"; };
+		A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteBookmarkButton.png; sourceTree = "<group>"; };
+		A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deleteBookmarkButton@2x.png"; sourceTree = "<group>"; };
+		A1C06BD31F0A35AC00A29620 /* deletePub.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletePub.png; sourceTree = "<group>"; };
+		A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deletePub@2x.png"; sourceTree = "<group>"; };
+		A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = donwload_data_button.png; sourceTree = "<group>"; };
+		A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_data_button@2x.png"; sourceTree = "<group>"; };
 		A1C1AB0A1F037A9400C29333 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		A1C1AB0C1F037D2900C29333 /* BaseViewControllerWithTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewControllerWithTable.swift; sourceTree = "<group>"; };
 		A1C1BD591F00A0AA002FC0E0 /* Toolbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Toolbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,7 +153,6 @@
 		A1C1BDA91F00FF85002FC0E0 /* downSleft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downSleft.png; sourceTree = "<group>"; };
 		A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downSleft@2x.png"; sourceTree = "<group>"; };
 		A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg.png; sourceTree = "<group>"; };
-		A1E658F41F06583200F99DAC /* PopPlaneInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopPlaneInfoView.swift; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		F082408167EDD359A7B14175 /* Pods_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -221,6 +245,7 @@
 				A1C1BDA81F00FF5B002FC0E0 /* source */,
 				A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */,
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
+				A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */,
 				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
 				A1C1BD681F00A0AA002FC0E0 /* Info.plist */,
@@ -254,6 +279,8 @@
 				A1C1BD8F1F00A61B002FC0E0 /* BaseNavigationController.swift */,
 				A1C1AB0A1F037A9400C29333 /* BaseTableViewController.swift */,
 				A1C1AB0C1F037D2900C29333 /* BaseViewControllerWithTable.swift */,
+				A1C06BC91F0A2D2800A29620 /* PopViewController.swift */,
+				A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */,
 			);
 			name = BaseController;
 			sourceTree = "<group>";
@@ -294,7 +321,8 @@
 				A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */,
 				A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */,
 				A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */,
-				A1E658F41F06583200F99DAC /* PopPlaneInfoView.swift */,
+				A1B71D061F0B36570054CA04 /* BookmarksCell.swift */,
+				A1B71D071F0B36570054CA04 /* BookmarksCell.xib */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -304,8 +332,16 @@
 			children = (
 				A10648271F04C21E002D088C /* icon */,
 				A1C1BDA91F00FF85002FC0E0 /* downSleft.png */,
+				A1C06BCD1F0A356400A29620 /* cancel.png */,
+				A1C06BCE1F0A356400A29620 /* cancel@2x.png */,
 				A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */,
 				A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */,
+				A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */,
+				A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */,
+				A1C06BD31F0A35AC00A29620 /* deletePub.png */,
+				A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */,
+				A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */,
+				A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */,
 			);
 			name = source;
 			sourceTree = "<group>";
@@ -431,26 +467,37 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */,
+				A1C06BD71F0A35AC00A29620 /* deleteBookmarkButton.png in Resources */,
+				A1C06BD81F0A35AC00A29620 /* deleteBookmarkButton@2x.png in Resources */,
 				A106483D1F04C21E002D088C /* AppIcon-B2C72x72~ipad.png in Resources */,
+				A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */,
+				A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */,
 				A106483F1F04C21E002D088C /* AppIcon-B2C76x76~ipad.png in Resources */,
 				A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */,
 				A106483A1F04C21E002D088C /* AppIcon-B2C50x50@2x~ipad.png in Resources */,
 				A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
 				A10648391F04C21E002D088C /* AppIcon-B2C40x40~ipad.png in Resources */,
+				A1C06BD91F0A35AC00A29620 /* deletePub.png in Resources */,
 				A10648401F04C21E002D088C /* Default-Landscape@2x~ipad.png in Resources */,
 				A106483C1F04C21E002D088C /* AppIcon-B2C72x72@2x~ipad.png in Resources */,
+				A1C06BDA1F0A35AC00A29620 /* deletePub@2x.png in Resources */,
 				A106483E1F04C21E002D088C /* AppIcon-B2C76x76@2x~ipad.png in Resources */,
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
 				A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */,
+				A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */,
 				A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */,
 				A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */,
 				A1C1BD671F00A0AA002FC0E0 /* LaunchScreen.storyboard in Resources */,
 				A10648371F04C21E002D088C /* AppIcon-B2C29x29~ipad.png in Resources */,
 				A106483B1F04C21E002D088C /* AppIcon-B2C50x50~ipad.png in Resources */,
 				A1C1BD641F00A0AA002FC0E0 /* Assets.xcassets in Resources */,
+				A1C06BDB1F0A35AC00A29620 /* donwload_data_button.png in Resources */,
+				A1C06BCC1F0A2D2800A29620 /* PopViewController.xib in Resources */,
 				A1C1BDAB1F00FF85002FC0E0 /* downSleft.png in Resources */,
 				A10648421F04C21E002D088C /* Default-Portrait@2x~ipad.png in Resources */,
+				A1C06BCF1F0A356400A29620 /* cancel.png in Resources */,
 				A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */,
 				A10648381F04C21E002D088C /* AppIcon-B2C40x40@2x~ipad.png in Resources */,
 				A1C1BDA71F00EEB3002FC0E0 /* AirplaneCell.xib in Resources */,
@@ -527,9 +574,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1E658F51F06583200F99DAC /* PopPlaneInfoView.swift in Sources */,
 				A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */,
+				A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */,
 				A1C1AB0D1F037D2900C29333 /* BaseViewControllerWithTable.swift in Sources */,
+				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,
 				A1C1BD931F00A718002FC0E0 /* constant.swift in Sources */,
 				A1C1BD8E1F00A5E0002FC0E0 /* BaseViewController.swift in Sources */,
