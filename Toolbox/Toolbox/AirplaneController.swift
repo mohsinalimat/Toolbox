@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SwiftyJSON
+
 class AirplaneController:BaseViewControllerWithTable {
     var selectedDataArray = [Int]()
     var selectButton : UIButton?
@@ -19,11 +21,56 @@ class AirplaneController:BaseViewControllerWithTable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationItem.titleView = nil
+       
+        //CCAA320CCAAIPC20161101
+        let subpath = "/TDLibrary/CCA/CCAA330CCAAIPC20170101/aipc/resources/apList.json"
+        let rootpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+        let newpath = rootpath.appending(subpath)
+        
+        print(newpath)
+        
+        let isExist = FileManager.default.fileExists(atPath: newpath)
+        if isExist {
+            print("file is exist")
+        }
+        else
+        {
+            print("not exist")
+        }
+        
+
+
+        
+
+        do{
+            let jsonString = try String (contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")//.data(using: .utf8)
+            
+            if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: true) {
+                let json = JSON(data: dataFromString)
+                
+                let obj =  try JSONSerialization.jsonObject(with: dataFromString, options: .allowFragments)
+                print(obj)
+
+
+            }
+            
+//            let jsondata : Data = try Data (contentsOf: URL (fileURLWithPath: newpath))
+//            
+//            let obj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments)
+//            print(obj)
+            
+        }catch{
+            print(error)
+        }
+        
         
     }
 
+    var completionHandlers: [() -> Void] = []
+    func someFunctionWithEscapingClosure(completionHandler:@escaping () -> Void) {
+       completionHandlers.append(completionHandler)
+    }
     
     override func initSubview(){
     

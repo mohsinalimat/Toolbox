@@ -33,6 +33,7 @@
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
 		A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */; };
+		A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */ = {isa = PBXBuildFile; fileRef = A1B7FB171F0F8912009D6CA9 /* apList.json */; };
 		A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C06BC91F0A2D2800A29620 /* PopViewController.swift */; };
 		A1C06BCC1F0A2D2800A29620 /* PopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */; };
 		A1C06BCF1F0A356400A29620 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCD1F0A356400A29620 /* cancel.png */; };
@@ -113,6 +114,7 @@
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
 		A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "11-00-00-01B.html"; sourceTree = "<group>"; };
+		A1B7FB171F0F8912009D6CA9 /* apList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = apList.json; sourceTree = "<group>"; };
 		A1C06BC91F0A2D2800A29620 /* PopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopViewController.swift; sourceTree = "<group>"; };
 		A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopViewController.xib; sourceTree = "<group>"; };
 		A1C06BCD1F0A356400A29620 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cancel.png; path = "1-icon/cancel.png"; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */,
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
 				A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */,
+				A1B7FB171F0F8912009D6CA9 /* apList.json */,
 				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
 				A1C1BD681F00A0AA002FC0E0 /* Info.plist */,
@@ -487,6 +490,7 @@
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
 				A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */,
 				A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */,
+				A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */,
 				A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */,
 				A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */,
 				A1C1BD671F00A0AA002FC0E0 /* LaunchScreen.storyboard in Resources */,

@@ -1,0 +1,290 @@
+{
+    "effectiveACListDate": "2016-11-01",
+    "airplaneEntry": [
+{
+            "tailNumber": "",
+            "airplaneId": "2000",
+            "airplaneSerialNumber": "2000",
+            "airplaneRegistry": "B-6022",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00001",
+            "customerEffectivity": "001",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2007",
+            "airplaneSerialNumber": "2007",
+            "airplaneRegistry": "B-6023",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00002",
+            "customerEffectivity": "002",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2015",
+            "airplaneSerialNumber": "2015",
+            "airplaneRegistry": "B-6024",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00003",
+            "customerEffectivity": "003",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2172",
+            "airplaneSerialNumber": "2172",
+            "airplaneRegistry": "B-6031",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00004",
+            "customerEffectivity": "004",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2202",
+            "airplaneSerialNumber": "2202",
+            "airplaneRegistry": "B-6032",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00005",
+            "customerEffectivity": "005",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2614",
+            "airplaneSerialNumber": "2614",
+            "airplaneRegistry": "B-6213",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00009",
+            "customerEffectivity": "009",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2643",
+            "airplaneSerialNumber": "2643",
+            "airplaneRegistry": "B-6216",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00010",
+            "customerEffectivity": "010",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "3195",
+            "airplaneSerialNumber": "3195",
+            "airplaneRegistry": "B-6235",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00011",
+            "customerEffectivity": "011",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "3200",
+            "airplaneSerialNumber": "3200",
+            "airplaneRegistry": "B-6236",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA01 00012",
+            "customerEffectivity": "012",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2237",
+            "airplaneSerialNumber": "2237",
+            "airplaneRegistry": "B-6034",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00001",
+            "customerEffectivity": "101",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2269",
+            "airplaneSerialNumber": "2269",
+            "airplaneRegistry": "B-6035",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00002",
+            "customerEffectivity": "102",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2285",
+            "airplaneSerialNumber": "2285",
+            "airplaneRegistry": "B-6036",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00003",
+            "customerEffectivity": "103",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2293",
+            "airplaneSerialNumber": "2293",
+            "airplaneRegistry": "B-6037",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00004",
+            "customerEffectivity": "104",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2298",
+            "airplaneSerialNumber": "2298",
+            "airplaneRegistry": "B-6038",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00005",
+            "customerEffectivity": "105",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2499",
+            "airplaneSerialNumber": "2499",
+            "airplaneRegistry": "B-2364",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00006",
+            "customerEffectivity": "106",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2508",
+            "airplaneSerialNumber": "2508",
+            "airplaneRegistry": "B-6004",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00007",
+            "customerEffectivity": "107",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2525",
+            "airplaneSerialNumber": "2525",
+            "airplaneRegistry": "B-6014",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00008",
+            "customerEffectivity": "108",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2532",
+            "airplaneSerialNumber": "2532",
+            "airplaneRegistry": "B-6044",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00009",
+            "customerEffectivity": "109",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+,{
+            "tailNumber": "",
+            "airplaneId": "2545",
+            "airplaneSerialNumber": "2545",
+            "airplaneRegistry": "B-6046",
+            "airplaneMajorModel": "A320",
+            "airplaneMinorModel": "A320",
+            "airplaneLineNumber": "CCA02 00010",
+            "customerEffectivity": "110",
+            "operatorCd": "CCA",
+            "aircraftNotes": "",
+            "aipcCec": "",
+            "operatorName": "AIR CHINA",
+            "ownerCode": "CCA"
+        }
+]
+}
