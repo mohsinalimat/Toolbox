@@ -7,8 +7,10 @@
 //
 
 import UIKit
-
 import SwiftyJSON
+import SSZipArchive
+import SVProgressHUD
+import LKDBHelper
 
 class AirplaneController:BaseViewControllerWithTable {
     var selectedDataArray = [Int]()
@@ -18,55 +20,66 @@ class AirplaneController:BaseViewControllerWithTable {
     var popViewselectedIndex:Int?
     var popViewDataArray = ["Tail","Registry","MSN","Variable","CEC","Line"]
     var popViewHeadTitle = "Sort Airplanes By"
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
        
-        //CCAA320CCAAIPC20161101
-        let subpath = "/TDLibrary/CCA/CCAA330CCAAIPC20170101/aipc/resources/apList.json"
-        let rootpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-        let newpath = rootpath.appending(subpath)
-        
-        print(newpath)
-        
-        let isExist = FileManager.default.fileExists(atPath: newpath)
-        if isExist {
-            print("file is exist")
-        }
-        else
-        {
-            print("not exist")
-        }
-        
-
-
-        
-
-        do{
-            let jsonString = try String (contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")//.data(using: .utf8)
-            
-            if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: true) {
-                let json = JSON(data: dataFromString)
-                
-                let obj =  try JSONSerialization.jsonObject(with: dataFromString, options: .allowFragments)
-                print(obj)
-
-
-            }
-            
-//            let jsondata : Data = try Data (contentsOf: URL (fileURLWithPath: newpath))
+//        //CCAA320CCAAIPC20161101 /CCAA330CCAAIPC20170101
+//        let subpath = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
+//        let rootpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+//        let newpath = rootpath.appending(subpath)
+//        
+//        print(newpath)
+//        
+//        let isExist = FileManager.default.fileExists(atPath: newpath)
+//        if isExist {
+//            print("file is exist")
+//        }
+//        else
+//        {
+//            print("not exist")
+//        }
+//        
+//
+//        do{
+//            let jsonString = try String (contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")
 //            
-//            let obj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments)
-//            print(obj)
-            
-        }catch{
-            print(error)
+//            if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true) {
+//               // let json = JSON(data: dataFromString)
+//                
+//                let obj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments) as? [String:Any]
+//                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else {
+//                    return
+//                }
+//               // print(airplaneEntryArr)
+//
+//                
+//                for obj in airplaneEntryArr {
+//                    let dic = obj as! [String:Any]
+//                    let model:AirplaneModel = AirplaneModel()
+//                    model.setModelWith(dic)
+//                }
+//            }
+//
+//        }catch{
+//            print(error)
+//        }
+        
+        DBManager().jsonDataToDB{
+            print("parse ok!")
         }
         
+       let arr = AirplaneModel.search(with: nil)
         
+        print(arr)
     }
 
+    
+    
+    
+    
+    
     var completionHandlers: [() -> Void] = []
     func someFunctionWithEscapingClosure(completionHandler:@escaping () -> Void) {
        completionHandlers.append(completionHandler)
@@ -226,15 +239,5 @@ class AirplaneController:BaseViewControllerWithTable {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

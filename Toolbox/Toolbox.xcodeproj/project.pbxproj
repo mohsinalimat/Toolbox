@@ -26,6 +26,8 @@
 		A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */; };
 		A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */; };
 		A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */; };
+		A136F11E1F1322DE00349572 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = A136F11D1F1322DE00349572 /* Model.m */; };
+		A136F1211F1372BC00349572 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A136F1201F1372BC00349572 /* DBManager.swift */; };
 		A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15580201F05E89D008C1787 /* PublicationCell.swift */; };
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
@@ -107,6 +109,10 @@
 		A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerCell.xib; sourceTree = "<group>"; };
 		A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerDetailCell.swift; sourceTree = "<group>"; };
 		A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerDetailCell.xib; sourceTree = "<group>"; };
+		A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Toolbox-Bridging-Header.h"; sourceTree = "<group>"; };
+		A136F11C1F1322DE00349572 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		A136F11D1F1322DE00349572 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
+		A136F1201F1372BC00349572 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 		A15580201F05E89D008C1787 /* PublicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicationCell.swift; sourceTree = "<group>"; };
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
@@ -216,6 +222,14 @@
 			path = "1-icon";
 			sourceTree = "<group>";
 		};
+		A136F11F1F13727000349572 /* db */ = {
+			isa = PBXGroup;
+			children = (
+				A136F1201F1372BC00349572 /* DBManager.swift */,
+			);
+			name = db;
+			sourceTree = "<group>";
+		};
 		A1C1BD501F00A0AA002FC0E0 = {
 			isa = PBXGroup;
 			children = (
@@ -291,7 +305,11 @@
 		A1C1BD911F00A6E0002FC0E0 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
+				A136F11C1F1322DE00349572 /* Model.h */,
+				A136F11D1F1322DE00349572 /* Model.m */,
+				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -429,6 +447,7 @@
 					A1C1BD581F00A0AA002FC0E0 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 8R29X3H9MY;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Manual;
 					};
 					A1C1BD6C1F00A0AA002FC0E0 = {
@@ -581,6 +600,7 @@
 				A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */,
 				A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */,
 				A1C1AB0D1F037D2900C29333 /* BaseViewControllerWithTable.swift in Sources */,
+				A136F11E1F1322DE00349572 /* Model.m in Sources */,
 				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,
 				A1C1BD931F00A718002FC0E0 /* constant.swift in Sources */,
@@ -596,6 +616,7 @@
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
+				A136F1211F1372BC00349572 /* DBManager.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
@@ -743,6 +764,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 656A95BFE95AA8238D58CD5C /* Pods-Toolbox.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8R29X3H9MY;
@@ -753,6 +775,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cd157c8e-bf3d-4834-9a6e-1618c8133e81";
 				PROVISIONING_PROFILE_SPECIFIER = "wygtest-dev";
+				SWIFT_OBJC_BRIDGING_HEADER = "Toolbox/Toolbox-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -761,6 +785,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Toolbox/Info.plist;
@@ -768,6 +793,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.Toolbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Toolbox/Toolbox-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
