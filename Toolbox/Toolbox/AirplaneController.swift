@@ -10,10 +10,9 @@ import UIKit
 import SwiftyJSON
 import SSZipArchive
 import SVProgressHUD
-import LKDBHelper
 
 class AirplaneController:BaseViewControllerWithTable {
-    var selectedDataArray = [Int]()
+    var selectedDataArray = [String]()
     var selectButton : UIButton?
     
     var popButtonWidth = 135
@@ -24,60 +23,28 @@ class AirplaneController:BaseViewControllerWithTable {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
-       
-//        //CCAA320CCAAIPC20161101 /CCAA330CCAAIPC20170101
-//        let subpath = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
-//        let rootpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-//        let newpath = rootpath.appending(subpath)
-//        
-//        print(newpath)
-//        
-//        let isExist = FileManager.default.fileExists(atPath: newpath)
-//        if isExist {
-//            print("file is exist")
-//        }
-//        else
-//        {
-//            print("not exist")
-//        }
-//        
-//
-//        do{
-//            let jsonString = try String (contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")
-//            
-//            if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true) {
-//               // let json = JSON(data: dataFromString)
-//                
-//                let obj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments) as? [String:Any]
-//                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else {
-//                    return
-//                }
-//               // print(airplaneEntryArr)
-//
-//                
-//                for obj in airplaneEntryArr {
-//                    let dic = obj as! [String:Any]
-//                    let model:AirplaneModel = AirplaneModel()
-//                    model.setModelWith(dic)
-//                }
-//            }
-//
-//        }catch{
-//            print(error)
+
+        //...第一次解析后保存标记
+//        DBManager().parseJsonDataToDB{
+//            print("parse ok!")
 //        }
         
-        DBManager().jsonDataToDB{
-            print("parse ok!")
-        }
+        loadData()
+
         
-       let arr = AirplaneModel.search(with: nil)
-        
-        print(arr)
     }
 
     
     
-    
+    func loadData() {
+        //字段为空的放在最后
+        let arr = AirplaneModel.search(with: "airplaneRegistry!=\"\"", orderBy: "airplaneRegistry asc")
+        dataArray = dataArray  + arr!
+        
+        let arr2 = AirplaneModel.search(with: "airplaneRegistry=\"\"", orderBy: "airplaneRegistry asc")
+        dataArray = dataArray + arr2!
+        
+    }
     
     
     var completionHandlers: [() -> Void] = []
@@ -86,9 +53,7 @@ class AirplaneController:BaseViewControllerWithTable {
     }
     
     override func initSubview(){
-    
         title = "Aiplane Selector"
-
         let topview : UIView  = {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 60))
             v.backgroundColor = UIColor.white
@@ -128,9 +93,6 @@ class AirplaneController:BaseViewControllerWithTable {
         sectionHeadtitle =  "Air China"
         tableview?.register(UINib(nibName: "AirplaneCell", bundle: nil), forCellReuseIdentifier: "AirplaneCellIdentifierId")
         tableview?.register(UINib (nibName:"AirplaneSubCell", bundle: nil), forCellReuseIdentifier: "AirplaneSubCellIdentifierId")
-        
-        //...test data
-        dataArray = dataArray + [111,222,333,444,555,666,777,888,999]
     }
 
     
@@ -169,20 +131,22 @@ class AirplaneController:BaseViewControllerWithTable {
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let value = dataArray[indexPath.row] as? Int
+        let value = dataArray[indexPath.row]
 
-        if isDetailCell(value: value!){
+        if  value is Int{
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneSubCellIdentifierId", for: indexPath) as! AirplaneSubCell
             cell.selectionStyle = .none
             return cell
         }
         else
         {
+            let  model:AirplaneModel! = value as! AirplaneModel
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneCellIdentifierId", for: indexPath) as! AirplaneCell
-            //        cell.textLabel?.text = dataArray[indexPath.row] as? String
             cell.selectionStyle = .none
-            if self.selectedDataArray.index(of: value!) != nil{
+            
+            cell.fillCell(model: model)
+            
+            if self.selectedDataArray.index(of: model.airplaneId) != nil{
                 cell.cellSelectedInit()
             }
             
@@ -192,12 +156,12 @@ class AirplaneController:BaseViewControllerWithTable {
                 if isSelected{
                     self.dataArray.insert(0, at: indexPath.row + 1)
                     //...保存模型唯一标示
-                    self.selectedDataArray.append(self.dataArray[indexPath.row] as! Int)
+                    self.selectedDataArray.append(model.airplaneId)
 //                    self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 }
                 else{
                     self.dataArray.remove(at: indexPath.row + 1)
-                    self.selectedDataArray.remove(at: self.selectedDataArray.index(of: value!)!)
+                    self.selectedDataArray.remove(at: self.selectedDataArray.index(of: model.airplaneId)!)
 //                    self.tableview?.deleteRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.fade)
                 }
                 

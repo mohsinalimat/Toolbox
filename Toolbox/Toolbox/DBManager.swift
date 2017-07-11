@@ -10,7 +10,7 @@ import UIKit
 
 class DBManager: NSObject {
 
-    func jsonDataToDB(completionHandler:()->()) -> Void {
+    func parseJsonDataToDB(path:String? = nil, completionHandler:()->()) -> Void {
         //CCAA320CCAAIPC20161101 /CCAA330CCAAIPC20170101
         let subpath = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
         let rootpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
@@ -24,12 +24,12 @@ class DBManager: NSObject {
         }
         else
         {
-            print("not exist")
+            print("\(newpath) 不存在！");return
         }
         
         
         do{
-            let jsonString = try String (contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")
+            let jsonString = try String(contentsOfFile: newpath).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\r", with: "")
             
             if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true) {
                 // let json = JSON(data: dataFromString)
@@ -38,12 +38,8 @@ class DBManager: NSObject {
                 guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else {
                     return
                 }
-//138
-                for obj in airplaneEntryArr {
-                    let dic = obj as! [String:Any]
-                    let model:AirplaneModel = AirplaneModel()
-                    model.setModelWith(dic)
-                }
+                
+                AirplaneModel.saveToDb(with: airplaneEntryArr)
             }
           
             completionHandler()
@@ -53,4 +49,8 @@ class DBManager: NSObject {
 
     }
 
+    
+    
+    
+    
 }

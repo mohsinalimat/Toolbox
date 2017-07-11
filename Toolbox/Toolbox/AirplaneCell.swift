@@ -33,6 +33,13 @@ class AirplaneCell: UITableViewCell {
     }
 
     
+    func fillCell(model:AirplaneModel) {
+        registryNameLable.text = model.airplaneRegistry != "" ? model.airplaneRegistry : "No Registry"
+        majormodelLable.text = model.airplaneMajorModel + "-" + model.airplaneMinorModel
+        
+    }
+    
+    
     override func prepareForReuse() {
         cellBtn.isSelected = false
         backgroundColor = UIColor.white

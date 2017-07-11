@@ -36,8 +36,27 @@
 
 @end
 
+//tools
+#pragma mark
+@interface NSString (isNull)
++(NSString*)stringFromStr:(NSString*)str;
+@end
+
+@implementation NSString (isNull)
+
++(NSString*)stringFromStr:(NSString*)str{
+    
+    return str ? str : @"";
+    
+}
+
+@end
+
+
+
 
 //BASE MODEL
+#pragma mark
 @implementation Model
 
     -(instancetype)init
@@ -56,35 +75,67 @@
         return NSStringFromClass(self);
     }
 
+    //插入数据操作
+    +(void)saveToDbWith:(NSArray*)data{
+        NSLog(@"开始插入数据库...");
+        dispatch_apply(data.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t index) {
+            [[[self alloc]init] setModelWith:data[index]];
+        });
+        
+        NSLog(@"插入完成!");
+    }
 
-    -(NSArray*)searchWith:(NSString*)query
+    -(instancetype)modelFromDic:(NSDictionary*)dic{
+        
+        unsigned int outCount = 0;
+        id _m = [[[self class]alloc]init];
+//        [_m setValuesForKeysWithDictionary:dic];//...与以下操作是相反方向
+        
+        objc_property_t *list = class_copyPropertyList([self class], &outCount);
+        for (int i =0; i < outCount; i++) {
+            objc_property_t property = list[i];
+            const char * charname = property_getName(property);
+            NSString * name = [[NSString alloc]initWithUTF8String:charname];
+            [_m setValue:[NSString stringFromStr:dic[name]] forKey:name];
+        }
+        
+        free(list);
+        return _m;
+    }
+
+    -(void)setModelWith:(NSDictionary*)dic{
+    }
+
+
+    //search
+    -(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         
-        return [[DBTool default].helper search:[self class] where:query orderBy:nil offset:0 count:INT16_MAX];
+        return [[DBTool default].helper search:[self class] where:query orderBy:order offset:0 count:UINT16_MAX];
         
     }
     
     
-    +(NSArray*)searchWith:(NSString*)query
+    +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
-        return [[[self alloc]init ] searchWith:query];
+        return [[[self alloc]init ] searchWith:query orderBy:order];
     }
     
-    -(void)setModelWith:(NSDictionary *)dic
-    {
-    }
-    
+
 @end
 
 #pragma mark - 飞机信息
 @implementation AirplaneModel
-    -(void)setModelWith:(NSDictionary*)dic{
-        id obj = [self.helper searchSingle:[self class] where:[NSString stringWithFormat:@"airplaneId=%@",dic[@"airplaneId"]] orderBy:nil];
+  -(void)setModelWith:(NSDictionary*)dic{
+
+        NSString * query = [NSString stringWithFormat:@"airplaneId='%@'",dic[@"airplaneId"]];
+        id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
         if (obj) {
             NSLog(@"已存在飞机：%@",dic[@"airplaneId"]);
             return;
         }
-        
+      
+      /*
          self.aipcCec = dic[@"aipcCec"];
          self.aircraftNotes = dic[@"aircraftNotes"];
          self.airplaneId = dic[@"airplaneId"];
@@ -98,17 +149,15 @@
          self.operatorName = dic[@"operatorName"];
          self.ownerCode = dic[@"ownerCode"];
          self.tailNumber = dic[@"tailNumber"];
-        
-        [self.helper insertToDB:self];
-        NSLog(@"inser model");
+      */
+         id _m  = [self modelFromDic:dic];
+        [[DBTool default].helper insertToDB:_m];
     }
 
-    
-    -(instancetype)initWith:(NSDictionary*)dic{
-        return self;
-    }
-    
+
+
 @end
+
 
 
 

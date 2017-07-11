@@ -20,7 +20,8 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     var needtitleView:Bool = true
     
     private var headSectionHeight = 30.0
-
+    private var headSectionNum = 0//head中显示数字
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,7 +47,6 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         button.addTarget(self, action: #selector(popPresentControllerButtonAction(_:)), for: .touchUpInside)
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20)
         button.imageEdgeInsets = UIEdgeInsetsMake(18, button.frame.width - 22 , 12, 10)
-        
         navigationItem.titleView = button
     }
 
@@ -104,12 +104,16 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         return {
+            if headSectionNum == 0{
+                headSectionNum = dataArray.count
+            }
+            
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
             v.backgroundColor = kTableviewHeadViewBgColor
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
-            title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count)"
+            title.text = "\t\t\(sectionHeadtitle!)\t\t\(headSectionNum)"
             
             v.addSubview(title)
             return v

@@ -8,20 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import <LKDBHelper/LKDBHelper.h>
+#import <objc/runtime.h>
 
 @interface Model : NSObject
 
-@property(nonatomic,retain)LKDBHelper * helper;
-    
--(void)setModelWith:(NSDictionary*)dic;
++(void)saveToDbWith:(NSArray*)data;
 
-+(NSArray*)searchWith:(NSString*)query;
++(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order;
     
 @end
 
 
 @interface AirplaneModel : Model
-    
 @property(nonatomic,copy)NSString * aipcCec;
 @property(nonatomic,copy)NSString * aircraftNotes;
 @property(nonatomic,copy)NSString * airplaneId;
@@ -35,9 +33,6 @@
 @property(nonatomic,copy)NSString * operatorName;
 @property(nonatomic,copy)NSString * ownerCode;
 @property(nonatomic,copy)NSString * tailNumber;
-
-    -(instancetype)initWith:(NSDictionary*)dic;
-    
 @end
 
 
