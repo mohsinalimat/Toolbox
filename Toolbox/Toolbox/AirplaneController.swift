@@ -11,23 +11,67 @@ import SwiftyJSON
 import SSZipArchive
 import SVProgressHUD
 
+enum PopValue {
+    case Tail
+    case Registry
+    case MSN
+    case Variable
+    case CEC
+    case Line
+}
+
 class AirplaneController:BaseViewControllerWithTable {
-    var selectedDataArray = [String]()
+    var selectedDataArray = [String]()//当前已选择展开的model标记
     var selectButton : UIButton?
     
-    var popButtonWidth = 135
-    var popViewselectedIndex:Int?
-    var popViewDataArray = ["Tail","Registry","MSN","Variable","CEC","Line"]
-    var popViewHeadTitle = "Sort Airplanes By"
+    let popButtonWidth = 135
+    var popViewselectedIndex:Int? //标记pop当前选择的索引
+    let popViewkeyArr = ["Tail","Registry","MSN","Variable","CEC","Line"]
 
+    let popViewHeadTitle = "Sort Airplanes By"
+    var currentFieldKey:String! = "Registry"
+    var currentFieldName:String! = "airplaneRegistry"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
 
         //...第一次解析后保存标记
-//        DBManager().parseJsonDataToDB{
-//            print("parse ok!")
-//        }
+        /*
+        let path = "CCAA320CCAAIPC20161101/aipc/resources/apList.json"
+        DBManager.parseJsonData(path: path){(obj) in
+            let obj =  obj as? [String:Any]
+            guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
+            AirplaneModel.saveToDb(with: airplaneEntryArr)
+        }
+        */
+        
+        let path = "apModelMap.js"//与MSN字段关联
+        DBManager.parseJsonData(path: path,preprogressHandler: { str in
+                let s = str
+                let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
+                return newstr
+            }){(obj) in
+                let obj =  obj as? [String:Any]
+                if obj != nil{
+                    kAirplanePublications = obj!
+                }
+
+        }
+        
+        let libpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+        let basepath = libpath + "/TDLibrary/CCA/"
+        
+        do{
+//            let files = try FileManager.default.contentsOfDirectory(atPath: basepath)
+            let files = try FileManager.default.subpathsOfDirectory(atPath: basepath)
+            print(files)
+        }catch{
+        
+        }
+        
+        
+        
         
         loadData()
 
@@ -36,14 +80,18 @@ class AirplaneController:BaseViewControllerWithTable {
 
     
     
-    func loadData() {
+    func loadData(opt:String = "airplaneRegistry") {
+        dataArray.removeAll()
+        selectedDataArray.removeAll()
+        
         //字段为空的放在最后
-        let arr = AirplaneModel.search(with: "airplaneRegistry!=\"\"", orderBy: "airplaneRegistry asc")
+        let arr = AirplaneModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray  + arr!
         
-        let arr2 = AirplaneModel.search(with: "airplaneRegistry=\"\"", orderBy: "airplaneRegistry asc")
+        let arr2 = AirplaneModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray + arr2!
         
+        tableview?.reloadData()
     }
     
     
@@ -100,11 +148,11 @@ class AirplaneController:BaseViewControllerWithTable {
     func popButtonAction(_ button:UIButton)
     {
         let vc = BaseViewControllerWithTable.init()
-        let rect =  CGRect (x: 0, y: 0, width: 280, height: 44 * popViewDataArray.count)
+        let rect =  CGRect (x: 0, y: 0, width: 280, height: 44 * popViewkeyArr.count)
         //...先赋值？才会走到 viewDidLoad
         vc.needtitleView = false
         vc.view.frame = rect
-        vc.dataArray = popViewDataArray
+        vc.dataArray = popViewkeyArr
         vc.navigationItem.rightBarButtonItems = nil
         
         vc.title = popViewHeadTitle
@@ -113,11 +161,17 @@ class AirplaneController:BaseViewControllerWithTable {
         vc.tableview?.bounces = false
         vc.tableview?.showsVerticalScrollIndicator = false
         vc.cellSelectedIndex = popViewselectedIndex
-        vc.cellSelectedAction = {index in
-            self.popViewselectedIndex = index
-            button.setTitle(self.popViewDataArray[index], for: .normal)
-            //...刷新列表
-            
+        vc.cellSelectedAction = {
+            [weak self] index in
+            guard let strongSelf = self else { return }
+            let keytitle = strongSelf.popViewkeyArr[index]
+            button.setTitle("\(keytitle)", for: .normal)
+            //记录当前选项刷新列表
+            let fname = kAirplaneInfoMap[keytitle]!
+            strongSelf.popViewselectedIndex = index
+            strongSelf.currentFieldKey = keytitle
+            strongSelf.currentFieldName = fname
+            strongSelf.loadData(opt:fname)
         }
         
         let nav = BaseNavigationController(rootViewController:vc)
@@ -134,8 +188,11 @@ class AirplaneController:BaseViewControllerWithTable {
         let value = dataArray[indexPath.row]
 
         if  value is Int{
+            let value = dataArray[indexPath.row - 1]
+            let  model:AirplaneModel! = value as! AirplaneModel
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneSubCellIdentifierId", for: indexPath) as! AirplaneSubCell
             cell.selectionStyle = .none
+            cell.fillCell(model: model ,title: currentFieldKey)
             return cell
         }
         else
@@ -144,9 +201,9 @@ class AirplaneController:BaseViewControllerWithTable {
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneCellIdentifierId", for: indexPath) as! AirplaneCell
             cell.selectionStyle = .none
             
-            cell.fillCell(model: model)
+            cell.fillCell(model: model ,title: currentFieldName)
             
-            if self.selectedDataArray.index(of: model.airplaneId) != nil{
+            if self.selectedDataArray.index(of: model.airplaneId ) != nil{
                 cell.cellSelectedInit()
             }
             
@@ -155,7 +212,7 @@ class AirplaneController:BaseViewControllerWithTable {
                 isSelected in
                 if isSelected{
                     self.dataArray.insert(0, at: indexPath.row + 1)
-                    //...保存模型唯一标示
+                    //保存模型唯一标示airplaneId
                     self.selectedDataArray.append(model.airplaneId)
 //                    self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 }

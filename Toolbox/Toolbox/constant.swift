@@ -24,3 +24,18 @@ let jumptoNextWithIndex:((Int) -> Void) = {index in
     root.selectedIndex = index
 }
 		
+//MARK: - 全局变量
+//对应的数据库字段
+let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
+    "Registry":"airplaneRegistry",
+    "MSN":"airplaneSerialNumber",
+    "Variable":"airplaneId",
+    "CEC":"customerEffectivity",
+    "Line":"airplaneLineNumber",
+];
+
+//飞机所适用的手册
+var kAirplanePublications:[String:Any] = [:]
+
+//当前选中的飞机信息
+var kAirplaneModel:AirplaneModel?

@@ -79,18 +79,17 @@
     +(void)saveToDbWith:(NSArray*)data{
         NSLog(@"开始插入数据库...");
         dispatch_apply(data.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t index) {
-            [[[self alloc]init] setModelWith:data[index]];
+            [[[self alloc]init] saveModelWith:data[index]];
         });
         
         NSLog(@"插入完成!");
     }
 
-    -(instancetype)modelFromDic:(NSDictionary*)dic{
+    -(instancetype)modelWith:(NSDictionary*)dic{
         
         unsigned int outCount = 0;
         id _m = [[[self class]alloc]init];
-//        [_m setValuesForKeysWithDictionary:dic];//...与以下操作是相反方向
-        
+        //[_m setValuesForKeysWithDictionary:dic];//...与以下操作是相反方向
         objc_property_t *list = class_copyPropertyList([self class], &outCount);
         for (int i =0; i < outCount; i++) {
             objc_property_t property = list[i];
@@ -103,7 +102,9 @@
         return _m;
     }
 
-    -(void)setModelWith:(NSDictionary*)dic{
+
+     -(void)saveModelWith:(NSDictionary*)dic{
+         //子类必须重载
     }
 
 
@@ -115,7 +116,15 @@
         
     }
     
-    
+
+    /**
+     根据查询条件查找
+
+     @param query 查询条件
+     @param order 排序
+
+     @return Array
+     */
     +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         return [[[self alloc]init ] searchWith:query orderBy:order];
@@ -126,7 +135,7 @@
 
 #pragma mark - 飞机信息
 @implementation AirplaneModel
-  -(void)setModelWith:(NSDictionary*)dic{
+  -(void)saveModelWith:(NSDictionary*)dic{
 
         NSString * query = [NSString stringWithFormat:@"airplaneId='%@'",dic[@"airplaneId"]];
         id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
@@ -150,7 +159,7 @@
          self.ownerCode = dic[@"ownerCode"];
          self.tailNumber = dic[@"tailNumber"];
       */
-         id _m  = [self modelFromDic:dic];
+         id _m  = [self modelWith:dic];
         [[DBTool default].helper insertToDB:_m];
     }
 
