@@ -39,3 +39,19 @@ var kAirplanePublications:[String:Any] = [:]
 
 //当前选中的飞机信息
 var kAirplaneModel:AirplaneModel?
+
+
+///PATH
+let ROOTPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+let ROOTSUBPATH = "/TDLibrary/CCA/" //待确定唯一性?
+
+let aplistjsonpath = "/resources/apList.json"
+let apmodelmapjspath = ROOTPATH + ROOTSUBPATH + "apModelMap.js"//与MSN字段关联飞机手册
+
+
+
+
+
+
+
+

@@ -18,19 +18,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow (frame: UIScreen.main.bounds)
 
-        
         let tabBarController = BaseTabbarController()
-        //let navigationController = BaseNavigationController(rootViewController:tabBarController)
         window?.rootViewController = tabBarController
-        
         window?.backgroundColor = UIColor.white
         window?.makeKeyAndVisible()
         
-
         
         return true
     }
 
+    func initData(){
+        
+    }
+    
     
     func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
         print("will change statueBar frame to  \(newStatusBarFrame) !")

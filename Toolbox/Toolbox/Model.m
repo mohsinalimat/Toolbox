@@ -53,10 +53,7 @@
 @end
 
 
-
-
-//BASE MODEL
-#pragma mark
+#pragma mark - BASE
 @implementation Model
 
     -(instancetype)init
@@ -75,7 +72,7 @@
         return NSStringFromClass(self);
     }
 
-    //插入数据操作
+    //写入数据操作
     +(void)saveToDbWith:(NSArray*)data{
         NSLog(@"开始插入数据库...");
         dispatch_apply(data.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t index) {
@@ -117,14 +114,7 @@
     }
     
 
-    /**
-     根据查询条件查找
-
-     @param query 查询条件
-     @param order 排序
-
-     @return Array
-     */
+    //查找
     +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         return [[[self alloc]init ] searchWith:query orderBy:order];
@@ -133,7 +123,7 @@
 
 @end
 
-#pragma mark - 飞机信息
+#pragma mark
 @implementation AirplaneModel
   -(void)saveModelWith:(NSDictionary*)dic{
 

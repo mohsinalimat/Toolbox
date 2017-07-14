@@ -16,25 +16,24 @@ class DBManager: NSObject {
     /// - parameter path:               文件路径
     /// - parameter preprogressHandler: 预处理操作（可选）
     /// - parameter completionHandler:  回调处理
-    static func parseJsonData(path:String,preprogressHandler:((String)->(String))? = nil, completionHandler:((Any)->())) -> Void {
-        //CCAA320CCAAIPC20161101 /CCAA330CCAAIPC20170101
-        ///let subpath = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
-        let libpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-        let basepath = libpath + "/TDLibrary/CCA/"
-        let newpath = basepath.appending(path)
-        print(newpath)
-        
-        let isExist = FileManager.default.fileExists(atPath: newpath)
+    static func parseJsonData(
+        path:String,
+        preprogressHandler:((String)->(String))? = nil,
+        completionHandler:((Any)->()))
+    {
+        ///let path = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
+        print(path)
+        let isExist = FileManager.default.fileExists(atPath: path)
         if isExist {
             print("file is exist")
         }
         else
         {
-            print("目标路径：\(newpath) 不存在！");return
+            print("目标路径：\(path) 不存在！");return
         }
          
         do{
-            var jsonString = try String(contentsOfFile: newpath)
+            var jsonString = try String(contentsOfFile: path)
                 .replacingOccurrences(of: "\n", with: "")
                 .replacingOccurrences(of: " ", with: "")
                 .replacingOccurrences(of: "\r", with: "")
@@ -46,6 +45,7 @@ class DBManager: NSObject {
                 // let json = JSON(data: dataFromString)
                 let anyObj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments)
                 completionHandler(anyObj)
+                print("文件： \(path) 解析完成！")
             }
         }catch{
             print("json解析异常 ： \(error)")
@@ -54,7 +54,19 @@ class DBManager: NSObject {
     }
 
     
-    
+    func start() {
+        DBManager.parseJsonData(path: apmodelmapjspath,preprogressHandler: { str in
+            let s = str
+            let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
+            return newstr
+        }){(obj) in
+            let obj =  obj as? [String:Any]
+            if obj != nil{
+                kAirplanePublications = obj!
+            }
+        }
+    }
+
     
     
 }

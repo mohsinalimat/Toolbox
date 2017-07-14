@@ -11,15 +11,6 @@ import SwiftyJSON
 import SSZipArchive
 import SVProgressHUD
 
-enum PopValue {
-    case Tail
-    case Registry
-    case MSN
-    case Variable
-    case CEC
-    case Line
-}
-
 class AirplaneController:BaseViewControllerWithTable {
     var selectedDataArray = [String]()//当前已选择展开的model标记
     var selectButton : UIButton?
@@ -37,44 +28,59 @@ class AirplaneController:BaseViewControllerWithTable {
         navigationItem.titleView = nil
 
         //...第一次解析后保存标记
-        /*
-        let path = "CCAA320CCAAIPC20161101/aipc/resources/apList.json"
-        DBManager.parseJsonData(path: path){(obj) in
-            let obj =  obj as? [String:Any]
-            guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
-            AirplaneModel.saveToDb(with: airplaneEntryArr)
-        }
-        */
-        
-        let path = "apModelMap.js"//与MSN字段关联
-        DBManager.parseJsonData(path: path,preprogressHandler: { str in
-                let s = str
-                let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
-                return newstr
-            }){(obj) in
-                let obj =  obj as? [String:Any]
-                if obj != nil{
-                    kAirplanePublications = obj!
-                }
 
-        }
-        
-        let libpath :String =  NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-        let basepath = libpath + "/TDLibrary/CCA/"
-        
+
+        let basepath = ROOTPATH + ROOTSUBPATH
+        let fm = FileManager.default
+        var pathArr = [String]()
         do{
-//            let files = try FileManager.default.contentsOfDirectory(atPath: basepath)
-            let files = try FileManager.default.subpathsOfDirectory(atPath: basepath)
-            print(files)
+            let files = try fm.contentsOfDirectory(atPath: basepath)
+            for item in files {
+                var isDir = ObjCBool(false)
+                let path = basepath + item
+                let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
+                
+                if isexist && isDir.boolValue {
+                    let sub = try fm.contentsOfDirectory(atPath: path)
+                    if sub.count > 0 {
+                        pathArr.append(path.appending("/\(sub[0])"))
+                    }
+                }
+            }
         }catch{
-        
+            print(error)
         }
-        
-        
-        
+
+        for index in 0..<pathArr.count {
+            DBManager.parseJsonData(path: pathArr[index].appending(aplistjsonpath), completionHandler: { (obj) in
+                let obj =  obj as? [String:Any]
+                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
+                AirplaneModel.saveToDb(with: airplaneEntryArr)
+        })
+        }
         
         loadData()
 
+        
+        
+        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
+            for i in 0..<20 {
+            print("-------\(i)")
+            }
+        }
+        
+        let workitem2 = DispatchWorkItem.init(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
+            for i in 0..<20 {
+                print("++++++++\(i)")
+            }
+        }
+        
+        workitem1.perform()
+        
+        let queue = DispatchQueue.init(label: "com.dbmanager.queue",qos:DispatchQoS.utility)
+        
+        queue.async(execute: workitem1)
+        queue.async(execute: workitem2)
         
     }
 

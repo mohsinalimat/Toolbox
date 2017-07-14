@@ -10,15 +10,30 @@
 #import <LKDBHelper/LKDBHelper.h>
 #import <objc/runtime.h>
 
+//BASE MODEL
 @interface Model : NSObject
 
+/**
+ 写入数据库
+
+ @param data 数据集合
+ */
 +(void)saveToDbWith:(NSArray*)data;
 
+/**
+ 根据查询条件查找
+ 
+ @param query 查询条件
+ @param order 排序项
+ 
+ @return Array
+ */
 +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order;
-    
+
+
 @end
 
-
+//飞机信息
 @interface AirplaneModel : Model
 @property(nonatomic,copy)NSString * aipcCec;
 @property(nonatomic,copy)NSString * aircraftNotes;
@@ -35,7 +50,12 @@
 @property(nonatomic,copy)NSString * tailNumber;
 @end
 
+//手册
+@interface PublicationsModel : Model
+@property(nonatomic,copy)NSString * attribute;
+@property(nonatomic,copy)NSString * bookId;
 
+@end
 
 
 
