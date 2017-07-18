@@ -20,6 +20,17 @@ class PublicationController: BaseViewControllerWithTable {
 
     }
 
+    func loadData() {
+        //数据可能为空
+        guard let selectedAirplane = kSelectedAirplane else {
+            return
+        }
+        
+        let msn:String = selectedAirplane.airplaneSerialNumber
+        let books = kAirplanePublications[msn]
+        
+        
+    }
     
     override func initSubview(){
 

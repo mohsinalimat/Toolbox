@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import KissXML
 
 class DBManager: NSObject {
     static let `default` :DBManager = DBManager()
@@ -21,13 +22,9 @@ class DBManager: NSObject {
         preprogressHandler:((String)->(String))? = nil,
         completionHandler:((Any)->()))
     {
-        ///let path = "/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/resources/apList.json"
         print(path)
         let isExist = FileManager.default.fileExists(atPath: path)
-        if isExist {
-            print("file is exist")
-        }
-        else
+        if !isExist
         {
             print("目标路径：\(path) 不存在！");return
         }
@@ -45,7 +42,6 @@ class DBManager: NSObject {
                 // let json = JSON(data: dataFromString)
                 let anyObj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments)
                 completionHandler(anyObj)
-                print("文件： \(path) 解析完成！")
             }
         }catch{
             print("json解析异常 ： \(error)")
@@ -53,8 +49,28 @@ class DBManager: NSObject {
 
     }
 
+    ///主调方法
+   public func startParse() {
+        if !updateTableInfoisExist(cls: AirplaneModel.self) {
+            getapList()
+        }
+        else{
+            print("Airplane已存在");
+        }
+        if !updateTableInfoisExist(cls: PublicationsModel.self) {
+            getbooks()
+        }
+        else{
+            print("Publications已存在");
+        }
+        
+        getapMpdel()
+    }
+
     
-    func start() {
+    //MARK:
+    //获取apmodel赋值给全局变量- kAirplanePublications
+    func getapMpdel(){
         DBManager.parseJsonData(path: apmodelmapjspath,preprogressHandler: { str in
             let s = str
             let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
@@ -66,7 +82,115 @@ class DBManager: NSObject {
             }
         }
     }
+    
+    func getapList(){
+        //获取apaList.json所有路径
+        let path = getPath()
+        
+        //解析数据并保存
+        for index in 0..<path.count {
+            DBManager.parseJsonData(path: path[index].appending(aplistjsonpath), completionHandler: { (obj) in
+                let obj =  obj as? [String:Any]
+                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
+                AirplaneModel.saveToDb(with: airplaneEntryArr)
+            })
+        }
+    
+        updateTableinfo(cls: AirplaneModel.self)
+    }
+    
+    //获取手册信息
+    func getbooks() {
+        var paths = DBManager.default.getPath()
+        for index in 0..<paths.count {
+            var path = paths[index]
+            let booklocalurl = path.substring(from: ROOTPATH.endIndex)
+            let metadataurl = booklocalurl.appending("/resources/toc.xml")
+            
+            var des:[String:String] = [:]
+            des["booklocalurl"] = booklocalurl
+            des["metadataurl"] = metadataurl
+            
+            path = path.appending("/resources/book.xml")
+            do{
+                let jsonString = try String(contentsOfFile: path)
+                if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
+                    let doc = try DDXMLDocument.init(data: jsondata, options: 0)
+                    //let bookElement:DDXMLNode = try doc.nodes(forXPath: "//books/book")[0]
+                    
+                    let rootE:DDXMLElement! = doc.rootElement()
+                    let book:DDXMLElement! = rootE.elements(forName: "book")[0]
+                    let attrNodes =  book.attributes
+                    guard let attributeArr = attrNodes else {
+                        return
+                    }
+                    
+                    for node in attributeArr {
+                        if let key = node.name,let value = node.stringValue{
+                            des[key] = value
+                        }
+                    }
+                    
+                    PublicationsModel.saveToDb(with: des)
+                }
+            }catch{
+                print(error)
+            }
+        }
 
+        updateTableinfo(cls: PublicationsModel.self)
+    }
     
+    //获取路径
+    func getPath() -> [String] {
+        let basepath = ROOTPATH + ROOTSUBPATH
+        let fm = FileManager.default
+        var pathArr = [String]()
+        do{
+            let files = try fm.contentsOfDirectory(atPath: basepath)
+            for item in files {
+                var isDir = ObjCBool(false)
+                let path = basepath + item
+                let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
+                
+                if isexist && isDir.boolValue {
+                    let sub = try fm.contentsOfDirectory(atPath: path)
+                    if sub.count > 0 {
+                        pathArr.append(path.appending("/\(sub[0])"))
+                    }
+                }
+            }
+        }catch{
+            print("GET PATH ERROR:\(error)")
+        }
+      
+        return pathArr
+    }
     
+    ///MARK:-
+    //记录数据表更新记录
+   private func updateTableinfo(cls:Model.Type)  {
+        var infodic = [String:Any]()
+        infodic["table_name"] = cls.getTableName()
+        infodic["update_time"] = Date().timeIntervalSince1970
+        UpdateInfo.saveToDb(with: infodic)
+    }
+    
+    //是否存在
+    private func updateTableInfoisExist(cls:Model.Type) -> Bool {
+        let m = UpdateInfo.search(with: "table_name='\(cls.getTableName())'", orderBy: nil)
+        return m != nil ? true:false
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

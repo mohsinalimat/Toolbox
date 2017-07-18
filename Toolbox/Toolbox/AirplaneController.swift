@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftyJSON
 import SSZipArchive
 import SVProgressHUD
 
@@ -28,59 +27,30 @@ class AirplaneController:BaseViewControllerWithTable {
         navigationItem.titleView = nil
 
         //...第一次解析后保存标记
-
-
-        let basepath = ROOTPATH + ROOTSUBPATH
-        let fm = FileManager.default
-        var pathArr = [String]()
-        do{
-            let files = try fm.contentsOfDirectory(atPath: basepath)
-            for item in files {
-                var isDir = ObjCBool(false)
-                let path = basepath + item
-                let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
-                
-                if isexist && isDir.boolValue {
-                    let sub = try fm.contentsOfDirectory(atPath: path)
-                    if sub.count > 0 {
-                        pathArr.append(path.appending("/\(sub[0])"))
-                    }
-                }
-            }
-        }catch{
-            print(error)
-        }
-
-        for index in 0..<pathArr.count {
-            DBManager.parseJsonData(path: pathArr[index].appending(aplistjsonpath), completionHandler: { (obj) in
-                let obj =  obj as? [String:Any]
-                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
-                AirplaneModel.saveToDb(with: airplaneEntryArr)
-        })
-        }
+        DBManager.default.startParse()
         
         loadData()
 
         
         
-        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
-            for i in 0..<20 {
-            print("-------\(i)")
-            }
-        }
-        
-        let workitem2 = DispatchWorkItem.init(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
-            for i in 0..<20 {
-                print("++++++++\(i)")
-            }
-        }
-        
-        workitem1.perform()
-        
-        let queue = DispatchQueue.init(label: "com.dbmanager.queue",qos:DispatchQoS.utility)
-        
-        queue.async(execute: workitem1)
-        queue.async(execute: workitem2)
+//        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
+//            for i in 0..<20 {
+//            print("-------\(i)")
+//            }
+//        }
+//        
+//        let workitem2 = DispatchWorkItem.init(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
+//            for i in 0..<20 {
+//                print("++++++++\(i)")
+//            }
+//        }
+//        
+//        workitem1.perform()
+//        
+//        let queue = DispatchQueue.init(label: "com.dbmanager.queue",qos:DispatchQoS.utility)
+//        
+//        queue.async(execute: workitem1)
+//        queue.async(execute: workitem2)
         
     }
 
@@ -251,6 +221,18 @@ class AirplaneController:BaseViewControllerWithTable {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
+        let value:Any! = dataArray[indexPath.row]
+        
+        if  value is Int{
+            let value = dataArray[indexPath.row - 1]
+            let  model:AirplaneModel! = value as! AirplaneModel
+            kSelectedAirplane = model
+        }
+        else
+        {
+            kSelectedAirplane = (value as! AirplaneModel)
+        }
+        
         jumptoNextWithIndex(1)
     }
     

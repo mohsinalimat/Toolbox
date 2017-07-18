@@ -34,8 +34,36 @@ class ManagerCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
-     
+        bgView.backgroundColor = UIColor.white
+        layer.borderWidth = 0.5
+        openButton.isSelected = false
+        
+        stitleLable.textColor = UIColor.black
+        sownerLable.textColor = UIColor.black
+        smodelLable.textColor = UIColor.black
+        sdocLable.textColor = UIColor.black
+        srevLable.textColor = UIColor.black
+        sdateLable.textColor = UIColor.black
     }
+    
+    func fillCell(model:PublicationsModel,title:String = "airplaneRegistry") {
+        titleLable.text = model.display_title
+        stitleLable.text = model.display_title
+        sownerLable.text = model.document_owner
+        smodelLable.text = model.model
+        sdocLable.text = model.doc_number
+        srevLable.text = model.revision_number
+        sdateLable.text = model.revision_date
+        
+        let docabbr = model.doc_abbreviation
+        guard let type = docabbr else {
+            return
+        }
+        colorFlagLable.backgroundColor = kDOCTYPEColor[type]
+        
+        
+    }
+
     
     
     func cellIsSelected(_ selected : Bool) {
@@ -66,6 +94,7 @@ class ManagerCell: UITableViewCell {
         }
     }
 
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         

@@ -36,7 +36,7 @@
 
 @end
 
-//tools
+//
 #pragma mark
 @interface NSString (isNull)
 +(NSString*)stringFromStr:(NSString*)str;
@@ -53,14 +53,13 @@
 @end
 
 
-#pragma mark - BASE
+#pragma mark - BASE MODEL
 @implementation Model
 
     -(instancetype)init
     {
         self = [super init];
         if (self) {
-
         }
         
         return self;
@@ -69,21 +68,34 @@
 
     //返回数据表名称
     + (NSString *)getTableName{
-        return NSStringFromClass(self);
+        return [[NSStringFromClass(self) stringByReplacingOccurrencesOfString:@"Model" withString:@""] uppercaseString];
+    }
+
+    //返回表主键
+    -(NSString *)getPrimarykey{
+        //子类必须重载
+        return @"";
     }
 
     //写入数据操作
-    +(void)saveToDbWith:(NSArray*)data{
+    +(void)saveToDbWith:(id)data{
         NSLog(@"开始插入数据库...");
-        dispatch_apply(data.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t index) {
-            [[[self alloc]init] saveModelWith:data[index]];
-        });
-        
+        if ([data isKindOfClass:[NSArray class]]) {
+            NSArray * arr = (NSArray*)data;
+            if (arr.count < 1) {
+                return;
+            }
+            dispatch_apply(arr.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t index) {
+                [[[self alloc]init] saveModelWith:arr[index]];
+            });
+        }
+        else if ([data isKindOfClass:[NSDictionary class]]){
+            [[[self alloc]init] saveModelWith:data];
+        }
         NSLog(@"插入完成!");
     }
 
     -(instancetype)modelWith:(NSDictionary*)dic{
-        
         unsigned int outCount = 0;
         id _m = [[[self class]alloc]init];
         //[_m setValuesForKeysWithDictionary:dic];//...与以下操作是相反方向
@@ -101,10 +113,19 @@
 
 
      -(void)saveModelWith:(NSDictionary*)dic{
-         //子类必须重载
+         NSString * query = [NSString stringWithFormat:@"%@='%@'",[self getPrimarykey],dic[[self getPrimarykey]]];
+         id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
+         if (obj) {
+             NSLog(@"已存在：%@",dic[[self getPrimarykey]]);
+             return;
+         }
+         
+         id _m  = [self modelWith:dic];
+         [[DBTool default].helper insertToDB:_m];
     }
 
 
+    #pragma mark -
     //search
     -(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
@@ -125,39 +146,33 @@
 
 #pragma mark
 @implementation AirplaneModel
-  -(void)saveModelWith:(NSDictionary*)dic{
 
-        NSString * query = [NSString stringWithFormat:@"airplaneId='%@'",dic[@"airplaneId"]];
-        id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
-        if (obj) {
-            NSLog(@"已存在飞机：%@",dic[@"airplaneId"]);
-            return;
-        }
-      
-      /*
-         self.aipcCec = dic[@"aipcCec"];
-         self.aircraftNotes = dic[@"aircraftNotes"];
-         self.airplaneId = dic[@"airplaneId"];
-         self.airplaneLineNumber = dic[@"airplaneLineNumber"];
-         self.airplaneMajorModel = dic[@"airplaneMajorModel"];
-         self.airplaneMinorModel = dic[@"airplaneMinorModel"];
-         self.airplaneRegistry = dic[@"airplaneRegistry"];
-         self.airplaneSerialNumber = dic[@"airplaneSerialNumber"];
-         self.customerEffectivity = dic[@"customerEffectivity"];
-         self.operatorCd = dic[@"operatorCd"];
-         self.operatorName = dic[@"operatorName"];
-         self.ownerCode = dic[@"ownerCode"];
-         self.tailNumber = dic[@"tailNumber"];
-      */
-         id _m  = [self modelWith:dic];
-        [[DBTool default].helper insertToDB:_m];
-    }
+-(NSString *)getPrimarykey{
+    //子类必须重载
+    return @"airplaneId";
+}
 
+@end
 
+@implementation PublicationsModel
+-(NSString *)getPrimarykey{
+    //子类必须重载
+    return @"book_uuid";
+}
 
 @end
 
 
+#pragma mark - other
+
+@implementation UpdateInfo
+
+-(NSString *)getPrimarykey
+{
+    return @"table_name";
+}
+
+@end
 
 
 

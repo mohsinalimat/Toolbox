@@ -10,7 +10,7 @@ import UIKit
 
 class ManagerController: BaseViewControllerWithTable {
 
-    var selectedDataArray = [Int]()
+    var selectedDataArray = [String]()
     var selectButton : UIButton?
     
     var popButtonWidth = 200
@@ -26,8 +26,26 @@ class ManagerController: BaseViewControllerWithTable {
         super.viewDidLoad()
          navigationItem.titleView = nil
         // Do any additional setup after loading the view.
+        
+        loadData()
     }
 
+    
+    
+    func loadData(opt:String = "book_uuid") {
+        dataArray.removeAll()
+        selectedDataArray.removeAll()
+        
+        //字段为空的放在最后
+        let arr = PublicationsModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
+        dataArray = dataArray  + arr!
+        
+        let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
+        dataArray = dataArray + arr2!
+        
+        tableview?.reloadData()
+    }
+    
     
     override func initSubview(){
         
@@ -66,10 +84,7 @@ class ManagerController: BaseViewControllerWithTable {
             return v
         }()
         view.addSubview(topview)
-        
-        //...test data
-        dataArray = dataArray + [111,222,333,444]
-        
+
         tableview?.frame = CGRect (x: 0, y: topview.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 60)
         sectionHeadtitle =  "Publications on Devices"
         tableViewRegisterCell()
@@ -121,19 +136,29 @@ class ManagerController: BaseViewControllerWithTable {
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let value = dataArray[indexPath.row] as? Int
+        let value = dataArray[indexPath.row]
         
-        if isDetailCell(value: value!){
+        if value is Int {
+            let value = dataArray[indexPath.row - 1]
+            let  model:PublicationsModel! = value as! PublicationsModel
             let cell = tableview?.dequeueReusableCell(withIdentifier: managerDetailCellReuseIdentifier, for: indexPath) as! ManagerDetailCell
             cell.selectionStyle = .none
+            cell.fillCell(model: model)
             return cell
         }
         else
         {
+            let  model:PublicationsModel! = value as! PublicationsModel
             let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
             cell.selectionStyle = .none
-
-            cell.cellIsSelected(self.selectedDataArray.index(of: value!) != nil)
+            
+            cell.fillCell(model: model)
+            
+//            if self.selectedDataArray.index(of: model.book_uuid ) != nil {
+//                cell.cellSelectedInit()
+//            }
+            
+            cell.cellIsSelected(self.selectedDataArray.index(of: model.book_uuid ) != nil)
             
             return cell
         }
@@ -159,16 +184,16 @@ class ManagerController: BaseViewControllerWithTable {
             return
         }
 
-     let value = dataArray[indexPath.row] as! Int
+     let value = dataArray[indexPath.row] as! PublicationsModel
         
-       if self.selectedDataArray.index(of: value) != nil {
-            selectedDataArray.remove(at: selectedDataArray.index(of: value)!)
+       if self.selectedDataArray.index(of: value.book_uuid) != nil {
+            selectedDataArray.remove(at: selectedDataArray.index(of: value.book_uuid)!)
             self.dataArray.remove(at: indexPath.row + 1)
         }
         
         else
        {
-         selectedDataArray.append(value)
+         selectedDataArray.append(value.book_uuid)
          self.dataArray.insert(0, at: indexPath.row + 1)
         }
        
@@ -176,14 +201,6 @@ class ManagerController: BaseViewControllerWithTable {
         self.tableview?.reloadData()
         
     }
-    
-    
-    //判断是否详情cell
-    func isDetailCell(value: Int) -> Bool {
-        return value == 0 ? true : false
-    }
-    
-    
     
     
     
