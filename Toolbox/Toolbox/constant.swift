@@ -45,11 +45,15 @@ let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
     "Line":"airplaneLineNumber",
 ];
 
-//飞机所适用的手册
-var kAirplanePublications:[String:Any] = [:]
+//全部手册
+var kAllPublications:[String:Any] = [:]
 
-//当前选中的飞机信息
+//当前选中的飞机
 var kSelectedAirplane:AirplaneModel?
+//当前选中的手册
+var kSelectedPublication:PublicationsModel?
+
+
 
 
 ///PATH

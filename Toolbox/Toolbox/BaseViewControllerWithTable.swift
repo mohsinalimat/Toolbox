@@ -138,7 +138,9 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         }
     }
     
-  
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        
+    }
 
     
     override func didReceiveMemoryWarning() {

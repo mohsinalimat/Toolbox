@@ -65,11 +65,16 @@ class DBManager: NSObject {
         }
         
         getapMpdel()
+    
+        //...test
+    
+        getToc()
+    
     }
 
     
     //MARK:
-    //获取apmodel赋值给全局变量- kAirplanePublications
+    //获取apmodel赋值给全局变量- kAllPublications
     func getapMpdel(){
         DBManager.parseJsonData(path: apmodelmapjspath,preprogressHandler: { str in
             let s = str
@@ -78,7 +83,7 @@ class DBManager: NSObject {
         }){(obj) in
             let obj =  obj as? [String:Any]
             if obj != nil{
-                kAirplanePublications = obj!
+                kAllPublications = obj!
             }
         }
     }
@@ -130,7 +135,6 @@ class DBManager: NSObject {
                             des[key] = value
                         }
                     }
-                    
                     PublicationsModel.saveToDb(with: des)
                 }
             }catch{
@@ -140,6 +144,45 @@ class DBManager: NSObject {
 
         updateTableinfo(cls: PublicationsModel.self)
     }
+    
+    
+    func getToc() {
+        var path = getPath()[0]
+        
+        path = path.appending("/resources/toc.xml")
+        
+        do{
+            let jsonString = try String(contentsOfFile: path)
+            if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
+                let doc = try DDXMLDocument.init(data: jsondata, options: 0)
+                
+                let rootE:DDXMLElement! = doc.rootElement()
+                let segs:[DDXMLElement] = rootE.elements(forName: "segment")
+                
+                //建立层级索引关系
+                
+                
+                
+//                let attrNodes =  book.attributes
+//                
+//                guard let attributeArr = attrNodes else {
+//                    return
+//                }
+                
+                print(segs);
+                
+            }
+        }catch{
+            print(error)
+        }
+        
+        
+    }
+    
+    
+    
+    
+    
     
     //获取路径
     func getPath() -> [String] {

@@ -10,13 +10,35 @@ import UIKit
 
 class TOCViewController: BaseViewControllerWithTable {
 
+    var currentPublication:PublicationsModel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
 
+    func loadData() {
+        //数据可能为空
+        guard let selectedPublication = kSelectedPublication else {
+            return
+        }
+        guard currentPublication !== selectedPublication  else {
+            return
+        }
+
+        currentPublication = selectedPublication
+        dataArray.removeAll()
+        dataArray.append(currentPublication)
+        
+        
+        tableview?.reloadData()
+    }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+        super.viewWillAppear(animated)
+    }
     
     override func initSubview(){
 
@@ -24,7 +46,7 @@ class TOCViewController: BaseViewControllerWithTable {
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
 
         //...test data 书本数据 + 章节数据 + 一级Section + 二级section
-        dataArray = dataArray + ["1"]
+
     }
     
     
@@ -33,6 +55,11 @@ class TOCViewController: BaseViewControllerWithTable {
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell
+        if indexPath.row == 0 {
+            let model = dataArray[0] as! PublicationsModel
+            cell.fillCell(model: model)
+        }
+        
         
         return cell
     }
@@ -42,6 +69,8 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //判断目录层级
+        
         
         jumptoNextWithIndex(3)
     }
