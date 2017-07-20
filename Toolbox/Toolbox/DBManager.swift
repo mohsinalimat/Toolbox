@@ -146,10 +146,12 @@ class DBManager: NSObject {
     }
     
     
-    func getToc() {
+    //懒加载处理
+    func getToc(model:PublicationsModel? = nil) {
         var path = getPath()[0]
-        
         path = path.appending("/resources/toc.xml")
+        
+        let book_id = "CCAA320CCAAIPC20161101"
         
         do{
             let jsonString = try String(contentsOfFile: path)
@@ -159,16 +161,14 @@ class DBManager: NSObject {
                 let rootE:DDXMLElement! = doc.rootElement()
                 let segs:[DDXMLElement] = rootE.elements(forName: "segment")
                 
-                //建立层级索引关系
                 
-                
-                
-//                let attrNodes =  book.attributes
-//                
-//                guard let attributeArr = attrNodes else {
-//                    return
-//                }
-                
+                //建立索引
+                for element in segs {
+                    let parent_id = book_id
+                    
+                    traversalNode(element: element, parentId: parent_id, bookId: book_id)
+                }
+      
                 print(segs);
                 
             }
@@ -179,8 +179,75 @@ class DBManager: NSObject {
         
     }
     
+    var times = 0
+    //遍历节点
+    func traversalNode(element:DDXMLElement,parentId:String,bookId:String) {
+
+        let parentId = parentId
     
+        let attrs = element.attributes
+        var des:[String:String]! = [:]
+        
+        times += 1
+        print("traversalNode调用次数：\(times) ， parentId = \(parentId)")
+        
+        guard let attributeArr = attrs else {
+            return
+        }
+        for node in attributeArr {
+            if let key = node.name,let value = node.stringValue{
+                des[key] = value
+            }
+        }
+        
+        let titleElement = element.elements(forName: "title")[0]
+        des["title"] = titleElement.stringValue
+        
+        let _id = des["id"]
+        if _id == nil {
+            print("ID 数据有问题。。。")
+        }
+        let primaryid = bookId + _id!
+        des["toc_id"] = _id
+        des["primary_id"] = primaryid
+        des["parent_id"] = parentId
+        des["book_id"] = bookId
+        
+        //有效性判断
+        let effect = element.elements(forName: "effect")
+        if  effect.count > 0 {
+            let effect = effect[0]
+            let effAttrs = effect.attributes
+            guard let attributeArr = effAttrs else {
+                return
+            }
+            for node in attributeArr {
+                if let key = node.name,let value = node.stringValue{
+                    des[key] = value
+                }
+            }
+        }
+        
+        //是否还有子节点
+        let isleaf = Int(des["is_leaf"]!)!
+        if isleaf == 1 {
+            let localtion :String! = des["content_location"]
+            let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
+            des["content_location"] = new
+        }
+        
+        SegmentModel.saveToDb(with: des)
     
+        if isleaf == 0 {
+            let eles = element.elements(forName: "segment")
+            for ele in eles {
+                traversalNode(element: ele, parentId: primaryid, bookId: bookId)
+            }
+            
+        }
+ 
+        
+    }
     
     
     
@@ -210,8 +277,8 @@ class DBManager: NSObject {
         return pathArr
     }
     
-    ///MARK:-
-    //记录数据表更新记录
+    //MARK:-
+    //表更新记录
    private func updateTableinfo(cls:Model.Type)  {
         var infodic = [String:Any]()
         infodic["table_name"] = cls.getTableName()

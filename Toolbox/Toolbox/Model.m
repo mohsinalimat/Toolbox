@@ -162,6 +162,17 @@
 
 @end
 
+@implementation SegmentModel
+-(NSString *)getPrimarykey{
+    //子类必须重载
+    return @"primary_id";
+}
+
+@end
+
+
+
+
 
 #pragma mark - other
 

@@ -90,6 +90,26 @@
 @property(nonatomic,copy)NSString * metadataurl;
 @end
 
+//手册目录
+@interface SegmentModel : Model
+@property(nonatomic,copy)NSString *  primary_id;//主键ID - book_id + id
+@property(nonatomic,copy)NSString *  parent_id;//目录项-父ID
+@property(nonatomic,copy)NSString *  toc_id;//目录项-ID
+@property(nonatomic,copy)NSString *  book_id;
+@property(nonatomic,copy)NSString *  content_location;
+@property(nonatomic,copy)NSString *  has_content;
+@property(nonatomic,copy)NSString *  is_leaf;
+@property(nonatomic,copy)NSString *  is_visible;
+@property(nonatomic,copy)NSString *  mime_type;
+@property(nonatomic,copy)NSString *  original_tag;
+@property(nonatomic,copy)NSString *  revision_type;
+@property(nonatomic,copy)NSString *  toc_code;
+@property(nonatomic,copy)NSString *  title;
+@property(nonatomic,copy)NSString *  effrg;//有效性，判断文档是否适用当前飞机(CEC关联),eg"101114 203211 451550三位分割"
+@property(nonatomic,copy)NSString *  tocdisplayeff;//有效性显示的内容
+@end
+
+
 
 #pragma mark - other 辅助
 //表更新记录
