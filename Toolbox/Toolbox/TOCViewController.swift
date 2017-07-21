@@ -8,6 +8,9 @@
 
 import UIKit
 
+let kSegmentCellIdentifier = "SegmentCellIdentifier"
+let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
+
 class TOCViewController: BaseViewControllerWithTable {
 
     var currentPublication:PublicationsModel!
@@ -15,6 +18,12 @@ class TOCViewController: BaseViewControllerWithTable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        dataArray = [1,2,3,4,5,6]
+        
+        let s = dataArray.index(after: 3)
+        
+        dataArray.removeSubrange(s..<dataArray.endIndex)
+        
     }
 
     func loadData() {
@@ -27,9 +36,13 @@ class TOCViewController: BaseViewControllerWithTable {
         }
 
         currentPublication = selectedPublication
+        
         dataArray.removeAll()
         dataArray.append(currentPublication)
+        //CCAA320CCAAIPC20161101
+       let chapter = SegmentModel.search(with: "parent_id='\(currentPublication.book_uuid!)'", orderBy: "toc_code asc")
         
+        dataArray = dataArray + chapter!
         
         tableview?.reloadData()
     }
@@ -40,12 +53,11 @@ class TOCViewController: BaseViewControllerWithTable {
         super.viewWillAppear(animated)
     }
     
+    
     override func initSubview(){
-
         tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64)
-        tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
-
-        //...test data 书本数据 + 章节数据 + 一级Section + 二级section
+        tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: kPublicationCellReuseIdentifier)
+        tableview?.register(UINib (nibName: "SegmentCell", bundle: nil), forCellReuseIdentifier: kSegmentCellIdentifier)
 
     }
     
@@ -54,14 +66,20 @@ class TOCViewController: BaseViewControllerWithTable {
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell
         if indexPath.row == 0 {
+            let cell = tableview?.dequeueReusableCell(withIdentifier: kPublicationCellReuseIdentifier, for: indexPath) as! PublicationCell
             let model = dataArray[0] as! PublicationsModel
             cell.fillCell(model: model)
+            return cell
+        }
+        else{
+            let cell = tableview?.dequeueReusableCell(withIdentifier: kSegmentCellIdentifier, for: indexPath) as! SegmentCell
+            let model = dataArray[indexPath.row] as! SegmentModel
+        
+            cell.fillCell(model: model)
+            return cell
         }
         
-        
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -72,8 +90,22 @@ class TOCViewController: BaseViewControllerWithTable {
         //判断目录层级
         
         
-        jumptoNextWithIndex(3)
+//        jumptoNextWithIndex(3)
     }
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -86,16 +118,5 @@ class TOCViewController: BaseViewControllerWithTable {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

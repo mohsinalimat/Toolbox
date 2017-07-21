@@ -51,6 +51,7 @@ class DBManager: NSObject {
 
     ///主调方法
    public func startParse() {
+    /*
         if !updateTableInfoisExist(cls: AirplaneModel.self) {
             getapList()
         }
@@ -63,12 +64,12 @@ class DBManager: NSObject {
         else{
             print("Publications已存在");
         }
-        
+        */
+    
         getapMpdel()
     
         //...test
-    
-        getToc()
+        //getSegments()
     
     }
 
@@ -146,8 +147,8 @@ class DBManager: NSObject {
     }
     
     
-    //懒加载处理
-    func getToc(model:PublicationsModel? = nil) {
+    //获取节点目录
+    func getSegments(model:PublicationsModel? = nil) {
         var path = getPath()[0]
         path = path.appending("/resources/toc.xml")
         
@@ -169,7 +170,11 @@ class DBManager: NSObject {
                     traversalNode(element: element, parentId: parent_id, bookId: book_id)
                 }
       
-                print(segs);
+               let queue = DispatchQueue.init(label: "lable")
+              queue.async(execute: {
+                
+              })
+                
                 
             }
         }catch{
@@ -181,10 +186,9 @@ class DBManager: NSObject {
     
     var times = 0
     //遍历节点
-    func traversalNode(element:DDXMLElement,parentId:String,bookId:String) {
+   private func traversalNode(element:DDXMLElement,parentId:String,bookId:String) {
 
         let parentId = parentId
-    
         let attrs = element.attributes
         var des:[String:String]! = [:]
         
@@ -235,7 +239,6 @@ class DBManager: NSObject {
             let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
             des["content_location"] = new
         }
-        
         SegmentModel.saveToDb(with: des)
     
         if isleaf == 0 {
@@ -245,8 +248,7 @@ class DBManager: NSObject {
             }
             
         }
- 
-        
+   
     }
     
     
@@ -289,7 +291,7 @@ class DBManager: NSObject {
     //是否存在
     private func updateTableInfoisExist(cls:Model.Type) -> Bool {
         let m = UpdateInfo.search(with: "table_name='\(cls.getTableName())'", orderBy: nil)
-        return m != nil ? true:false
+        return (m != nil) && (m?.count)! > 0 ? true:false
     }
 }
 
