@@ -51,7 +51,7 @@ class DBManager: NSObject {
 
     ///主调方法
    public func startParse() {
-    /*
+    
         if !updateTableInfoisExist(cls: AirplaneModel.self) {
             getapList()
         }
@@ -64,12 +64,18 @@ class DBManager: NSObject {
         else{
             print("Publications已存在");
         }
-        */
+    
+        if !updateTableInfoisExist(cls: SegmentModel.self) {
+//            getSegments()
+        }
+        else{
+            print("SegmentModel已存在");
+        }
     
         getapMpdel()
     
         //...test
-        //getSegments()
+//        getSegments()
     
     }
 
@@ -146,7 +152,6 @@ class DBManager: NSObject {
         updateTableinfo(cls: PublicationsModel.self)
     }
     
-    
     //获取节点目录
     func getSegments(model:PublicationsModel? = nil) {
         var path = getPath()[0]
@@ -166,14 +171,15 @@ class DBManager: NSObject {
                 //建立索引
                 for element in segs {
                     let parent_id = book_id
-                    
-                    traversalNode(element: element, parentId: parent_id, bookId: book_id)
+                    traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
                 }
       
-               let queue = DispatchQueue.init(label: "lable")
-              queue.async(execute: {
+                updateTableinfo(cls: SegmentModel.self,id:model?.book_uuid)
                 
-              })
+//               let queue = DispatchQueue.init(label: "lable")
+//              queue.async(execute: {
+//                
+//              })
                 
                 
             }
@@ -184,16 +190,21 @@ class DBManager: NSObject {
         
     }
     
-    var times = 0
-    //遍历节点
-   private func traversalNode(element:DDXMLElement,parentId:String,bookId:String) {
-
+    
+    /// 遍历节点
+    ///
+    /// - parameter element:  当前节点元素
+    /// - parameter parentId: 上一级节点ID
+    /// - parameter bookId:   当前手册ID
+    /// - parameter lv:       节点层级
+    private func traversalNode(element:DDXMLElement,
+                               parentId:String,
+                               bookId:String,
+                               lv:Int) {
         let parentId = parentId
         let attrs = element.attributes
         var des:[String:String]! = [:]
-        
-        times += 1
-        print("traversalNode调用次数：\(times) ， parentId = \(parentId)")
+        let lv = lv;
         
         guard let attributeArr = attrs else {
             return
@@ -216,7 +227,8 @@ class DBManager: NSObject {
         des["primary_id"] = primaryid
         des["parent_id"] = parentId
         des["book_id"] = bookId
-        
+        des["nodeLevel"] = "\(lv)"
+    
         //有效性判断
         let effect = element.elements(forName: "effect")
         if  effect.count > 0 {
@@ -244,9 +256,8 @@ class DBManager: NSObject {
         if isleaf == 0 {
             let eles = element.elements(forName: "segment")
             for ele in eles {
-                traversalNode(element: ele, parentId: primaryid, bookId: bookId)
+                traversalNode(element: ele, parentId: primaryid, bookId: bookId,lv:lv + 1)
             }
-            
         }
    
     }
@@ -281,10 +292,14 @@ class DBManager: NSObject {
     
     //MARK:-
     //表更新记录
-   private func updateTableinfo(cls:Model.Type)  {
+    private func updateTableinfo(cls:Model.Type,id:String? = nil)  {
         var infodic = [String:Any]()
         infodic["table_name"] = cls.getTableName()
         infodic["update_time"] = Date().timeIntervalSince1970
+        if let id = id {
+            infodic["ID"] = id
+        }
+        
         UpdateInfo.saveToDb(with: infodic)
     }
     

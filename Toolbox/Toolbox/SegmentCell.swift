@@ -8,6 +8,10 @@
 
 import UIKit
 
+let indentValueArray = [0,5,15,35,50]
+
+let kBaseValue:CGFloat = 80.0
+
 class SegmentCell: UITableViewCell {
 
     @IBOutlet weak var bgView: UIView!
@@ -20,7 +24,7 @@ class SegmentCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        headIndentValue.constant = 80.0
+        headIndentValue.constant = kBaseValue
     }
 
     
@@ -29,11 +33,13 @@ class SegmentCell: UITableViewCell {
         headTitleLable.text = (model.original_tag).uppercased() + " \(model.toc_code!)"
         detailLable.text = model.tocdisplayeff
         titleLable.text = model.title
-    
+        
+        headIndentValue.constant = headIndentValue.constant + CGFloat( model.nodeLevel - 1) * 15
     }
     
     override func prepareForReuse() {
 //        initStatus()
+        headIndentValue.constant = kBaseValue
     }
     
     

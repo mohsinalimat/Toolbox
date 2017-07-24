@@ -14,39 +14,14 @@ let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 class TOCViewController: BaseViewControllerWithTable {
 
     var currentPublication:PublicationsModel!
+    var openedDirArray:[SegmentModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        dataArray = [1,2,3,4,5,6]
-        
-        let s = dataArray.index(after: 3)
-        
-        dataArray.removeSubrange(s..<dataArray.endIndex)
         
     }
 
-    func loadData() {
-        //数据可能为空
-        guard let selectedPublication = kSelectedPublication else {
-            return
-        }
-        guard currentPublication !== selectedPublication  else {
-            return
-        }
-
-        currentPublication = selectedPublication
-        
-        dataArray.removeAll()
-        dataArray.append(currentPublication)
-        //CCAA320CCAAIPC20161101
-       let chapter = SegmentModel.search(with: "parent_id='\(currentPublication.book_uuid!)'", orderBy: "toc_code asc")
-        
-        dataArray = dataArray + chapter!
-        
-        tableview?.reloadData()
-    }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         loadData()
@@ -87,18 +62,79 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //判断目录层级
+        //是否为目录
+        if indexPath.row == 0 {
+            openedDirArray.removeAll()
+            getNewData(modelId: currentPublication.book_uuid)
+        }
+        else{
+            let m = dataArray[indexPath.row] as! SegmentModel
+            if Int(m.is_leaf) == 0 {
+                let has = openedDirArray.index(of: m)
+                if let has = has {
+                    openedDirArray.removeSubrange(has+1..<openedDirArray.count)
+                }
+                else if has == nil {
+                    openedDirArray.append(m)
+                }
+
+                
+                getNewData(modelId: m.primary_id)
+            }
+            else {//没有子节点了
+            //        jumptoNextWithIndex(3)
+                
+            }
+        }
         
-        
-//        jumptoNextWithIndex(3)
     }
     
     
+  //MARK: - 数据处理
+    func loadData() {
+        //数据可能为空
+        guard let selectedPublication = kSelectedPublication else {
+            return
+        }
+        guard currentPublication !== selectedPublication  else {
+            return
+        }
+        currentPublication = selectedPublication
+        openedDirArray.removeAll()
+        
+        getNewData(modelId: currentPublication.book_uuid)
+    }
     
+    func getNewData(modelId:String){
+        dataArray.removeAll()
+        dataArray.append(currentPublication)
+        dataArray = dataArray + openedDirArray
+        
+        let arr = traversalModel(id: modelId)
+        dataArray = dataArray + arr
     
+        tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
+    }
     
   
-    
+    func traversalModel(id:String) -> [SegmentModel] {
+        var tmpArr = [SegmentModel]()
+        
+        func _search(_ id:String){
+            let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
+            for m in chapter {
+                if Int(m.is_visible) == 0 {
+                //不可见
+                 _search(m.primary_id)
+                }else{
+                    tmpArr.append(m);
+                }
+            }
+        }
+
+        _search(id)
+        return tmpArr
+    }
     
     
     

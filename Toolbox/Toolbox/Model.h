@@ -105,8 +105,9 @@
 @property(nonatomic,copy)NSString *  revision_type;
 @property(nonatomic,copy)NSString *  toc_code;
 @property(nonatomic,copy)NSString *  title;
-@property(nonatomic,copy)NSString *  effrg;//有效性，判断文档是否适用当前飞机(CEC关联),eg"101114 203211 451550三位分割"
+@property(nonatomic,copy)NSString *  effrg;//有效性，判断文档是否适用当前飞机(CEC关联),eg"101,114 203,211 451550三位分割"
 @property(nonatomic,copy)NSString *  tocdisplayeff;//有效性显示的内容
+@property(nonatomic,assign)NSInteger nodeLevel;//节点层级
 @end
 
 
@@ -116,6 +117,7 @@
 @interface UpdateInfo : Model
 @property(nonatomic,copy)NSString * table_name;
 @property(nonatomic,assign)NSInteger update_time;
+@property(nonatomic,copy)NSString *  ID;
 @end
 
 
