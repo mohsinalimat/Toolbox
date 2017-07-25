@@ -28,6 +28,7 @@
 		A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */; };
 		A136F11E1F1322DE00349572 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = A136F11D1F1322DE00349572 /* Model.m */; };
 		A136F1211F1372BC00349572 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A136F1201F1372BC00349572 /* DBManager.swift */; };
+		A13D04FF1F272D8900D961BA /* EN21210101C.html.zip in Resources */ = {isa = PBXBuildFile; fileRef = A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */; };
 		A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15580201F05E89D008C1787 /* PublicationCell.swift */; };
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
@@ -115,6 +116,7 @@
 		A136F11C1F1322DE00349572 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		A136F11D1F1322DE00349572 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		A136F1201F1372BC00349572 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
+		A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = EN21210101C.html.zip; sourceTree = "<group>"; };
 		A15580201F05E89D008C1787 /* PublicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicationCell.swift; sourceTree = "<group>"; };
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */,
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
 				A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */,
+				A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */,
 				A1B7FB171F0F8912009D6CA9 /* apList.json */,
 				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
@@ -503,6 +506,7 @@
 				A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */,
 				A106483F1F04C21E002D088C /* AppIcon-B2C76x76~ipad.png in Resources */,
 				A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */,
+				A13D04FF1F272D8900D961BA /* EN21210101C.html.zip in Resources */,
 				A106483A1F04C21E002D088C /* AppIcon-B2C50x50@2x~ipad.png in Resources */,
 				A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,

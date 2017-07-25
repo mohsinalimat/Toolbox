@@ -52,7 +52,8 @@ var kAllPublications:[String:Any] = [:]
 var kSelectedAirplane:AirplaneModel?
 //当前选中的手册
 var kSelectedPublication:PublicationsModel?
-
+//当前选中的目录节点
+var kSelectedSegment:SegmentModel?
 
 
 
@@ -61,8 +62,9 @@ var kSelectedPublication:PublicationsModel?
 let ROOTPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/TDLibrary")
 let ROOTSUBPATH = "/CCA/" //待确定唯一性?
 
-let aplistjsonpath = "/resources/apList.json"
-let apmodelmapjspath = ROOTPATH + ROOTSUBPATH + "apModelMap.js"//与MSN字段关联飞机手册
+//sub
+let APLISTJSONPATH = "/resources/apList.json"
+let APMODELMAPJSPATH = ROOTPATH + ROOTSUBPATH + "apModelMap.js"//与MSN字段关联飞机手册
 
 
 

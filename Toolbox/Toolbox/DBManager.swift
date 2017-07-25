@@ -83,7 +83,7 @@ class DBManager: NSObject {
     //MARK:
     //获取apmodel赋值给全局变量- kAllPublications
     func getapMpdel(){
-        DBManager.parseJsonData(path: apmodelmapjspath,preprogressHandler: { str in
+        DBManager.parseJsonData(path: APMODELMAPJSPATH,preprogressHandler: { str in
             let s = str
             let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
             return newstr
@@ -101,7 +101,7 @@ class DBManager: NSObject {
         
         //解析数据并保存
         for index in 0..<path.count {
-            DBManager.parseJsonData(path: path[index].appending(aplistjsonpath), completionHandler: { (obj) in
+            DBManager.parseJsonData(path: path[index].appending(APLISTJSONPATH), completionHandler: { (obj) in
                 let obj =  obj as? [String:Any]
                 guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
                 AirplaneModel.saveToDb(with: airplaneEntryArr)

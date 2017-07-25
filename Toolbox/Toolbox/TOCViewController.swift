@@ -64,8 +64,7 @@ class TOCViewController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //是否为目录
         if indexPath.row == 0 {
-            openedDirArray.removeAll()
-            getNewData(modelId: currentPublication.book_uuid)
+            getNewData(modelId: currentPublication.book_uuid,flushDir: true)
         }
         else{
             let m = dataArray[indexPath.row] as! SegmentModel
@@ -77,12 +76,12 @@ class TOCViewController: BaseViewControllerWithTable {
                 else if has == nil {
                     openedDirArray.append(m)
                 }
-
                 
                 getNewData(modelId: m.primary_id)
             }
             else {//没有子节点了
-            //        jumptoNextWithIndex(3)
+                    kSelectedSegment = m
+                    jumptoNextWithIndex(3)
                 
             }
         }
@@ -90,9 +89,9 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     
-  //MARK: - 数据处理
+    //MARK: - 数据处理
     func loadData() {
-        //数据可能为空
+        //第一次进入currentPublication数据可能为空，稍后做提示处理？
         guard let selectedPublication = kSelectedPublication else {
             return
         }
@@ -100,41 +99,50 @@ class TOCViewController: BaseViewControllerWithTable {
             return
         }
         currentPublication = selectedPublication
-        openedDirArray.removeAll()
-        
-        getNewData(modelId: currentPublication.book_uuid)
+        getNewData(modelId: currentPublication.book_uuid,flushDir: true)
     }
     
-    func getNewData(modelId:String){
+    
+    /// 获取目录数据
+    ///
+    /// - parameter modelId:  当前model的主键-primary_id
+    /// - parameter flushDir: 标记为是否需要清空已展开的目录数据-openedDirArray
+    func getNewData(modelId:String,flushDir:Bool? = false){
         dataArray.removeAll()
         dataArray.append(currentPublication)
-        dataArray = dataArray + openedDirArray
         
-        let arr = traversalModel(id: modelId)
-        dataArray = dataArray + arr
-    
-        tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
-    }
-    
-  
-    func traversalModel(id:String) -> [SegmentModel] {
-        var tmpArr = [SegmentModel]()
-        
-        func _search(_ id:String){
-            let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
-            for m in chapter {
-                if Int(m.is_visible) == 0 {
-                //不可见
-                 _search(m.primary_id)
-                }else{
-                    tmpArr.append(m);
-                }
+        if let  f = flushDir {
+            if f {
+                openedDirArray.removeAll()
+            }
+            else{
+                dataArray = dataArray + openedDirArray
             }
         }
-
-        _search(id)
-        return tmpArr
+        
+        //向下遍历子孙节点
+        let arr:[SegmentModel] = { id in
+            var tmpArr = [SegmentModel]()
+            func _search(_ id:String){
+                let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
+                for m in chapter {
+                    if Int(m.is_visible) == 0 {
+                        //不可见
+                        _search(m.primary_id)
+                    }else{
+                        tmpArr.append(m);
+                    }
+                }
+            }
+            
+            _search(id)
+            return tmpArr
+        }(modelId)
+        
+        dataArray = dataArray + arr
+        tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
     }
+
     
     
     
