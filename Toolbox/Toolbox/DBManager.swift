@@ -75,7 +75,7 @@ class DBManager: NSObject {
         getapMpdel()
     
         //...test
-//        getSegments()
+        //getSegments()
     
     }
 

@@ -6,7 +6,7 @@ PODS:
   - KissXML (5.2.0)
   - LKDBHelper (2.4.2):
     - FMDB
-  - SSZipArchive (1.8.1)
+  - SSZipArchive (2.0.2)
   - SVProgressHUD (2.1.2)
   - SwiftyJSON (3.1.4)
 
@@ -14,7 +14,7 @@ DEPENDENCIES:
   - Alamofire (~> 4.4)
   - KissXML
   - LKDBHelper (~> 2.4.2)
-  - SSZipArchive (~> 1.8.1)
+  - SSZipArchive (~> 2.0.2)
   - SVProgressHUD (~> 2.1.2)
   - SwiftyJSON
 
@@ -23,10 +23,10 @@ SPEC CHECKSUMS:
   FMDB: 6198a90e7b6900cfc046e6bc0ef6ebb7be9236aa
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
   LKDBHelper: ab67373b32f47463bf5f838d730f225824f4492a
-  SSZipArchive: 04547dfa448be5ed7ecbaf7eaf8a6e9eb9b42997
+  SSZipArchive: 5fdf578dbbb60000b23439f80fa04e81d00740ee
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 34756f70f436ff415aedc3aba42ddbe2e0d0e592
+PODFILE CHECKSUM: b1f06ed118c5f443d9b616708b38a1e185001819
 
 COCOAPODS: 1.0.1

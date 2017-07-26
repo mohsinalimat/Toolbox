@@ -11,86 +11,98 @@ import SSZipArchive
 
 class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate{
 
-    var currentPublication:PublicationsModel!
+    var currentSegment:SegmentModel!
+    var currenthtml:String?
+    var webview:UIWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+//        let p1 = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] + "/210/04/EN04050001.html.zip"
+//        let p2 = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] + "/210/04/"
 
-        guard let url = loadData() else {
-            return
-        }
+
         
-//        let url = Bundle.main.path(forResource: "11-00-00-01B", ofType: "html")
-        let webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
-        webview.loadRequest(URLRequest.init(url: URL.init(string: url)!))
+        webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
         view.addSubview(webview)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        guard let url = loadData() else {
+            return
+        }
+        webview.loadRequest(URLRequest.init(url: URL.init(string: url)!))
+        super.viewWillAppear(animated)
+    }
+    
+    
     
     //MARK: - 数据处理
     //前级数据改变-后级数据的操作处理？？？？？？
     func loadData() -> String? {
         //第一次进入currentPublication数据可能为空，稍后做提示处理？
-        guard let selectedPublication = kSelectedPublication else {
+        guard let selectedPublication = kSelectedSegment else {
             return nil
         }
-        guard currentPublication !== selectedPublication  else {
+        guard currentSegment !== selectedPublication  else {
             return nil
         }
-        currentPublication = selectedPublication
+        currentSegment = selectedPublication
         
         
         /*
          /var/mobile/Containers/Data/Application/3DE63D99-03B4-40D6-8CA5-581FD04C1AF1/Library/TDLibrary
          /CCA/CCAA320CCAAIPC20161101/aipc
          /75/EN75244880B.html
-        
         */
-        
-        
         let s1 = ROOTPATH
-        let s2 = currentPublication.booklocalurl
+        let s2 = kSelectedPublication?.booklocalurl
         let s3 = kSelectedSegment?.content_location
-        
         let path = s1 + s2! + s3!
         let pathzip = path + ".zip"
         
-        /*
-        let existFile = FileManager.default.fileExists(atPath: path)
+        let htmlfullpath = HTMLPATH + s2! + s3!
+        let htmlpath = HTMLPATH + s2! + (s3?.substring(to: (s3?.index((s3?.startIndex)!, offsetBy: 3))!))!
+        
+        
+        let existFile = FileManager.default.fileExists(atPath: htmlpath)
         if !existFile
         {
-            //print("目标路径：\(path) 不存在！");//return nil
+            print("dir：\(htmlpath) 不存在！");
+            do{
+                try FileManager.default.createDirectory(atPath: htmlpath, withIntermediateDirectories: true, attributes: nil)
+                print("创建目录\(htmlpath)")
+            }catch{
+                print(error)
+            }
         }
         
-        let existZip = FileManager.default.fileExists(atPath: pathzip)
+        let existZip = FileManager.default.fileExists(atPath: htmlfullpath)
         if !existZip
         {
-            //print("目标路径：\(pathzip) 不存在！");//return nil
+            print("file：\(htmlfullpath) 不存在！");
+            
+            let existZip = FileManager.default.fileExists(atPath: pathzip)
+            if !existZip
+            {
+                print("zip路径：\(pathzip) 不存在！"); return nil
+            }else{
+                
+               let ret = SSZipArchive.unzipFile(atPath: pathzip, toDestination: htmlpath, delegate: self)
+                if ret {
+                    do {
+                           try FileManager.default.removeItem(atPath: pathzip)
+                    }catch{
+                        print(error)
+                    }
+               
+                }
+            }
+            
         }
-        */
         
-        let p = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] + "/210"
-        
-      
-        
-         do{
-      
-          try  FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
-    
-         }catch{
-         print(error)
-         }
-         
-        
-        
-        //let test = Bundle.main.path(forResource: "EN21210101C", ofType: ".html.zip")
-        //let des = test?.substring(to: ((test?.index((test?.endIndex)!, offsetBy: -4)))!)
-        
+        return htmlfullpath
 
-        SSZipArchive.unzipFile(atPath: pathzip, toDestination: p, delegate: self)
-        
-        
-        return path
     }
     
     
@@ -107,7 +119,18 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate{
     
     
     
-    
+    /*
+     [SSZipArchive] Set attributes failed for directory: /var/mobile/Containers/Data/Application/169034CB-A0A2-4DB9-A695-F5331D5613FC/Library/210/04/EN04050001.html.
+     2017-07-26 17:00:57.224 Toolbox[14264:1313126] [SSZipArchive] Error setting directory file modification date attribute: The file “EN04050001.html” doesn’t exist.
+     
+     
+     --------
+     
+     Error Domain=NSCocoaErrorDomain Code=513 "“EN21210101C.html.zip” couldn’t be removed because you don’t have permission to access it." UserInfo={NSFilePath=/var/mobile/Containers/Data/Application/53C98F87-F04A-4BF0-AAC1-377EB6B25C5A/Library/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/21/EN21210101C.html.zip, NSUserStringVariant=(
+     Remove
+     ), NSUnderlyingError=0x1377ba110 {Error Domain=NSPOSIXErrorDomain Code=13 "Permission denied"}}
+     
+     */
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
