@@ -8,6 +8,7 @@
 
 import UIKit
 import KissXML
+import SSZipArchive
 
 class DBManager: NSObject {
     static let `default` :DBManager = DBManager()
@@ -75,7 +76,7 @@ class DBManager: NSObject {
         getapMpdel()
     
         //...test
-        //getSegments()
+//        getSegments()
     
     }
 
@@ -85,7 +86,7 @@ class DBManager: NSObject {
     func getapMpdel(){
         DBManager.parseJsonData(path: APMODELMAPJSPATH,preprogressHandler: { str in
             let s = str
-            let newstr =  s.substring(from: "varapModelMap=".endIndex).replacingOccurrences(of: ";", with: "")
+            let newstr = s.replacingOccurrences(of: "varapModelMap=", with: "").replacingOccurrences(of: ";", with: "")
             return newstr
         }){(obj) in
             let obj =  obj as? [String:Any]
@@ -152,7 +153,7 @@ class DBManager: NSObject {
         updateTableinfo(cls: PublicationsModel.self)
     }
     
-    //获取节点目录
+    //获取节点目录-现在的处理的指定手册，需完善？？？？？
     func getSegments(model:PublicationsModel? = nil) {
         var path = getPath()[0]
         path = path.appending("/resources/toc.xml")
@@ -264,7 +265,7 @@ class DBManager: NSObject {
     
     
     
-    //获取路径
+    //获取路径-手册
     func getPath() -> [String] {
         let basepath = ROOTPATH + ROOTSUBPATH
         let fm = FileManager.default
@@ -308,8 +309,71 @@ class DBManager: NSObject {
         let m = UpdateInfo.search(with: "table_name='\(cls.getTableName())'", orderBy: nil)
         return (m != nil) && (m?.count)! > 0 ? true:false
     }
+    
+    
 }
 
+
+//MARK: 文件解压及数据处理
+extension DBManager : SSZipArchiveDelegate {
+    
+    
+    //安装手册
+    func installBook(){
+        let fm = FileManager.default
+        let despath = ROOTPATH + ROOTSUBPATH
+        
+        let exist = fm.fileExists(atPath: despath)
+        if !exist
+        {
+            print("目录：\(despath) 不存在！");
+            do{
+                try fm.createDirectory(atPath: despath, withIntermediateDirectories: true, attributes: nil)
+                print("创建目录\(despath)")
+            }catch{
+                print(error)
+            }
+        }
+        
+        do{
+            let zipArr = try fm.contentsOfDirectory(atPath: HTMLPATH)
+            
+            for p in zipArr {
+                let fullzip = HTMLPATH + "/\(p)"
+                
+                let filefullpath = despath + p.substring(to: p.index(p.endIndex, offsetBy: -4))
+                
+                if !fm.fileExists(atPath: filefullpath){
+                    print("开始解压：\(fullzip)")
+                    SSZipArchive.unzipFile(atPath: fullzip, toDestination: despath, delegate: self)
+                    
+                    //获取手册信息
+                    
+                    //获取章节目录
+                    
+                }else{
+                    print("文件已存在:\(filefullpath)")
+                }
+                
+            }
+        }catch{
+            print(error)
+        }
+        
+    }
+
+   
+    //MARK: -
+    func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
+        
+    }
+    
+    func zipArchiveDidUnzipArchive(atPath path: String, zipInfo: unz_global_info, unzippedPath: String) {
+     let arr = path.components(separatedBy: "/")
+        let zip = arr.last
+        let name = zip?.substring(to: (zip?.index((zip?.endIndex)!, offsetBy: -4))!)
+    }
+}
 
 
 

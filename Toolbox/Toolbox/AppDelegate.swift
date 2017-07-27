@@ -23,11 +23,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor = UIColor.white
         window?.makeKeyAndVisible()
         
+        //初始化操作
+        init_system()
         
         return true
     }
 
-    func initData(){
+    private func init_system(){
+        //DBManager.default.installBook()
         
     }
     
