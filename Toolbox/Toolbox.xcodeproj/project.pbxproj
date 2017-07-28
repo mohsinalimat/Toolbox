@@ -37,6 +37,20 @@
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
 		A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */; };
 		A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */ = {isa = PBXBuildFile; fileRef = A1B7FB171F0F8912009D6CA9 /* apList.json */; };
+		A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */; };
+		A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */; };
+		A1BBCF541F2ACBFF007374B7 /* bookmarkOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */; };
+		A1BBCF551F2ACBFF007374B7 /* bookmarkOffHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */; };
+		A1BBCF561F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */; };
+		A1BBCF571F2ACBFF007374B7 /* bookmarkOn.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4E1F2ACBFF007374B7 /* bookmarkOn.png */; };
+		A1BBCF581F2ACBFF007374B7 /* bookmarkOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */; };
+		A1BBCF591F2ACBFF007374B7 /* bookmarkOnHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */; };
+		A1BBCF5A1F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */; };
+		A1BBCF601F2ACFDF007374B7 /* hash_row.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF5B1F2ACFDF007374B7 /* hash_row.png */; };
+		A1BBCF611F2ACFDF007374B7 /* hashout.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF5C1F2ACFDF007374B7 /* hashout.png */; };
+		A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF5D1F2ACFDF007374B7 /* hashout@2x.png */; };
+		A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF5E1F2ACFDF007374B7 /* header_band.png */; };
+		A1BBCF641F2ACFDF007374B7 /* header_band@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF5F1F2ACFDF007374B7 /* header_band@2x.png */; };
 		A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C06BC91F0A2D2800A29620 /* PopViewController.swift */; };
 		A1C06BCC1F0A2D2800A29620 /* PopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */; };
 		A1C06BCF1F0A356400A29620 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C06BCD1F0A356400A29620 /* cancel.png */; };
@@ -125,6 +139,20 @@
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
 		A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "11-00-00-01B.html"; sourceTree = "<group>"; };
 		A1B7FB171F0F8912009D6CA9 /* apList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = apList.json; sourceTree = "<group>"; };
+		A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkBtnIcon.png; path = "1-icon/bookmarkBtnIcon.png"; sourceTree = "<group>"; };
+		A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkOff.png; path = "1-icon/bookmarkOff.png"; sourceTree = "<group>"; };
+		A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarkOff@2x.png"; path = "1-icon/bookmarkOff@2x.png"; sourceTree = "<group>"; };
+		A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkOffHighlighted.png; path = "1-icon/bookmarkOffHighlighted.png"; sourceTree = "<group>"; };
+		A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarkOffHighlighted@2x.png"; path = "1-icon/bookmarkOffHighlighted@2x.png"; sourceTree = "<group>"; };
+		A1BBCF4E1F2ACBFF007374B7 /* bookmarkOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkOn.png; path = "1-icon/bookmarkOn.png"; sourceTree = "<group>"; };
+		A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarkOn@2x.png"; path = "1-icon/bookmarkOn@2x.png"; sourceTree = "<group>"; };
+		A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkOnHighlighted.png; path = "1-icon/bookmarkOnHighlighted.png"; sourceTree = "<group>"; };
+		A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarkOnHighlighted@2x.png"; path = "1-icon/bookmarkOnHighlighted@2x.png"; sourceTree = "<group>"; };
+		A1BBCF5B1F2ACFDF007374B7 /* hash_row.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hash_row.png; sourceTree = "<group>"; };
+		A1BBCF5C1F2ACFDF007374B7 /* hashout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hashout.png; sourceTree = "<group>"; };
+		A1BBCF5D1F2ACFDF007374B7 /* hashout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hashout@2x.png"; sourceTree = "<group>"; };
+		A1BBCF5E1F2ACFDF007374B7 /* header_band.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = header_band.png; sourceTree = "<group>"; };
+		A1BBCF5F1F2ACFDF007374B7 /* header_band@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header_band@2x.png"; sourceTree = "<group>"; };
 		A1C06BC91F0A2D2800A29620 /* PopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopViewController.swift; sourceTree = "<group>"; };
 		A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopViewController.xib; sourceTree = "<group>"; };
 		A1C06BCD1F0A356400A29620 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cancel.png; path = "1-icon/cancel.png"; sourceTree = "<group>"; };
@@ -365,6 +393,15 @@
 				A1C06BCD1F0A356400A29620 /* cancel.png */,
 				A1C06BCE1F0A356400A29620 /* cancel@2x.png */,
 				A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */,
+				A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */,
+				A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */,
+				A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */,
+				A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */,
+				A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */,
+				A1BBCF4E1F2ACBFF007374B7 /* bookmarkOn.png */,
+				A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */,
+				A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */,
+				A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */,
 				A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */,
 				A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */,
 				A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */,
@@ -372,6 +409,11 @@
 				A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */,
 				A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */,
 				A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */,
+				A1BBCF5B1F2ACFDF007374B7 /* hash_row.png */,
+				A1BBCF5C1F2ACFDF007374B7 /* hashout.png */,
+				A1BBCF5D1F2ACFDF007374B7 /* hashout@2x.png */,
+				A1BBCF5E1F2ACFDF007374B7 /* header_band.png */,
+				A1BBCF5F1F2ACFDF007374B7 /* header_band@2x.png */,
 			);
 			name = source;
 			sourceTree = "<group>";
@@ -501,15 +543,25 @@
 				A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */,
 				A1C06BD71F0A35AC00A29620 /* deleteBookmarkButton.png in Resources */,
 				A1C06BD81F0A35AC00A29620 /* deleteBookmarkButton@2x.png in Resources */,
+				A1BBCF541F2ACBFF007374B7 /* bookmarkOff@2x.png in Resources */,
 				A106483D1F04C21E002D088C /* AppIcon-B2C72x72~ipad.png in Resources */,
+				A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */,
 				A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */,
+				A1BBCF591F2ACBFF007374B7 /* bookmarkOnHighlighted.png in Resources */,
 				A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */,
 				A106483F1F04C21E002D088C /* AppIcon-B2C76x76~ipad.png in Resources */,
 				A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */,
+				A1BBCF611F2ACFDF007374B7 /* hashout.png in Resources */,
+				A1BBCF641F2ACFDF007374B7 /* header_band@2x.png in Resources */,
+				A1BBCF601F2ACFDF007374B7 /* hash_row.png in Resources */,
 				A13D04FF1F272D8900D961BA /* EN21210101C.html.zip in Resources */,
 				A106483A1F04C21E002D088C /* AppIcon-B2C50x50@2x~ipad.png in Resources */,
 				A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */,
+				A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */,
+				A1BBCF5A1F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png in Resources */,
+				A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
+				A1BBCF581F2ACBFF007374B7 /* bookmarkOn@2x.png in Resources */,
 				A10648391F04C21E002D088C /* AppIcon-B2C40x40~ipad.png in Resources */,
 				A1C06BD91F0A35AC00A29620 /* deletePub.png in Resources */,
 				A10648401F04C21E002D088C /* Default-Landscape@2x~ipad.png in Resources */,
@@ -517,9 +569,13 @@
 				A1C06BDA1F0A35AC00A29620 /* deletePub@2x.png in Resources */,
 				A106483E1F04C21E002D088C /* AppIcon-B2C76x76@2x~ipad.png in Resources */,
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
+				A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */,
 				A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */,
 				A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */,
+				A1BBCF571F2ACBFF007374B7 /* bookmarkOn.png in Resources */,
 				A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */,
+				A1BBCF561F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png in Resources */,
+				A1BBCF551F2ACBFF007374B7 /* bookmarkOffHighlighted.png in Resources */,
 				A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */,
 				A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */,
 				A1C1BD671F00A0AA002FC0E0 /* LaunchScreen.storyboard in Resources */,

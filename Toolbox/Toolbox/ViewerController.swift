@@ -18,10 +18,65 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        initNavigationBarItem()
+
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
+        webview.delegate = self
         view.addSubview(webview)
     }
 
+    
+    func initNavigationBarItem(){
+        var itemArr = navigationItem.rightBarButtonItems;
+        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//14 * 16
+        btn.setImage(UIImage (named: "bookmarkOff"), for: .normal)
+        btn.setImage(UIImage (named: "bookmarkOn"), for: .selected)
+        btn.addTarget(self, action: #selector(buttonClickedAction(_:)), for: .touchUpInside)
+        btn.tag = 100
+        let ritem = UIBarButtonItem (customView: btn)
+        itemArr?.append(ritem)
+        navigationItem.rightBarButtonItems = itemArr
+        
+        let lbtn_1 = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//19 * 19
+        lbtn_1.setImage(UIImage (named: "back_arrow"), for: .normal)
+        lbtn_1.addTarget(self, action: #selector(buttonClickedAction(_:)), for: .touchUpInside)
+        lbtn_1.tag = 101
+        let litem_1 = UIBarButtonItem (customView: lbtn_1)
+        
+        let lbtn_2 = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
+        lbtn_2.setImage(UIImage (named: "forward_arrow"), for: .normal)
+        lbtn_2.addTarget(self, action: #selector(buttonClickedAction(_:)), for: .touchUpInside)
+        lbtn_2.tag = 102
+        let litem_2 = UIBarButtonItem (customView: lbtn_2)
+        let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fixed.width = 8
+        
+        litem_1.isEnabled = false
+        litem_2.isEnabled = false
+        
+        navigationItem.leftBarButtonItems = [fixed, litem_1,fixed,fixed,litem_2]
+    }
+    
+    
+    func buttonClickedAction(_ btn:UIButton){
+        if webview.isLoading {
+            print("webview loading");return
+        }
+        
+        switch btn.tag {
+            case 100:
+                print("bookmark")
+                btn.isSelected = !btn.isSelected
+            
+            case 101:print("back")
+            
+            case 102:print("forward")
+            default: break
+        }
+        
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         guard let url = getFilePath() else {
             return
@@ -99,16 +154,47 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     
     //MARK:- UIWebViewDelegate
+    
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        let url  = request.url
+        let fm = FileManager.default
+        
+        if let url = url {
+            let path = "\(url.path)"
+            let exist = fm.fileExists(atPath: path)
+            if !exist {
+                let zip = path + ".zip"
+                let exist = fm.fileExists(atPath: zip)
+                if exist {
+                    guard let des = (URL(string: path)?.deletingLastPathComponent().absoluteString) else {
+                        return false
+                    }
+                    SSZipArchive.unzipFile(atPath: zip, toDestination: des, delegate: self)
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        print("\(#function)")
         
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
+        print("\(#function)")
         //保存到浏览历史记录
         
     }
     
     
+    /*
+     2017-07-28 16:19:23.577 Toolbox[3011:167775] void SendDelegateMessage(NSInvocation *): delegate (webView:decidePolicyForNavigationAction:request:frame:decisionListener:) failed to return after waiting 10 seconds. main run loop mode: kCFRunLoopDefaultMode
+     webView(_:didFailLoadWithError:)
+     */
+
     /*
      [SSZipArchive] Set attributes failed for directory: /var/mobile/Containers/Data/Application/169034CB-A0A2-4DB9-A695-F5331D5613FC/Library/210/04/EN04050001.html.
      2017-07-26 17:00:57.224 Toolbox[14264:1313126] [SSZipArchive] Error setting directory file modification date attribute: The file “EN04050001.html” doesn’t exist.
@@ -121,6 +207,8 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
      ), NSUnderlyingError=0x1377ba110 {Error Domain=NSPOSIXErrorDomain Code=13 "Permission denied"}}
      
      */
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -14,14 +14,16 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
 
         let settingItem  = UIBarButtonItem (image: UIImage (named: "gear_(settings)_icon"), style: .plain, target: self, action: #selector(rightItemButtonAction))
+        let fiexditem = UIBarButtonItem.init(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fiexditem.width = 20
         
-        navigationItem.rightBarButtonItems = [settingItem]
+        navigationItem.rightBarButtonItems = [fiexditem,settingItem]
     }
 
     
     func rightItemButtonAction()
     {
-    
+        print("set btn");
     }
     
     
