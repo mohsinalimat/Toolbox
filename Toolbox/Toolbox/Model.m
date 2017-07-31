@@ -79,7 +79,6 @@
 
     //写入数据操作
     +(void)saveToDbWith:(id)data{
-        NSLog(@"开始插入数据库...");
         if ([data isKindOfClass:[NSArray class]]) {
             NSArray * arr = (NSArray*)data;
             if (arr.count < 1) {
@@ -92,7 +91,7 @@
         else if ([data isKindOfClass:[NSDictionary class]]){
             [[[self alloc]init] saveModelWith:data];
         }
-        NSLog(@"插入完成!");
+        NSLog(@"插入完成%lu条数据!",(unsigned long)([data isKindOfClass:[NSArray class]]?((NSArray*)data).count:1));
     }
 
     -(instancetype)modelWith:(NSDictionary*)dic{
@@ -125,22 +124,29 @@
     }
 
 
-    #pragma mark -
-    //search
+    #pragma mark - 查找删除
     -(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         
         return [[DBTool default].helper search:[self class] where:query orderBy:order offset:0 count:UINT16_MAX];
         
     }
-    
 
-    //查找
     +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         return [[[self alloc]init ] searchWith:query orderBy:order];
     }
-    
+
+    -(BOOL)deleteWith:(NSString*)query{
+        
+        return [[DBTool default].helper deleteWithClass:[self class] where:query];
+    }
+
+    +(BOOL)deleteWith:(NSString*)query{
+        
+        return [[[self alloc]init] deleteWith:query];
+    }
+
 
 @end
 
@@ -148,31 +154,33 @@
 @implementation AirplaneModel
 
 -(NSString *)getPrimarykey{
-    //子类必须重载
     return @"airplaneId";
 }
-
 @end
 
 @implementation PublicationsModel
+
 -(NSString *)getPrimarykey{
-    //子类必须重载
     return @"book_uuid";
 }
-
 @end
 
 @implementation SegmentModel
+
 -(NSString *)getPrimarykey{
-    //子类必须重载
     return @"primary_id";
 }
-
 @end
 
 
+///
+@implementation BookmarkModel
 
+-(NSString *)getPrimarykey{
+    return @"seg_primary_id";
+}
 
+@end
 
 #pragma mark - other
 

@@ -10,16 +10,19 @@ import UIKit
 import SSZipArchive
 
 class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebViewDelegate{
-
-    var currentSegment:SegmentModel!
-    var currenthtml:String?
+    
+    var currenthtml_url:String?
+    
     var webview:UIWebView!
+    
+    var loveBtn:UIButton!
+    var hasloved:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         initNavigationBarItem()
-
+        
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
         webview.delegate = self
         view.addSubview(webview)
@@ -36,6 +39,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let ritem = UIBarButtonItem (customView: btn)
         itemArr?.append(ritem)
         navigationItem.rightBarButtonItems = itemArr
+        loveBtn = btn
         
         let lbtn_1 = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//19 * 19
         lbtn_1.setImage(UIImage (named: "back_arrow"), for: .normal)
@@ -65,8 +69,41 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         
         switch btn.tag {
             case 100:
-                print("bookmark")
                 btn.isSelected = !btn.isSelected
+                
+                //是否已收藏
+                let hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
+                if !hasloved {
+                    //
+                    var dic = [String:Any]()
+                    dic["seg_primary_id"] = kSelectedSegment?.primary_id
+                    dic["seg_original_tag"] = kSelectedSegment?.original_tag
+                    dic["seg_toc_code"] = kSelectedSegment?.toc_id
+                    dic["seg_title"] = kSelectedSegment?.title
+                    dic["seg_content_location"] = kSelectedSegment?.content_location
+                    dic["seg_parents"] = [1,1,1]
+                    
+                    dic["pub_book_uuid"] = kSelectedPublication?.book_uuid
+                    dic["pub_booklocalurl"] = kSelectedPublication?.booklocalurl
+                    dic["pub_doc_abbreviation"] = kSelectedPublication?.doc_abbreviation
+                    dic["pub_document_owner"] = kSelectedPublication?.document_owner
+                    dic["pub_model"] = kSelectedPublication?.model
+                    
+                    dic["airplaneId"] = kSelectedAirplane?.airplaneId
+                    dic["mark_content"] = ""
+                    
+                    BookmarkModel.saveToDb(with: dic)
+                }else{
+                    //删除记录
+                  let ret = BookmarkModel.delete(with: "seg_primary_id='\(kseg_primary_id!)'")
+                    if ret {
+                        print("delete success")
+                    }
+                }
+            
+            
+            
+            
             
             case 101:print("back")
             
@@ -81,7 +118,10 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         guard let url = getFilePath() else {
             return
         }
+
         webview.loadRequest(URLRequest.init(url: URL.init(string: url)!))
+        hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
+        loveBtn.isSelected = hasloved
         super.viewWillAppear(animated)
     }
     
@@ -91,13 +131,16 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     //前级数据改变-后级数据的操作处理？？？？？？
     func getFilePath() -> String? {
         //第一次进入currentPublication数据可能为空，稍后做提示处理？
-        guard let selectedPublication = kSelectedSegment else {
+        guard let pub_url = kpub_booklocal_url,let seg_url = kseg_contentlocation_url else {
             return nil
         }
-        guard currentSegment !== selectedPublication  else {
-            return nil
+        
+        let htmlurl = pub_url + seg_url
+        if let currenthtml_url = currenthtml_url {
+            guard currenthtml_url != htmlurl else {return nil}
         }
-        currentSegment = selectedPublication
+        
+        currenthtml_url = htmlurl
         
         
         /*
@@ -106,11 +149,12 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
          /75/EN75244880B.html
         */
         let s1 = ROOTPATH
-        let s2 = kSelectedPublication?.booklocalurl
-        let s3 = kSelectedSegment?.content_location
-        let htmlfullpath = s1 + s2! + s3!
+        let s2 = pub_url
+        let s3 = seg_url
+        
+        let htmlfullpath = s1 + s2 + s3
         let htmlzippath = htmlfullpath + ".zip"
-        let htmldirpath = s1 + s2! + (s3?.substring(to: (s3?.index((s3?.startIndex)!, offsetBy: 3))!))!
+        let htmldirpath = s1 + s2 + s3.substring(to: (s3.index((s3.startIndex), offsetBy: 3)))
 
         let fileExist = FileManager.default.fileExists(atPath: htmlfullpath)
         if !fileExist
@@ -185,6 +229,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         print("\(#function)")
+        
         //保存到浏览历史记录
         
     }

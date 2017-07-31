@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func init_system(){
+        SVProgressHUD.setBackgroundColor(UIColor.black)
+        SVProgressHUD.setForegroundColor(UIColor.white)
+        SVProgressHUD.setDefaultMaskType(SVProgressHUDMaskType.black)
+        
         //DBManager.default.installBook()
         
     }

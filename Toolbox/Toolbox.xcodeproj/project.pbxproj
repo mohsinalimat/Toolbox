@@ -31,6 +31,7 @@
 		A13D04FF1F272D8900D961BA /* EN21210101C.html.zip in Resources */ = {isa = PBXBuildFile; fileRef = A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */; };
 		A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15580201F05E89D008C1787 /* PublicationCell.swift */; };
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
+		A17792671F2F3771009782F6 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17792661F2F3771009782F6 /* HUD.swift */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
@@ -133,6 +134,7 @@
 		A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = EN21210101C.html.zip; sourceTree = "<group>"; };
 		A15580201F05E89D008C1787 /* PublicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicationCell.swift; sourceTree = "<group>"; };
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
+		A17792661F2F3771009782F6 /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				A136F11C1F1322DE00349572 /* Model.h */,
 				A136F11D1F1322DE00349572 /* Model.m */,
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
+				A17792661F2F3771009782F6 /* HUD.swift */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -671,6 +674,7 @@
 				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,
 				A1C1BD931F00A718002FC0E0 /* constant.swift in Sources */,
+				A17792671F2F3771009782F6 /* HUD.swift in Sources */,
 				A1C1BD8E1F00A5E0002FC0E0 /* BaseViewController.swift in Sources */,
 				A1C1BD9C1F00ACA2002FC0E0 /* ViewerController.swift in Sources */,
 				A1C1BDA21F00ACE0002FC0E0 /* ManagerController.swift in Sources */,

@@ -31,7 +31,9 @@ class AirplaneController:BaseViewControllerWithTable {
         
         loadData()
 
+
         
+        SVProgressHUD.show()
         
 //        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
 //            for i in 0..<20 {

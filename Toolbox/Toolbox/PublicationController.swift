@@ -90,6 +90,8 @@ class PublicationController: BaseViewControllerWithTable {
         
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
         kSelectedPublication = model
+        ////
+        kpub_booklocal_url = model.booklocalurl
         
         jumptoNextWithIndex(2)
     }

@@ -21,6 +21,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     private var headSectionHeight = 30.0
     private var headSectionNum = 0//head中显示数字
+    var headNumShouldChange:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +105,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         return {
-            if headSectionNum == 0{
+            if headSectionNum == 0 || headNumShouldChange {
                 headSectionNum = dataArray.count
             }
             
@@ -142,6 +143,13 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         
     }
 
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

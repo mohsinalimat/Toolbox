@@ -80,6 +80,10 @@ class TOCViewController: BaseViewControllerWithTable {
                 getNewData(modelId: m.primary_id)
             }
             else {//没有子节点了
+                    /////
+                    kseg_contentlocation_url = m.content_location
+                    kseg_primary_id = m.primary_id
+                
                     kSelectedSegment = m
                     jumptoNextWithIndex(3)
                 

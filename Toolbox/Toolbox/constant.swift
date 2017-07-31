@@ -26,9 +26,6 @@ let kCurrentScreenWidth = UIScreen.main.bounds.width
 let kCurrentScreenHight = UIScreen.main.bounds.height
 
 
-
-
-
 //MARK: -
 let jumptoNextWithIndex:((Int) -> Void) = {index in
     let root = UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController
@@ -54,6 +51,13 @@ var kSelectedAirplane:AirplaneModel?
 var kSelectedPublication:PublicationsModel?
 //当前选中的目录节点
 var kSelectedSegment:SegmentModel?
+
+//////////////////////////////////
+var kpub_booklocal_url:String?//当前手册地址
+var kpub_bookuuid:String?
+
+var kseg_contentlocation_url:String?//当前目录内容地址
+var kseg_primary_id:String?
 
 
 

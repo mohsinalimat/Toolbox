@@ -31,6 +31,9 @@
 +(NSArray*)searchWith:(NSString*)query
               orderBy:(NSString*)order;
 
++(BOOL)deleteWith:(NSString*)query;
+
+
 /*私有方法，必须由子类重载.外部调用无意义。*/
 -(NSString *)getPrimarykey;
 
@@ -90,7 +93,7 @@
 @property(nonatomic,copy)NSString * metadataurl;
 @end
 
-//手册目录
+//目录
 @interface SegmentModel : Model
 @property(nonatomic,copy)NSString *  primary_id;//主键ID - book_id + id
 @property(nonatomic,copy)NSString *  parent_id;//目录项-父ID
@@ -110,7 +113,26 @@
 @property(nonatomic,assign)NSInteger nodeLevel;//节点层级
 @end
 
+///
+@interface BookmarkModel : Model
+@property(nonatomic,copy)NSString * seg_primary_id;//KEY
+@property(nonatomic,copy)NSString * seg_original_tag;
+@property(nonatomic,copy)NSString * seg_toc_code;
+@property(nonatomic,copy)NSString * seg_title;
+@property(nonatomic,copy)NSString * seg_content_location;
+@property(nonatomic)NSArray * seg_parents;
 
+@property(nonatomic,copy)NSString * pub_book_uuid;
+@property(nonatomic,copy)NSString * pub_booklocalurl;
+@property(nonatomic,copy)NSString * pub_doc_abbreviation;
+@property(nonatomic,copy)NSString * pub_document_owner;
+@property(nonatomic,copy)NSString * pub_model;
+
+@property(nonatomic,copy)NSString * airplaneId;
+@property(nonatomic,copy)NSString * mark_content;//备注
+
+@property(nonatomic,assign)NSInteger data_type;//...
+@end
 
 #pragma mark - other 辅助
 //表更新记录
