@@ -93,7 +93,9 @@ class PublicationController: BaseViewControllerWithTable {
         ////
         kpub_booklocal_url = model.booklocalurl
         
-        jumptoNextWithIndex(2)
+        kseg_direction = 1
+        
+        RootControllerChangeWithIndex(2)
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

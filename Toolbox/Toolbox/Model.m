@@ -10,8 +10,11 @@
 #define ToolboxDBName @"Toolbox"
 
 @interface  DBTool: NSObject
+
 @property(nonatomic,retain)LKDBHelper * helper;
+
 @end
+
 @implementation DBTool
 
     - (instancetype)init
@@ -36,10 +39,11 @@
 
 @end
 
-//
 #pragma mark
 @interface NSString (isNull)
+
 +(NSString*)stringFromStr:(NSString*)str;
+
 @end
 
 @implementation NSString (isNull)

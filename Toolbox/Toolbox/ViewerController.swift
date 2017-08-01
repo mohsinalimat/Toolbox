@@ -29,6 +29,23 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     }
 
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard var urlStr = getFilePath() else {
+            return
+        }
+        urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
+        
+        Loading()
+        webview.loadRequest(URLRequest.init(url: URL.init(string: urlStr)!))
+        hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
+        loveBtn.isSelected = hasloved
+        
+        addModel(m: model())
+        super.viewWillAppear(animated)
+    }
+    
+
+    //MARK: -
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//14 * 16
@@ -55,6 +72,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
         
+        //....
         litem_1.isEnabled = false
         litem_2.isEnabled = false
         
@@ -74,36 +92,16 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 //是否已收藏
                 let hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
                 if !hasloved {
-                    //
-                    var dic = [String:Any]()
-                    dic["seg_primary_id"] = kSelectedSegment?.primary_id
-                    dic["seg_original_tag"] = kSelectedSegment?.original_tag
-                    dic["seg_toc_code"] = kSelectedSegment?.toc_id
-                    dic["seg_title"] = kSelectedSegment?.title
-                    dic["seg_content_location"] = kSelectedSegment?.content_location
-                    dic["seg_parents"] = [1,1,1]
-                    
-                    dic["pub_book_uuid"] = kSelectedPublication?.book_uuid
-                    dic["pub_booklocalurl"] = kSelectedPublication?.booklocalurl
-                    dic["pub_doc_abbreviation"] = kSelectedPublication?.doc_abbreviation
-                    dic["pub_document_owner"] = kSelectedPublication?.document_owner
-                    dic["pub_model"] = kSelectedPublication?.model
-                    
-                    dic["airplaneId"] = kSelectedAirplane?.airplaneId
-                    dic["mark_content"] = ""
-                    
+                    let dic = getBaseData()
                     BookmarkModel.saveToDb(with: dic)
+                    HUD.show(successInfo: "添加书签")
                 }else{
                     //删除记录
                   let ret = BookmarkModel.delete(with: "seg_primary_id='\(kseg_primary_id!)'")
                     if ret {
-                        print("delete success")
+                        HUD.show(successInfo: "取消书签")
                     }
                 }
-            
-            
-            
-            
             
             case 101:print("back")
             
@@ -113,18 +111,39 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         
     }
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        guard let url = getFilePath() else {
-            return
-        }
-
-        webview.loadRequest(URLRequest.init(url: URL.init(string: url)!))
-        hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
-        loveBtn.isSelected = hasloved
-        super.viewWillAppear(animated)
+    func getBaseData() -> [String:Any] {
+        var dic = [String:Any]()
+        dic["seg_primary_id"] = kSelectedSegment?.primary_id
+        dic["seg_original_tag"] = kSelectedSegment?.original_tag
+        dic["seg_toc_code"] = kSelectedSegment?.toc_id
+        dic["seg_title"] = kSelectedSegment?.title
+        dic["seg_content_location"] = kSelectedSegment?.content_location
+        dic["seg_parents"] = kseg_parentnode_arr //.....
+        
+        dic["pub_book_uuid"] = kSelectedPublication?.book_uuid
+        dic["pub_booklocalurl"] = kSelectedPublication?.booklocalurl
+        dic["pub_doc_abbreviation"] = kSelectedPublication?.doc_abbreviation
+        dic["pub_document_owner"] = kSelectedPublication?.document_owner
+        dic["pub_model"] = kSelectedPublication?.model
+        
+        dic["airplaneId"] = kSelectedAirplane?.airplaneId
+        dic["mark_content"] = ""
+        return dic
     }
     
+    func model() -> BookmarkModel {
+        let m = BookmarkModel()
+        return m.model(with: getBaseData())
+    }
+    
+    func addModel(m:BookmarkModel) {
+        for (index,seg) in kseg_hasopened_arr.enumerated() {
+            if m.seg_primary_id == seg.seg_primary_id {
+                kseg_hasopened_arr.remove(at: index);break
+            }
+        }
+        kseg_hasopened_arr.insert(m, at: 0)
+    }
     
     
     //MARK: - 获取文件路径
@@ -151,7 +170,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let s1 = ROOTPATH
         let s2 = pub_url
         let s3 = seg_url
-        
         let htmlfullpath = s1 + s2 + s3
         let htmlzippath = htmlfullpath + ".zip"
         let htmldirpath = s1 + s2 + s3.substring(to: (s3.index((s3.startIndex), offsetBy: 3)))
@@ -172,7 +190,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         }
         
         return htmlfullpath
-
     }
     
     
@@ -223,15 +240,14 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-        print("\(#function)")
-        
+        print("\(#function)-error：\(error.localizedDescription)")
+        Dismiss()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         print("\(#function)")
         
-        //保存到浏览历史记录
-        
+        Dismiss()
     }
     
     

@@ -19,19 +19,24 @@ class BookmarkController: BaseViewControllerWithTable {
         tableview?.register(UINib(nibName: "BookmarksCell", bundle: nil), forCellReuseIdentifier: "BookmarksCellReuseIdentifier")
         headNumShouldChange = true
         
-        //....统计文档数量
-        sectionHeadtitle =  "Bookmarks"
+        //.
+        sectionHeadtitle = "Bookmarks"
     }
 
     override func viewWillAppear(_ animated: Bool) {
         
-        dataArray.removeAll()        
+        dataArray.removeAll()
+        HUD.show(withStatus: "Loading...")
         if let arr = BookmarkModel.search(with: nil, orderBy: nil)
         {
             dataArray = dataArray + arr
         }
         
         tableview?.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            HUD.dismiss()
+        }
+        
         super.viewWillAppear(animated)
     }
     
@@ -64,7 +69,11 @@ class BookmarkController: BaseViewControllerWithTable {
         let airs = AirplaneModel.search(with: "airplaneId='\(airid!)'", orderBy: nil)
         kSelectedAirplane = airs?.first as? AirplaneModel
         
-        jumptoNextWithIndex(3)
+        kseg_direction = 2
+        
+        
+        
+        RootControllerChangeWithIndex(3)
     }
     
     

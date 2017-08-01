@@ -34,6 +34,16 @@
 +(BOOL)deleteWith:(NSString*)query;
 
 
+/**
+ 创建实例
+
+ @param dic key-value
+
+ @return 实例对象
+ */
+-(instancetype)modelWith:(NSDictionary*)dic;
+
+
 /*私有方法，必须由子类重载.外部调用无意义。*/
 -(NSString *)getPrimarykey;
 
@@ -131,7 +141,7 @@
 @property(nonatomic,copy)NSString * airplaneId;
 @property(nonatomic,copy)NSString * mark_content;//备注
 
-@property(nonatomic,assign)NSInteger data_type;//...
+@property(nonatomic,assign)NSInteger data_type;//RESERVE...
 @end
 
 #pragma mark - other 辅助

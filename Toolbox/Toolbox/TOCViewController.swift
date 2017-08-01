@@ -14,7 +14,7 @@ let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 class TOCViewController: BaseViewControllerWithTable {
 
     var currentPublication:PublicationsModel!
-    var openedDirArray:[SegmentModel] = []
+//    var kseg_parentnode_arr:[SegmentModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,12 +69,12 @@ class TOCViewController: BaseViewControllerWithTable {
         else{
             let m = dataArray[indexPath.row] as! SegmentModel
             if Int(m.is_leaf) == 0 {
-                let has = openedDirArray.index(of: m)
+                let has = kseg_parentnode_arr.index(of: m)
                 if let has = has {
-                    openedDirArray.removeSubrange(has+1..<openedDirArray.count)
+                    kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
                 }
                 else if has == nil {
-                    openedDirArray.append(m)
+                    kseg_parentnode_arr.append(m)
                 }
                 
                 getNewData(modelId: m.primary_id)
@@ -85,7 +85,7 @@ class TOCViewController: BaseViewControllerWithTable {
                     kseg_primary_id = m.primary_id
                 
                     kSelectedSegment = m
-                    jumptoNextWithIndex(3)
+                    RootControllerChangeWithIndex(3)
                 
             }
         }
@@ -103,7 +103,17 @@ class TOCViewController: BaseViewControllerWithTable {
             return
         }
         currentPublication = selectedPublication
-        getNewData(modelId: currentPublication.book_uuid,flushDir: true)
+        
+        if kseg_direction == 1{
+            getNewData(modelId: currentPublication.book_uuid,flushDir: true)
+        }else{
+            let m = kseg_parentnode_arr.last
+            guard let parid = m?.primary_id else {
+                return
+            }
+            getNewData(modelId: parid,flushDir: false)
+        }
+        
     }
     
     
@@ -117,10 +127,10 @@ class TOCViewController: BaseViewControllerWithTable {
         
         if let  f = flushDir {
             if f {
-                openedDirArray.removeAll()
+                kseg_parentnode_arr.removeAll()
             }
             else{
-                dataArray = dataArray + openedDirArray
+                dataArray = dataArray + kseg_parentnode_arr
             }
         }
         

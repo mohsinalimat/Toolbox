@@ -27,11 +27,20 @@ let kCurrentScreenHight = UIScreen.main.bounds.height
 
 
 //MARK: -
-let jumptoNextWithIndex:((Int) -> Void) = {index in
+let RootControllerChangeWithIndex:((Int) -> Void) = {index in
     let root = UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController
     root.selectedIndex = index
 }
-		
+
+let Loading = {HUD.show()}
+let Loadingwith:((String)->()) = {str in
+    HUD.show(withStatus:str)
+}
+
+let Dismiss = {HUD.dismiss()}
+
+
+
 //MARK: - 全局变量
 //对应的数据库字段
 let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
@@ -57,9 +66,11 @@ var kpub_booklocal_url:String?//当前手册地址
 var kpub_bookuuid:String?
 
 var kseg_contentlocation_url:String?//当前目录内容地址
-var kseg_primary_id:String?
+var kseg_primary_id:String?//当前选择节点ID
+var kseg_parentnode_arr:[SegmentModel] = []//当前选择节点的父节点
+var kseg_hasopened_arr:[BookmarkModel] = []//历史浏览记录
 
-
+var kseg_direction = 1 //1-正向 2-反向
 
 ///PATH
 //"/var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc"

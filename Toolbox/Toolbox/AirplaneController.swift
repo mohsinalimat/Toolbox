@@ -8,7 +8,6 @@
 
 import UIKit
 import SSZipArchive
-import SVProgressHUD
 
 class AirplaneController:BaseViewControllerWithTable {
     var selectedDataArray = [String]()//当前已选择展开的model标记
@@ -30,10 +29,16 @@ class AirplaneController:BaseViewControllerWithTable {
         DBManager.default.startParse()
         
         loadData()
-
-
         
-        SVProgressHUD.show()
+//        var arr = [11,22,33]
+//        for (i,seg) in arr.enumerated() {
+//            print("\(i) - \(seg)")
+//            if seg == 22 {
+//                arr.remove(at: i)
+//                break
+//            }
+//        }
+        
         
 //        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
 //            for i in 0..<20 {
@@ -62,6 +67,7 @@ class AirplaneController:BaseViewControllerWithTable {
         dataArray.removeAll()
         selectedDataArray.removeAll()
         
+        HUD.show(withStatus: "Loading...")
         //字段为空的放在最后
         let arr = AirplaneModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray  + arr!
@@ -70,6 +76,12 @@ class AirplaneController:BaseViewControllerWithTable {
         dataArray = dataArray + arr2!
         
         tableview?.reloadData()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+             HUD.dismiss()    
+        }
+        
+        
     }
     
     
@@ -235,7 +247,7 @@ class AirplaneController:BaseViewControllerWithTable {
             kSelectedAirplane = (value as! AirplaneModel)
         }
         
-        jumptoNextWithIndex(1)
+        RootControllerChangeWithIndex(1)
     }
     
     

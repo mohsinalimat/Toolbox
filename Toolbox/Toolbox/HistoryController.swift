@@ -17,27 +17,52 @@ class HistoryController: BaseViewControllerWithTable {
         
         tableview?.frame = CGRect (x: 0, y:0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 )
         tableview?.register(UINib(nibName: "BookmarksCell", bundle: nil), forCellReuseIdentifier: "BookmarksCellReuseIdentifier")
-
+   
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         
-        //...test data
-        dataArray = dataArray + ["1","2","3","4"]
+        dataArray.removeAll()
         
+        dataArray = dataArray + kseg_hasopened_arr
+        
+        tableview?.reloadData()
+        
+        super.viewWillAppear(animated)
     }
     
     
-    
     //MARK:
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataArray.count
+        guard dataArray.count > 0 else {
+            return 1
+        }
+        
+        return section == 0 ? 1 :  dataArray.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if dataArray.count == 0 {
+            var cell = tableview?.dequeueReusableCell(withIdentifier: "historynodataidentifierid")
+            if cell == nil {
+                cell = UITableViewCell.init(style: .default, reuseIdentifier: "historynodataidentifierid")
+            }
+            cell?.textLabel?.text = "NO DATA"
+            cell?.textLabel?.textAlignment = .center
+            cell?.textLabel?.font = UIFont .systemFont(ofSize: 18)
+            
+            return cell!
+        }
+        
+        let m = dataArray[indexPath.row] as! BookmarkModel
+        
         let cell = tableview?.dequeueReusableCell(withIdentifier: "BookmarksCellReuseIdentifier", for: indexPath) as! BookmarksCell
+        
+        cell.fillCell(model: m)
         
         return cell
     }
@@ -47,7 +72,27 @@ class HistoryController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let m = dataArray[indexPath.row] as! BookmarkModel
+        kseg_contentlocation_url = m.seg_content_location
+        kseg_primary_id = m.seg_primary_id
+        let segs = SegmentModel.search(with: "primary_id='\(kseg_primary_id!)'", orderBy: nil)
+        kSelectedSegment = segs?.first as? SegmentModel
         
+        kpub_bookuuid = m.pub_book_uuid
+        kpub_booklocal_url = m.pub_booklocalurl
+        let books = PublicationsModel.search(with: "book_uuid='\(kpub_bookuuid!)'", orderBy: nil)
+        kSelectedPublication = books?.first as? PublicationsModel
+        
+        let airid = m.airplaneId
+        let airs = AirplaneModel.search(with: "airplaneId='\(airid!)'", orderBy: nil)
+        kSelectedAirplane = airs?.first as? AirplaneModel
+        
+        kseg_parentnode_arr = m.seg_parents as! [SegmentModel]
+        
+        kseg_direction = 2
+        
+        
+        RootControllerChangeWithIndex(3)
         
     }
     
