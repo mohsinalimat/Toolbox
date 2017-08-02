@@ -8,8 +8,8 @@
 
 import UIKit
 
-let kSegmentCellIdentifier = "SegmentCellIdentifier"
-let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
+private let kSegmentCellIdentifier = "SegmentCellIdentifier"
+private let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 
 class TOCViewController: BaseViewControllerWithTable {
 
@@ -33,7 +33,7 @@ class TOCViewController: BaseViewControllerWithTable {
         tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64)
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: kPublicationCellReuseIdentifier)
         tableview?.register(UINib (nibName: "SegmentCell", bundle: nil), forCellReuseIdentifier: kSegmentCellIdentifier)
-
+        tableview?.backgroundView = nil;
     }
     
     
@@ -52,6 +52,15 @@ class TOCViewController: BaseViewControllerWithTable {
             let model = dataArray[indexPath.row] as! SegmentModel
         
             cell.fillCell(model: model)
+            
+            if kseg_primary_id == model.primary_id {//是否选中
+                cell.backgroundColor = kCellSelectedBgColor
+            }
+            else{
+                cell.backgroundColor = kCellDefaultBgColor
+            }
+            
+            
             return cell
         }
         
@@ -62,12 +71,15 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //是否为目录
-        if indexPath.row == 0 {
+        
+        if indexPath.row == 0 {//根目录
+            kseg_primary_id = nil
             getNewData(modelId: currentPublication.book_uuid,flushDir: true)
         }
         else{
             let m = dataArray[indexPath.row] as! SegmentModel
+            kseg_primary_id = m.primary_id
+            
             if Int(m.is_leaf) == 0 {
                 let has = kseg_parentnode_arr.index(of: m)
                 if let has = has {
@@ -79,12 +91,14 @@ class TOCViewController: BaseViewControllerWithTable {
                 
                 getNewData(modelId: m.primary_id)
             }
-            else {//没有子节点了
-                    /////
-                    kseg_contentlocation_url = m.content_location
-                    kseg_primary_id = m.primary_id
+            else {//最后一级目录
+                    let cell = tableView.cellForRow(at: indexPath)
+                    cell?.backgroundColor = kCellSelectedBgColor
                 
+                    kseg_contentlocation_url = m.content_location
                     kSelectedSegment = m
+                    tableView.reloadData()
+                
                     RootControllerChangeWithIndex(3)
                 
             }
@@ -157,17 +171,7 @@ class TOCViewController: BaseViewControllerWithTable {
         tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     
     

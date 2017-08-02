@@ -23,12 +23,14 @@ class AirplaneController:BaseViewControllerWithTable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dataArray = dataArray as! [AirplaneModel]
+        
         navigationItem.titleView = nil
 
         //...第一次解析后保存标记
         DBManager.default.startParse()
         
-        loadData()
+//        loadData()
         
 //        var arr = [11,22,33]
 //        for (i,seg) in arr.enumerated() {
@@ -61,8 +63,25 @@ class AirplaneController:BaseViewControllerWithTable {
         
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadData()
+        if let hasSelectedAir = kSelectedAirplane{
+            for (index,value)  in dataArray.enumerated() {
+                let m = value as? AirplaneModel
+                if hasSelectedAir.airplaneId == m?.airplaneId {
+                    dataArray.insert(0, at: index + 1)
+                    selectedDataArray.append(hasSelectedAir.airplaneId)
+                }
+            }
+        }
+
+        
+        tableview?.reloadData()
+    }
     
-    
+    //MARK:-
     func loadData(opt:String = "airplaneRegistry") {
         dataArray.removeAll()
         selectedDataArray.removeAll()
@@ -75,9 +94,9 @@ class AirplaneController:BaseViewControllerWithTable {
         let arr2 = AirplaneModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray + arr2!
         
-        tableview?.reloadData()
+//        tableview?.reloadData()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
              HUD.dismiss()    
         }
         
@@ -162,6 +181,7 @@ class AirplaneController:BaseViewControllerWithTable {
             strongSelf.currentFieldKey = keytitle
             strongSelf.currentFieldName = fname
             strongSelf.loadData(opt:fname)
+            strongSelf.tableview?.reloadData()
         }
         
         let nav = BaseNavigationController(rootViewController:vc)
@@ -193,7 +213,7 @@ class AirplaneController:BaseViewControllerWithTable {
             
             cell.fillCell(model: model ,title: currentFieldName)
             
-            if self.selectedDataArray.index(of: model.airplaneId ) != nil{
+            if self.selectedDataArray.index(of: model.airplaneId ) != nil || ((kSelectedAirplane?.airplaneId == model.airplaneId) && (dataArray[indexPath.row + 1] is Int)) {
                 cell.cellSelectedInit()
             }
             
@@ -202,14 +222,14 @@ class AirplaneController:BaseViewControllerWithTable {
                 isSelected in
                 if isSelected{
                     self.dataArray.insert(0, at: indexPath.row + 1)
-                    //保存模型唯一标示airplaneId
+                    //保存唯一标示airplaneId
                     self.selectedDataArray.append(model.airplaneId)
 //                    self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 }
                 else{
                     self.dataArray.remove(at: indexPath.row + 1)
                     self.selectedDataArray.remove(at: self.selectedDataArray.index(of: model.airplaneId)!)
-//                    self.tableview?.deleteRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.fade)
+                    
                 }
                 
                 self.tableview?.reloadData()
@@ -246,6 +266,11 @@ class AirplaneController:BaseViewControllerWithTable {
         {
             kSelectedAirplane = (value as! AirplaneModel)
         }
+        
+//        selectedDataArray.removeAll()
+//        self.dataArray.insert(0, at: indexPath.row + 1)
+//        
+//        tableview?.reloadData()
         
         RootControllerChangeWithIndex(1)
     }

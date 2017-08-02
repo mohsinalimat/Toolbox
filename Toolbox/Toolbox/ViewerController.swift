@@ -118,16 +118,32 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         dic["seg_toc_code"] = kSelectedSegment?.toc_id
         dic["seg_title"] = kSelectedSegment?.title
         dic["seg_content_location"] = kSelectedSegment?.content_location
-        dic["seg_parents"] = kseg_parentnode_arr //.....
-        
         dic["pub_book_uuid"] = kSelectedPublication?.book_uuid
         dic["pub_booklocalurl"] = kSelectedPublication?.booklocalurl
         dic["pub_doc_abbreviation"] = kSelectedPublication?.doc_abbreviation
         dic["pub_document_owner"] = kSelectedPublication?.document_owner
         dic["pub_model"] = kSelectedPublication?.model
-        
         dic["airplaneId"] = kSelectedAirplane?.airplaneId
         dic["mark_content"] = ""
+        //        dic["seg_parents"] = kseg_parentnode_arr //.....
+        
+        do{
+            var tmp:[String] = []
+            for m in kseg_parentnode_arr {
+                tmp.append(m.primary_id)
+            }
+            
+            let ret =  JSONSerialization.isValidJSONObject(tmp)
+            guard ret == true else {
+                return dic
+            }
+            
+            let str = try JSONSerialization.data(withJSONObject: tmp, options: .prettyPrinted).base64EncodedString()
+            dic["seg_parents"] = str
+        }catch{
+            print(error)
+        }
+                
         return dic
     }
     

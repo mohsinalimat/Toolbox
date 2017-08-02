@@ -12,6 +12,7 @@ let indentValueArray = [0,5,15,35,50]
 
 let kBaseValue:CGFloat = 80.0
 
+
 class SegmentCell: UITableViewCell {
 
     @IBOutlet weak var bgView: UIView!
@@ -35,11 +36,12 @@ class SegmentCell: UITableViewCell {
         titleLable.text = model.title
         
         headIndentValue.constant = headIndentValue.constant + CGFloat( model.nodeLevel - 1) * 15
+//        backgroundColor = kCellDefaultBgColor
     }
     
     override func prepareForReuse() {
-//        initStatus()
         headIndentValue.constant = kBaseValue
+//        backgroundColor = kCellDefaultBgColor
     }
     
     
@@ -49,6 +51,8 @@ class SegmentCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+//        backgroundColor = kCellSelectedBgColor
+        
     }
     
 }

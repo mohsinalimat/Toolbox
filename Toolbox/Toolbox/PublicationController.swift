@@ -67,6 +67,7 @@ class PublicationController: BaseViewControllerWithTable {
         tableview?.frame = CGRect (x: 0, y: searchBar.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - searchBar.frame.height)
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
         sectionHeadtitle =  "Publications"
+        
     }
     
     
@@ -75,8 +76,14 @@ class PublicationController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
+        
         cell.fillCell(model: model)
-    
+        if let kSelectedPublication = kSelectedPublication{
+            let select = kSelectedPublication.book_uuid == model.book_uuid
+            cell.isSelected(select)
+        }
+        
+        
         return cell
     }
     
@@ -86,7 +93,7 @@ class PublicationController: BaseViewControllerWithTable {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableview?.cellForRow(at: indexPath) as! PublicationCell
-        cell.setSelected(true, animated: true)
+        cell.isSelected(true)
         
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
         kSelectedPublication = model
@@ -95,16 +102,10 @@ class PublicationController: BaseViewControllerWithTable {
         
         kseg_direction = 1
         
+        tableview?.reloadData()
         RootControllerChangeWithIndex(2)
     }
-    
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let cell = tableview?.cellForRow(at: indexPath) as! PublicationCell
-        cell.setSelected(false, animated: true)
-    }
-    
-    
-    
+
     
     
     

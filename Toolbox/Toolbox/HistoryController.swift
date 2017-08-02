@@ -53,7 +53,7 @@ class HistoryController: BaseViewControllerWithTable {
             }
             cell?.textLabel?.text = "NO DATA"
             cell?.textLabel?.textAlignment = .center
-            cell?.textLabel?.font = UIFont .systemFont(ofSize: 18)
+            cell?.textLabel?.font = UIFont .systemFont(ofSize: 15)
             
             return cell!
         }
@@ -78,22 +78,37 @@ class HistoryController: BaseViewControllerWithTable {
         let segs = SegmentModel.search(with: "primary_id='\(kseg_primary_id!)'", orderBy: nil)
         kSelectedSegment = segs?.first as? SegmentModel
         
-        kpub_bookuuid = m.pub_book_uuid
+        let bookid = m.pub_book_uuid
         kpub_booklocal_url = m.pub_booklocalurl
-        let books = PublicationsModel.search(with: "book_uuid='\(kpub_bookuuid!)'", orderBy: nil)
+        let books = PublicationsModel.search(with: "book_uuid='\(bookid!)'", orderBy: nil)
         kSelectedPublication = books?.first as? PublicationsModel
         
         let airid = m.airplaneId
         let airs = AirplaneModel.search(with: "airplaneId='\(airid!)'", orderBy: nil)
         kSelectedAirplane = airs?.first as? AirplaneModel
+        kseg_parentnode_arr.removeAll()
         
-        kseg_parentnode_arr = m.seg_parents as! [SegmentModel]
-        
+        if let str = m.seg_parents {
+            let data = Data.init(base64Encoded: str)
+            do{
+                let arr = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [String]
+                
+                var sql = "("
+                for value in arr {
+                    sql =  sql.appending("'\(value)',")
+                }
+                sql.remove(at: sql.index(before: sql.endIndex))
+                sql = sql.appending(")")
+                
+                let s = SegmentModel.search(with: "primary_id in \(sql)", orderBy: nil)
+                kseg_parentnode_arr = s as! [SegmentModel]
+            }catch{
+                print(error)
+            }
+        }
+     
         kseg_direction = 2
-        
-        
         RootControllerChangeWithIndex(3)
-        
     }
     
     

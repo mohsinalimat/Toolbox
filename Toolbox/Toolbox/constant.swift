@@ -9,22 +9,17 @@
 import Foundation
 import UIKit
 
-let kColor:((Int,Int,Int) -> UIColor) = {
-    r,g,b in
-    return UIColor (red: 54/255.0, green:  54/255.0, blue:  54/255.0, alpha: 1)
-}
-
-//Color
+///
 let kBartintColor =  UIColor (red: 54/255.0, green:  54/255.0, blue:  54/255.0, alpha: 1)
 let kTableviewHeadViewBgColor = UIColor(red: 84/255.0, green:  150/255.0, blue:  194/255.0, alpha: 1)
 let kTableviewBackgroundColor = UIColor.init(colorLiteralRed: 231/255.0, green: 231/255.0, blue: 231/255.0, alpha: 1)
+let kCellDefaultBgColor = UIColor (red: 236/255.0, green: 236/255.0, blue: 236/255.0, alpha: 1)
+let kCellSelectedBgColor = UIColor.white
 let kDOCTYPEColor:[String:UIColor] = ["AIPC":UIColor(red: 255/255.0, green:  227/255.0, blue:  30/255.0, alpha: 1),
                                       "AMM":UIColor(red: 169/255.0, green:  67/255.0, blue:  85/255.0, alpha: 1),
                                       "TSM":UIColor(red: 146/255.0, green:  154/255.0, blue:  158/255.0, alpha: 1),]
-
 let kCurrentScreenWidth = UIScreen.main.bounds.width
 let kCurrentScreenHight = UIScreen.main.bounds.height
-
 
 //MARK: -
 let RootControllerChangeWithIndex:((Int) -> Void) = {index in
@@ -40,7 +35,6 @@ let Loadingwith:((String)->()) = {str in
 let Dismiss = {HUD.dismiss()}
 
 
-
 //MARK: - 全局变量
 //对应的数据库字段
 let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
@@ -51,33 +45,21 @@ let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
     "Line":"airplaneLineNumber",
 ];
 
-//全部手册
-var kAllPublications:[String:Any] = [:]
-
-//当前选中的飞机
-var kSelectedAirplane:AirplaneModel?
-//当前选中的手册
-var kSelectedPublication:PublicationsModel?
-//当前选中的目录节点
-var kSelectedSegment:SegmentModel?
-
-//////////////////////////////////
+var kAllPublications:[String:Any] = [:]//手册与飞机关联信息msn
+var kSelectedAirplane:AirplaneModel?//当前选中的飞机
+var kSelectedPublication:PublicationsModel?//当前选中的手册
+var kSelectedSegment:SegmentModel?//当前选中的目录节点
 var kpub_booklocal_url:String?//当前手册地址
-var kpub_bookuuid:String?
-
 var kseg_contentlocation_url:String?//当前目录内容地址
 var kseg_primary_id:String?//当前选择节点ID
 var kseg_parentnode_arr:[SegmentModel] = []//当前选择节点的父节点
 var kseg_hasopened_arr:[BookmarkModel] = []//历史浏览记录
-
 var kseg_direction = 1 //1-正向 2-反向
 
 ///PATH
 //"/var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc"
 let ROOTPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/TDLibrary")
-
 let HTMLPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/HTML")
-
 let ROOTSUBPATH = "/CCA/" //待确定唯一性?
 
 let PATH = ROOTPATH + ROOTSUBPATH

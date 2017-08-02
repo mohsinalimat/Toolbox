@@ -12,14 +12,10 @@ class BookmarkController: BaseViewControllerWithTable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        
         tableview?.frame = CGRect (x: 0, y:0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 )
         tableview?.register(UINib(nibName: "BookmarksCell", bundle: nil), forCellReuseIdentifier: "BookmarksCellReuseIdentifier")
         headNumShouldChange = true
-        
-        //.
+
         sectionHeadtitle = "Bookmarks"
     }
 
@@ -60,19 +56,36 @@ class BookmarkController: BaseViewControllerWithTable {
         let segs = SegmentModel.search(with: "primary_id='\(kseg_primary_id!)'", orderBy: nil)
         kSelectedSegment = segs?.first as? SegmentModel
         
-        kpub_bookuuid = m.pub_book_uuid
+        let bookid = m.pub_book_uuid
         kpub_booklocal_url = m.pub_booklocalurl
-        let books = PublicationsModel.search(with: "book_uuid='\(kpub_bookuuid!)'", orderBy: nil)
+        let books = PublicationsModel.search(with: "book_uuid='\(bookid!)'", orderBy: nil)
         kSelectedPublication = books?.first as? PublicationsModel
         
         let airid = m.airplaneId
         let airs = AirplaneModel.search(with: "airplaneId='\(airid!)'", orderBy: nil)
         kSelectedAirplane = airs?.first as? AirplaneModel
+        kseg_parentnode_arr.removeAll()
+        
+        if let str = m.seg_parents {
+            let data = Data.init(base64Encoded: str)
+            do{
+                let arr = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [String]
+                
+                var sql = "("
+                for value in arr {
+                    sql =  sql.appending("'\(value)',")
+                }
+                sql.remove(at: sql.index(before: sql.endIndex))
+                sql = sql.appending(")")
+                
+                let s = SegmentModel.search(with: "primary_id in \(sql)", orderBy: nil)
+                kseg_parentnode_arr = s as! [SegmentModel]
+            }catch{
+                print(error)
+            }
+        }
         
         kseg_direction = 2
-        
-        
-        
         RootControllerChangeWithIndex(3)
     }
     
@@ -101,16 +114,5 @@ class BookmarkController: BaseViewControllerWithTable {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

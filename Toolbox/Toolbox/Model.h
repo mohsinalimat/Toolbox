@@ -130,7 +130,7 @@
 @property(nonatomic,copy)NSString * seg_toc_code;
 @property(nonatomic,copy)NSString * seg_title;
 @property(nonatomic,copy)NSString * seg_content_location;
-@property(nonatomic)NSArray * seg_parents;
+@property(nonatomic,copy)NSString * seg_parents;
 
 @property(nonatomic,copy)NSString * pub_book_uuid;
 @property(nonatomic,copy)NSString * pub_booklocalurl;
