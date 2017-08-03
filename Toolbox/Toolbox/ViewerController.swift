@@ -18,33 +18,74 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     var loveBtn:UIButton!
     var hasloved:Bool = false
     
+    //MARK:-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        initNavigationBarItem()
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_airplane_changed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
         
+        initNavigationBarItem()
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
         webview.delegate = self
+        webview.backgroundColor = kTableviewBackgroundColor
+        
         view.addSubview(webview)
     }
 
+    func recnotification(_ noti:Notification)  {
+        kSelectedSegment = nil
+        currenthtml_url = nil
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         guard var urlStr = getFilePath() else {
+            if currenthtml_url == nil {
+                webview.isHidden = true
+                loveBtn.isHidden = true
+                getTapNodata();
+            }
             return
         }
-        urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
+
+        if !view.isUserInteractionEnabled {
+            view.isUserInteractionEnabled = true
+        }
+        if webview.isHidden {
+            webview.isHidden = false
+            loveBtn.isHidden = false
+        }
+        
+        for v in view.subviews {
+            if v is UILabel
+            {
+                v.removeFromSuperview();
+            }
+        }
         
         Loading()
+        urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
         webview.loadRequest(URLRequest.init(url: URL.init(string: urlStr)!))
-        hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
+        hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
         loveBtn.isSelected = hasloved
         
         addModel(m: model())
         super.viewWillAppear(animated)
     }
     
-
+    func getTapNodata() {
+        let lab = UILabel.init(frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 70))
+        lab.text = "No airplane selected. please select an airplane first."
+        lab.textAlignment = .center
+        lab.font = UIFont.boldSystemFont(ofSize: 15)
+        lab.tag = 100
+        lab.isUserInteractionEnabled = false
+        view.backgroundColor = kTableviewBackgroundColor
+        view.isUserInteractionEnabled = false
+        view.addSubview(lab)
+    }
+    
     //MARK: -
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
@@ -90,14 +131,14 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 btn.isSelected = !btn.isSelected
                 
                 //是否已收藏
-                let hasloved = BookmarkModel.search(with: "seg_primary_id='\(kseg_primary_id!)'", orderBy: nil).count > 0
+                let hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
                 if !hasloved {
                     let dic = getBaseData()
                     BookmarkModel.saveToDb(with: dic)
                     HUD.show(successInfo: "添加书签")
                 }else{
                     //删除记录
-                  let ret = BookmarkModel.delete(with: "seg_primary_id='\(kseg_primary_id!)'")
+                  let ret = BookmarkModel.delete(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'")
                     if ret {
                         HUD.show(successInfo: "取消书签")
                     }
@@ -125,7 +166,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         dic["pub_model"] = kSelectedPublication?.model
         dic["airplaneId"] = kSelectedAirplane?.airplaneId
         dic["mark_content"] = ""
-        //        dic["seg_parents"] = kseg_parentnode_arr //.....
         
         do{
             var tmp:[String] = []
@@ -163,10 +203,8 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     
     //MARK: - 获取文件路径
-    //前级数据改变-后级数据的操作处理？？？？？？
     func getFilePath() -> String? {
-        //第一次进入currentPublication数据可能为空，稍后做提示处理？
-        guard let pub_url = kpub_booklocal_url,let seg_url = kseg_contentlocation_url else {
+        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {
             return nil
         }
         

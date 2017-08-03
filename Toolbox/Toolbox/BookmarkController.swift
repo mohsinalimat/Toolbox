@@ -38,6 +38,10 @@ class BookmarkController: BaseViewControllerWithTable {
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No bookmark.")
+        }
+        
         let cell = tableview?.dequeueReusableCell(withIdentifier: "BookmarksCellReuseIdentifier", for: indexPath) as! BookmarksCell
         let m = dataArray[indexPath.row] as! BookmarkModel
         cell.fillCell(model: m)
@@ -51,13 +55,11 @@ class BookmarkController: BaseViewControllerWithTable {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let m = dataArray[indexPath.row] as! BookmarkModel
-        kseg_contentlocation_url = m.seg_content_location
-        kseg_primary_id = m.seg_primary_id
-        let segs = SegmentModel.search(with: "primary_id='\(kseg_primary_id!)'", orderBy: nil)
+//        kseg_contentlocation_url = m.seg_content_location
+        let segs = SegmentModel.search(with: "primary_id='\(m.seg_primary_id!)'", orderBy: nil)
         kSelectedSegment = segs?.first as? SegmentModel
         
         let bookid = m.pub_book_uuid
-        kpub_booklocal_url = m.pub_booklocalurl
         let books = PublicationsModel.search(with: "book_uuid='\(bookid!)'", orderBy: nil)
         kSelectedPublication = books?.first as? PublicationsModel
         

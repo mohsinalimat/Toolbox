@@ -51,6 +51,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         navigationItem.titleView = button
     }
 
+    //MARK:-
     func popPresentControllerButtonAction(_ button:UIButton){
         
         let rect = CGRect (x: 0, y: 0, width: 320, height: 160)
@@ -65,7 +66,18 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         self.present(vc, animated: true, completion: nil)
     }
     
-    
+    func getCellForNodata(_ tableView:UITableView,info:String) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "historynodataidentifierid")
+        if cell == nil {
+            cell = UITableViewCell.init(style: .default, reuseIdentifier: "historynodataidentifierid")
+        }
+        cell?.textLabel?.text = info
+        cell?.textLabel?.textAlignment = .center
+        cell?.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        cell?.isUserInteractionEnabled = false
+        cell?.backgroundColor = UIColor.clear
+        return cell!
+    }
     
     public func initSubview(){
     
@@ -81,7 +93,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataArray.count
+        return dataArray.count == 0 ? 1: dataArray.count
     }
     
     
@@ -127,7 +139,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat(sectionHeadtitle != nil ? headSectionHeight : 0.0)
+        return CGFloat(sectionHeadtitle != nil && dataArray.count > 0 ? headSectionHeight : 0.0)
     }
     
     

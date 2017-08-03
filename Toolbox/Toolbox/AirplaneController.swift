@@ -93,10 +93,8 @@ class AirplaneController:BaseViewControllerWithTable {
         
         let arr2 = AirplaneModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray + arr2!
-        
-//        tableview?.reloadData()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+ 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
              HUD.dismiss()    
         }
         
@@ -195,8 +193,12 @@ class AirplaneController:BaseViewControllerWithTable {
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No airplane data.")
+        }
+        
         let value = dataArray[indexPath.row]
-
         if  value is Int{
             let value = dataArray[indexPath.row - 1]
             let  model:AirplaneModel! = value as! AirplaneModel
@@ -241,6 +243,10 @@ class AirplaneController:BaseViewControllerWithTable {
     }
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if dataArray.count == 0 {
+            return 64;
+        }
+        
         let tmp = dataArray[indexPath.row] as? Int
         if let isdetail = tmp
         {
@@ -266,21 +272,13 @@ class AirplaneController:BaseViewControllerWithTable {
         {
             kSelectedAirplane = (value as! AirplaneModel)
         }
-        
-//        selectedDataArray.removeAll()
-//        self.dataArray.insert(0, at: indexPath.row + 1)
-//        
-//        tableview?.reloadData()
+
+        NotificationCenter.default.post(name: knotification_airplane_changed, object: nil)
         
         RootControllerChangeWithIndex(1)
     }
     
-    
-    //判断是否详情cell
-    func isDetailCell(value: Int) -> Bool {
-        return value == 0 ? true : false
-    }
-    
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

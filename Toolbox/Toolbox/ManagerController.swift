@@ -136,6 +136,10 @@ class ManagerController: BaseViewControllerWithTable {
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No publication on the deveice.")
+        }
+        
         let value = dataArray[indexPath.row]
         
         if value is Int {
@@ -166,6 +170,10 @@ class ManagerController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if dataArray.count == 0 {
+            return 70;
+        }
+        
         let tmp = dataArray[indexPath.row] as? Int
         if let isdetail = tmp
         {

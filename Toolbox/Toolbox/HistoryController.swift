@@ -46,16 +46,9 @@ class HistoryController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         if dataArray.count == 0 {
-            var cell = tableview?.dequeueReusableCell(withIdentifier: "historynodataidentifierid")
-            if cell == nil {
-                cell = UITableViewCell.init(style: .default, reuseIdentifier: "historynodataidentifierid")
-            }
-            cell?.textLabel?.text = "NO DATA"
-            cell?.textLabel?.textAlignment = .center
-            cell?.textLabel?.font = UIFont .systemFont(ofSize: 15)
-            
-            return cell!
+            return getCellForNodata(tableView, info: "No history data.")
         }
         
         let m = dataArray[indexPath.row] as! BookmarkModel
@@ -73,13 +66,11 @@ class HistoryController: BaseViewControllerWithTable {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let m = dataArray[indexPath.row] as! BookmarkModel
-        kseg_contentlocation_url = m.seg_content_location
-        kseg_primary_id = m.seg_primary_id
-        let segs = SegmentModel.search(with: "primary_id='\(kseg_primary_id!)'", orderBy: nil)
+//        kseg_contentlocation_url = m.seg_content_location
+        let segs = SegmentModel.search(with: "primary_id='\(m.seg_primary_id!)'", orderBy: nil)
         kSelectedSegment = segs?.first as? SegmentModel
         
         let bookid = m.pub_book_uuid
-        kpub_booklocal_url = m.pub_booklocalurl
         let books = PublicationsModel.search(with: "book_uuid='\(bookid!)'", orderBy: nil)
         kSelectedPublication = books?.first as? PublicationsModel
         

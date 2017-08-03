@@ -14,14 +14,29 @@ private let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 class TOCViewController: BaseViewControllerWithTable {
 
     var currentPublication:PublicationsModel!
+    var currentSegment:SegmentModel!
+    
 //    var kseg_parentnode_arr:[SegmentModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_airplane_changed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
     }
 
+    func recnotification(_ noti:Notification)  {
+        currentPublication = nil
+        kSelectedSegment = nil
+        
+        kseg_direction = 1
+        kseg_parentnode_arr.removeAll()
+        dataArray.removeAll()
+        
+        tableview?.reloadData()
+        
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         loadData()
@@ -41,6 +56,10 @@ class TOCViewController: BaseViewControllerWithTable {
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+        }
+        
         if indexPath.row == 0 {
             let cell = tableview?.dequeueReusableCell(withIdentifier: kPublicationCellReuseIdentifier, for: indexPath) as! PublicationCell
             let model = dataArray[0] as! PublicationsModel
@@ -53,7 +72,7 @@ class TOCViewController: BaseViewControllerWithTable {
         
             cell.fillCell(model: model)
             
-            if kseg_primary_id == model.primary_id {//是否选中
+            if currentSegment?.primary_id == model.primary_id {//是否选中
                 cell.backgroundColor = kCellSelectedBgColor
             }
             else{
@@ -73,13 +92,13 @@ class TOCViewController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.row == 0 {//根目录
-            kseg_primary_id = nil
+            currentSegment = nil
+            kSelectedSegment = nil
             getNewData(modelId: currentPublication.book_uuid,flushDir: true)
         }
         else{
             let m = dataArray[indexPath.row] as! SegmentModel
-            kseg_primary_id = m.primary_id
-            
+            currentSegment = m
             if Int(m.is_leaf) == 0 {
                 let has = kseg_parentnode_arr.index(of: m)
                 if let has = has {
@@ -94,8 +113,6 @@ class TOCViewController: BaseViewControllerWithTable {
             else {//最后一级目录
                     let cell = tableView.cellForRow(at: indexPath)
                     cell?.backgroundColor = kCellSelectedBgColor
-                
-                    kseg_contentlocation_url = m.content_location
                     kSelectedSegment = m
                     tableView.reloadData()
                 
@@ -109,7 +126,6 @@ class TOCViewController: BaseViewControllerWithTable {
     
     //MARK: - 数据处理
     func loadData() {
-        //第一次进入currentPublication数据可能为空，稍后做提示处理？
         guard let selectedPublication = kSelectedPublication else {
             return
         }
@@ -117,6 +133,7 @@ class TOCViewController: BaseViewControllerWithTable {
             return
         }
         currentPublication = selectedPublication
+        currentSegment = kSelectedSegment
         
         if kseg_direction == 1{
             getNewData(modelId: currentPublication.book_uuid,flushDir: true)
@@ -134,7 +151,7 @@ class TOCViewController: BaseViewControllerWithTable {
     /// 获取目录数据
     ///
     /// - parameter modelId:  当前model的主键-primary_id
-    /// - parameter flushDir: 标记为是否需要清空已展开的目录数据-openedDirArray
+    /// - parameter flushDir: 标记为是否需要清空已展开的目录数据
     func getNewData(modelId:String,flushDir:Bool? = false){
         dataArray.removeAll()
         dataArray.append(currentPublication)

@@ -18,8 +18,17 @@ class PublicationController: BaseViewControllerWithTable {
 
         // Do any additional setup after loading the view.
 
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_ :)), name: knotification_airplane_changed, object: nil)
+        
     }
 
+    func recnotification(_ noti:Notification)  {
+        currentAirplaneModel = nil
+        kSelectedPublication = nil
+    }
+    
+
+    
     func loadData() {
         //数据可能为空
         guard let selectedAirplane = kSelectedAirplane else {
@@ -74,6 +83,11 @@ class PublicationController: BaseViewControllerWithTable {
     
     //MARK: 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+        }
+        
         let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
         
@@ -92,15 +106,16 @@ class PublicationController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let cell = tableview?.cellForRow(at: indexPath) as! PublicationCell
         cell.isSelected(true)
         
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
         kSelectedPublication = model
         ////
-        kpub_booklocal_url = model.booklocalurl
-        
+
         kseg_direction = 1
+        NotificationCenter.default.post(name: knotification_publication_changed, object: nil)
         
         tableview?.reloadData()
         RootControllerChangeWithIndex(2)
