@@ -39,8 +39,9 @@ class TOCViewController: BaseViewControllerWithTable {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        loadData()
         super.viewWillAppear(animated)
+        
+        loadData()
     }
     
     

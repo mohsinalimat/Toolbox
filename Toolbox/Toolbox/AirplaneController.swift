@@ -173,8 +173,10 @@ class AirplaneController:BaseViewControllerWithTable {
             guard let strongSelf = self else { return }
             let keytitle = strongSelf.popViewkeyArr[index]
             button.setTitle("\(keytitle)", for: .normal)
+            kAIRPLANE_SORTEDOPTION_KEY = keytitle
+            
             //记录当前选项刷新列表
-            let fname = kAirplaneInfoMap[keytitle]!
+            let fname = kAirplaneKeyValue[keytitle]!
             strongSelf.popViewselectedIndex = index
             strongSelf.currentFieldKey = keytitle
             strongSelf.currentFieldName = fname

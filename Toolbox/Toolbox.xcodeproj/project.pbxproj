@@ -90,6 +90,8 @@
 		A1C1BDAB1F00FF85002FC0E0 /* downSleft.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDA91F00FF85002FC0E0 /* downSleft.png */; };
 		A1C1BDAC1F00FF85002FC0E0 /* downSleft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */; };
 		A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */; };
+		A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */; };
+		A1CA21871F3472CE0055BCB0 /* SetterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */; };
 		A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DE045E1F21D06B000C5069 /* SegmentCell.swift */; };
 		A1DE04611F21D06B000C5069 /* SegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1DE045F1F21D06B000C5069 /* SegmentCell.xib */; };
 /* End PBXBuildFile section */
@@ -203,6 +205,8 @@
 		A1C1BDA91F00FF85002FC0E0 /* downSleft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downSleft.png; sourceTree = "<group>"; };
 		A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downSleft@2x.png"; sourceTree = "<group>"; };
 		A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg.png; sourceTree = "<group>"; };
+		A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetterViewController.swift; sourceTree = "<group>"; };
+		A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetterViewController.xib; sourceTree = "<group>"; };
 		A1DE045E1F21D06B000C5069 /* SegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentCell.swift; sourceTree = "<group>"; };
 		A1DE045F1F21D06B000C5069 /* SegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentCell.xib; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
@@ -375,6 +379,8 @@
 				A1C1BD9D1F00ACB5002FC0E0 /* HistoryController.swift */,
 				A1C1BD9F1F00ACC9002FC0E0 /* BookmarkController.swift */,
 				A1C1BDA11F00ACE0002FC0E0 /* ManagerController.swift */,
+				A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */,
+				A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -586,6 +592,7 @@
 				A17C810A1F30589400EF8B9D /* success@2x.png in Resources */,
 				A106483C1F04C21E002D088C /* AppIcon-B2C72x72@2x~ipad.png in Resources */,
 				A1C06BDA1F0A35AC00A29620 /* deletePub@2x.png in Resources */,
+				A1CA21871F3472CE0055BCB0 /* SetterViewController.xib in Resources */,
 				A106483E1F04C21E002D088C /* AppIcon-B2C76x76@2x~ipad.png in Resources */,
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
 				A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */,
@@ -706,6 +713,7 @@
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
 				A136F1211F1372BC00349572 /* DBManager.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,
+				A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
 				A1C1BD8C1F00A5BB002FC0E0 /* BaseTabbarController.swift in Sources */,

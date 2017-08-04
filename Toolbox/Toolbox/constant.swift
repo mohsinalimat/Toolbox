@@ -36,13 +36,16 @@ let Dismiss = {HUD.dismiss()}
 
 //MARK: - 全局变量
 //对应字段
-let kAirplaneInfoMap:[String:String]! = ["Tail":"tailNumber",
+let kAirplaneKeyValue:[String:String]! = ["Tail":"tailNumber",
     "Registry":"airplaneRegistry",
     "MSN":"airplaneSerialNumber",
     "Variable":"airplaneId",
     "CEC":"customerEffectivity",
     "Line":"airplaneLineNumber",
+    "MODEL":"airplaneMajorModel"
 ];
+
+var kAIRPLANE_SORTEDOPTION_KEY:String = "Registry"
 
 var kAllPublications:[String:Any] = [:]//手册与飞机关联信息msn
 var kSelectedAirplane:AirplaneModel?//当前选中的飞机

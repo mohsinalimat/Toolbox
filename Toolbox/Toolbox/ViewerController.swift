@@ -40,6 +40,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         guard var urlStr = getFilePath() else {
             if currenthtml_url == nil {
                 webview.isHidden = true
@@ -71,7 +72,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         loveBtn.isSelected = hasloved
         
         addModel(m: model())
-        super.viewWillAppear(animated)
     }
     
     func getTapNodata() {

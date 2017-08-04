@@ -13,7 +13,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let settingItem  = UIBarButtonItem (image: UIImage (named: "gear_(settings)_icon"), style: .plain, target: self, action: #selector(rightItemButtonAction))
+        let settingItem  = UIBarButtonItem (image: UIImage (named: "gear_(settings)_icon"), style: .plain, target: self, action: #selector(rightItemButtonAction(_:)))
         let fiexditem = UIBarButtonItem.init(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fiexditem.width = 20
         
@@ -21,9 +21,24 @@ class BaseViewController: UIViewController {
     }
 
     
-    func rightItemButtonAction()
+    func rightItemButtonAction(_ button:UIBarButtonItem)
     {
         print("set btn");
+        let rect = CGRect (x: 0, y: 0, width: 480, height: 480)
+        let vc :SetterViewController = SetterViewController.init(nibName: "SetterViewController", bundle: nil)
+        
+        let nav:BaseNavigationController = BaseNavigationController(rootViewController:vc)
+        nav.navigationBar.barTintColor = UIColor.white
+        nav.navigationBar.tintColor = UIColor.black
+        
+        nav.view.frame = rect
+        nav.modalPresentationStyle = .popover
+        nav.popoverPresentationController?.barButtonItem = button
+        
+        nav.preferredContentSize = rect.size
+
+        self.present(nav, animated: true, completion: nil)
+
     }
     
     

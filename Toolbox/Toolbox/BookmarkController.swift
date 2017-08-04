@@ -20,6 +20,7 @@ class BookmarkController: BaseViewControllerWithTable {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         dataArray.removeAll()
         HUD.show(withStatus: "Loading...")
@@ -32,8 +33,6 @@ class BookmarkController: BaseViewControllerWithTable {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             HUD.dismiss()
         }
-        
-        super.viewWillAppear(animated)
     }
     
     //MARK:

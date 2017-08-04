@@ -21,14 +21,13 @@ class HistoryController: BaseViewControllerWithTable {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         dataArray.removeAll()
         
         dataArray = dataArray + kseg_hasopened_arr
         
         tableview?.reloadData()
-        
-        super.viewWillAppear(animated)
     }
     
     
