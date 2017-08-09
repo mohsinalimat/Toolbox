@@ -38,6 +38,7 @@
 		A17C810A1F30589400EF8B9D /* success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81061F30589400EF8B9D /* success@2x.png */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
+		A1B13AB01F3982A10049250F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B13AAF1F3982A10049250F /* LocationManager.swift */; };
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
 		A1B71D0B1F0B6BAD0054CA04 /* 11-00-00-01B.html in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */; };
@@ -147,6 +148,7 @@
 		A17C81061F30589400EF8B9D /* success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "success@2x.png"; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
+		A1B13AAF1F3982A10049250F /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
 		A1B71D0A1F0B6BAD0054CA04 /* 11-00-00-01B.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "11-00-00-01B.html"; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				A136F1201F1372BC00349572 /* DBManager.swift */,
+				A1B13AAF1F3982A10049250F /* LocationManager.swift */,
 			);
 			name = db;
 			sourceTree = "<group>";
@@ -714,6 +717,7 @@
 				A136F1211F1372BC00349572 /* DBManager.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,
 				A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */,
+				A1B13AB01F3982A10049250F /* LocationManager.swift in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
 				A1C1BD8C1F00A5BB002FC0E0 /* BaseTabbarController.swift in Sources */,

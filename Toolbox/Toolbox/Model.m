@@ -7,7 +7,6 @@
 //
 
 #import "Model.h"
-#define ToolboxDBName @"Toolbox"
 
 @interface  DBTool: NSObject
 
@@ -21,7 +20,9 @@
     {
         self = [super init];
         if (self) {
-            _helper = [[LKDBHelper alloc]initWithDBName:ToolboxDBName];
+            NSString *libraypath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)lastObject];
+            NSString * path = [libraypath stringByAppendingPathComponent:@"Database/ToolBox.db"];
+            _helper = [[LKDBHelper alloc]initWithDBPath:path];
         }
         return self;
     }
@@ -68,6 +69,15 @@
         
         return self;
     }
+
+
++(void)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)des {
+    NSFileManager * fm = [NSFileManager defaultManager];
+    
+   BOOL _b = [fm moveItemAtPath:srcPath toPath:des error:nil];
+    
+    NSLog(@"%d",_b);
+}
 
 
     //返回数据表名称

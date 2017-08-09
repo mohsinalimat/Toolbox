@@ -65,10 +65,15 @@ let knotification_segment_changed = Notification.Name(rawValue: "knotification_s
 
 ///PATH
 /*
- "/var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc"
+ "/var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary
+ /CCA/
+ CCAA320CCAAIPC20161101/aipc"
  */
-let ROOTPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/TDLibrary")
-let HTMLPATH = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0].appending("/HTML")
+let DocumentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+
+let LibraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+let ROOTPATH = LibraryPath.appending("/TDLibrary")
+let HTMLPATH = LibraryPath.appending("/HTML")
 let ROOTSUBPATH = "/CCA/" //待确定唯一性?
 
 let PATH = ROOTPATH + ROOTSUBPATH

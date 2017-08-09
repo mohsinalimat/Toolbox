@@ -10,8 +10,11 @@ import UIKit
 
 class SetterViewController: UITableViewController {
     
-    let sectionHeadTitle:[String] = ["TOOLBOX LIBRARY","PREFERENCES","DISPLAY & BRIGHTNESS"];
-    let rowTitle = ["Version","Copyright","Airplane Identifier","Ghost Hand","Brightness","Night Theme"]
+    let sectionHeadTitle:[String] = ["TOOLBOX LIBRARY","PREFERENCES",/*"DISPLAY & BRIGHTNESS"*/];
+    let dataArray:[[String]] = [["Version","Copyright"],
+                               ["Airplane Identifier",/*"Ghost Hand"*/],
+                               //["Brightness",/*"Night Theme"*/]
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,8 @@ class SetterViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         title = "Setter"
+        
+//        print(Bundle.main.infoDictionary?["CFBundleShortVersionString"])
     }
 
     
@@ -34,24 +39,53 @@ class SetterViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 3
+        return dataArray.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 2
+        return dataArray[section].count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
+        var cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier")
+        if cell == nil {
+            cell = UITableViewCell.init(style: UITableViewCellStyle.value1, reuseIdentifier: "reuseIdentifier")
+        }
         // Configure the cell...
-
-        return cell
+        let title = dataArray[indexPath.section][indexPath.row]
+        cell?.textLabel?.text = title;
+        
+        var detailStr = ""
+        switch (indexPath.section,indexPath.row) {
+        case (0,0):
+            detailStr = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+            break
+        case (0,1):
+            detailStr = "Copyright@gener-tech2017.All rights reserved"
+            break
+        case (1,0):
+            detailStr = kAIRPLANE_SORTEDOPTION_KEY
+            break
+        case (1,1):
+            detailStr = kAIRPLANE_SORTEDOPTION_KEY
+            break
+            
+        default: break
+            
+        }
+        cell?.detailTextLabel?.text = detailStr
+        
+        
+        return cell!
     }
     
 
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionHeadTitle[section]
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

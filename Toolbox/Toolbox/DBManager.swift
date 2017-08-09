@@ -12,6 +12,7 @@ import SSZipArchive
 
 class DBManager: NSObject {
     static let `default` :DBManager = DBManager()
+    let fm = FileManager.default
     
     /// 解析json格式的数据
     ///
@@ -67,7 +68,7 @@ class DBManager: NSObject {
         }
     
         if !updateTableInfoisExist(cls: SegmentModel.self) {
-//            getSegments()
+            getSegments()
         }
         else{
             print("SegmentModel已存在");
@@ -153,7 +154,7 @@ class DBManager: NSObject {
         updateTableinfo(cls: PublicationsModel.self)
     }
     
-    //获取节点目录-现在的处理的指定手册，需完善？？？？？
+    //获取节点目录-现在处理的指定手册，需完善？？？？？
     func getSegments(model:PublicationsModel? = nil) {
         var path = getPath()[0]
         path = path.appending("/resources/toc.xml")
@@ -311,68 +312,226 @@ class DBManager: NSObject {
     }
     
     
+    func deleteFile(path:String) {
+        if FileManager.default.isDeletableFile(atPath: path) {
+            do {
+                try FileManager.default.removeItem(atPath: path)
+            }catch{
+                print(error)
+            }
+        }else {
+            print("文件删除失败:\(path)")
+        }
+    }
+    
 }
 
 
+
+
+//1502086746.428690
 //MARK: 文件解压及数据处理
 extension DBManager : SSZipArchiveDelegate {
+    
+    func getFilesAt(path:String) -> [NSString] {
+        var files = [String]()
+        do {
+            files = try fm.contentsOfDirectory(atPath: path)
+        } catch  {
+            print("\(#function)" + error.localizedDescription)
+        }
+        
+        return files as [NSString]
+    }
     
     
     //安装手册
     func installBook(){
-        let fm = FileManager.default
-        let despath = ROOTPATH + ROOTSUBPATH
+        //let despath = ROOTPATH + ROOTSUBPATH
         
-        let exist = fm.fileExists(atPath: despath)
-        if !exist
-        {
-            print("目录：\(despath) 不存在！");
-            do{
-                try fm.createDirectory(atPath: despath, withIntermediateDirectories: true, attributes: nil)
-                print("创建目录\(despath)")
-            }catch{
-                print(error)
-            }
-        }
+        moveAndParse()
         
+        let despath = LibraryPath.appending("/TDLibrary/tmp")
+        let baseinfodatapath = LibraryPath.appending("/Application data")
+        
+        LocationManager.default.checkPathIsExist(path: despath)
+        LocationManager.default.checkPathIsExist(path: baseinfodatapath)
+
         do{
-            let zipArr = try fm.contentsOfDirectory(atPath: HTMLPATH)
+            let zipArr = try fm.contentsOfDirectory(atPath: DocumentPath)
             
             for p in zipArr {
-                let fullzip = HTMLPATH + "/\(p)"
-                
-                let filefullpath = despath + p.substring(to: p.index(p.endIndex, offsetBy: -4))
-                
-                if !fm.fileExists(atPath: filefullpath){
-                    print("开始解压：\(fullzip)")
-                    SSZipArchive.unzipFile(atPath: fullzip, toDestination: despath, delegate: self)
-                    
-                    //获取手册信息
-                    
-                    //获取章节目录
-                    
-                }else{
-                    print("文件已存在:\(filefullpath)")
+                if p.hasSuffix(".zip") {
+                    let srczip = DocumentPath + "/\(p)"
+                    print("开始解压：\(srczip)")
+//                    SSZipArchive.unzipFile(atPath: srczip, toDestination: despath, delegate: self)
+                    SSZipArchive.unzipFile(atPath: srczip, toDestination: despath, progressHandler: { (entry, zipinfo, entrynumber, total) in
+                        print("\(entrynumber) - \(total)")
+                        if !entry.hasSuffix(".zip") {
+                            do{
+                               try self.fm.moveItem(atPath: despath + "/\(entry)", toPath: baseinfodatapath +  "/\(entry)")
+                            }catch{
+                                print(error)
+                            }
+                            
+                        }
+                        
+                        }, completionHandler: { (path, success, error) in
+                             print("DOCMENT解压完成：\(path)")
+                            //
+                            self.unzipFile(path: despath)
+                            
+                    })
                 }
-                
+            
             }
         }catch{
             print(error)
         }
         
     }
+    
+    //解压缓存目录
+    func unzipFile(path:String)  {
+        print("path:\(path)")
+        
+        /*手册内部遍历*/
+        func unzipSingleFile(filePath:String){
+            print("filePath:\(filePath)")
+            do{
+                let fileArr = try fm.contentsOfDirectory(atPath: filePath)
+                for item in fileArr {
+                    var isDir = ObjCBool(false)
+                    let path = filePath.appending("/\(item)")
+                    let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
+                    if isexist && isDir.boolValue {
+                        unzipSingleFile(filePath: path)
+                        
+                    }else if filePath.hasSuffix("resources") /*||  filePath.hasSuffix("images")*/ {
+                        //解压资源目录
+                        SSZipArchive.unzipFile(atPath: path, toDestination: filePath,
+                                               progressHandler: {(entry, zipinfo, entrynumber, total) in
+                            },
+                                               completionHandler: { [weak self] (path, success, error) in
+                        guard let strongSelf = self else { return }
+                        strongSelf.deleteFile(path: path)
+                        })
+                    }
+                }
+                //1502185017.35775解压处理完毕，判断手册owner，移动,删除
+                moveAndParse()
+                
+            }catch{}
+        }
+        
+        
+        do{
+            let fileArr = try fm.contentsOfDirectory(atPath: path)
+            for item in fileArr {
+                if item.hasSuffix(".zip") {//解压tmp目录
+                    let srcpath = path.appending("/\(item)")
+                    let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
+                    
+                    
+                    LocationManager.default.checkPathIsExist(path: newpath)
+                    
+                    SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total) in
+                            print("\(entrynumber) - \(total)")
+                        },completionHandler:{[weak self](path, success, error) in
+                            print("一个TMP解压完成:\(path)")
 
+                            //重新开始遍历
+                            unzipSingleFile(filePath: newpath)
+                            
+                            //删除源文件
+                            guard let strongSelf = self else { return }
+                            strongSelf.deleteFile(path: path)
+                    })
+                }
+            }
+           
+            //删除tmp所有文件
+            deleteFile(path: path)
+            
+        }catch{
+            print(error)
+        }
+        
+    }
+    
    
-    //MARK: -
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //移动到正式手册路径
+    func moveAndParse() {
+        let files = getFilesAt(path: ROOTPATH)
+        for item in files {
+            if item.hasPrefix("150"){
+            let path1 = ROOTPATH.appending("/\(item)")//150
+                let f2 = getFilesAt(path: path1)
+                for item in f2{//cca
+                    let path_cca = ROOTPATH.appending("/\(item)")
+                    let path2 = path1.appending("/\(item)")
+                    guard let f3  = getFilesAt(path: path2).first else{return}
+                    if LocationManager.default.checkPathIsExist(path: path_cca){//owner 已存在
+                        let cca_files = getFilesAt(path: path_cca)
+                        if !cca_files.contains(f3 as NSString) {
+                            do{
+                                let srcpath = path2.appending("/\(f3)")
+                                
+                                Model.moveItem(atPath: srcpath, toPath: path_cca)
+                                
+                                try fm.moveItem(atPath: srcpath, toPath: path_cca)
+                            }catch{
+                                print(error)
+                            }
+                        }
+                        
+                    }else{
+                        do{
+                            let srcpath = path2.appending("/\(f3)")
+                            try fm.moveItem(atPath: srcpath, toPath: path_cca)
+                        }catch{
+                            print(error)
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    //MARK: - SSZipArchiveDelegate
     func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
         
     }
     
     func zipArchiveDidUnzipArchive(atPath path: String, zipInfo: unz_global_info, unzippedPath: String) {
-     let arr = path.components(separatedBy: "/")
-        let zip = arr.last
-        let name = zip?.substring(to: (zip?.index((zip?.endIndex)!, offsetBy: -4))!)
+        if FileManager.default.isDeletableFile(atPath: path) {
+            do {
+                try FileManager.default.removeItem(atPath: path)
+            }catch{
+                print(error)
+            }
+        }else {
+            print("文件删除失败")
+        }
+        
+        
     }
+    
+    
+    
+    
 }
 
 

@@ -13,6 +13,8 @@
 //BASE MODEL
 @interface Model : NSObject
 
++(void)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)des;
+
 /**
  写入数据库
 
