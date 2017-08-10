@@ -400,7 +400,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
                     if (fp) {
                         if ([[[fullPath pathExtension] lowercaseString] isEqualToString:@"zip"]) {
-                            NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
+                            //(8-10)NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
                             if ([self unzipFileAtPath:fullPath toDestination:[fullPath stringByDeletingLastPathComponent] overwrite:overwrite password:password error:nil delegate:nil]) {
                                 [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
                             }
