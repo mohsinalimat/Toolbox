@@ -22,14 +22,71 @@ class ManagerController: BaseViewControllerWithTable {
     let managerCellIdentifier = "ManagerCellReuseIdentifier"
     let managerDetailCellReuseIdentifier = "ManagerDetailCellReuseIdentifier"
     
+    //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
          navigationItem.titleView = nil
-        // Do any additional setup after loading the view.
+        // Do any additional setup after loading the view.""
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
         loadData()
+        
+        
+        
     }
 
+    func allbookupdatecomplete(_ noti:Notification)  {
+        ///手册更新完毕，刷新列表
+        loadData()
+    }
+    
+    func startParsebook(_ noti:Notification) {
+        let rect = CGRect (x: 0, y: 0, width: 500, height: 280)
+        let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
+        
+        vc.view.frame = rect
+        vc.modalPresentationStyle = .formSheet
+        vc.preferredContentSize = rect.size
+        
+        if let num = noti.userInfo?["filesnumber"] {
+            vc.totalBookssnumber = num as! Int
+        }
+        
+        
+        self.navigationController?.present(vc, animated: false, completion: nil)
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //检测更新
+        if true {
+            DBManager.default.installBook()
+            
+            ////
+            showUnzipViewController()
+        }
+   
+    }
+    
+    func showUnzipViewController() {
+        let rect = CGRect (x: 0, y: 0, width: 500, height: 280)
+        let vc :UnzipInfoViewController = UnzipInfoViewController.init(nibName: "UnzipInfoViewController", bundle: nil)
+        
+//        let nav:BaseNavigationController = BaseNavigationController(rootViewController:vc)
+//        nav.navigationBar.barTintColor = UIColor.darkGray
+//        nav.navigationBar.tintColor = UIColor.black
+        
+        vc.view.frame = rect
+        vc.modalPresentationStyle = .formSheet
+        vc.preferredContentSize = rect.size
+        kUnzipprogress = vc.progress
+        
+        self.navigationController?.present(vc, animated: false, completion: nil)
+    }
     
     
     func loadData(opt:String = "book_uuid") {

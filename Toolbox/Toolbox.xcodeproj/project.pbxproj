@@ -31,11 +31,15 @@
 		A13D04FF1F272D8900D961BA /* EN21210101C.html.zip in Resources */ = {isa = PBXBuildFile; fileRef = A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */; };
 		A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15580201F05E89D008C1787 /* PublicationCell.swift */; };
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
+		A16C1A5B1F3D9BE900D961C9 /* UpdateBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */; };
+		A16C1A5C1F3D9BE900D961C9 /* UpdateBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */; };
 		A17792671F2F3771009782F6 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17792661F2F3771009782F6 /* HUD.swift */; };
 		A17C81071F30589400EF8B9D /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81031F30589400EF8B9D /* error.png */; };
 		A17C81081F30589400EF8B9D /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81041F30589400EF8B9D /* error@2x.png */; };
 		A17C81091F30589400EF8B9D /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81051F30589400EF8B9D /* success.png */; };
 		A17C810A1F30589400EF8B9D /* success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81061F30589400EF8B9D /* success@2x.png */; };
+		A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */; };
+		A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
 		A1B13AB01F3982A10049250F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B13AAF1F3982A10049250F /* LocationManager.swift */; };
@@ -141,11 +145,15 @@
 		A13D04FE1F272D8900D961BA /* EN21210101C.html.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = EN21210101C.html.zip; sourceTree = "<group>"; };
 		A15580201F05E89D008C1787 /* PublicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicationCell.swift; sourceTree = "<group>"; };
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
+		A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateBookViewController.swift; sourceTree = "<group>"; };
+		A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpdateBookViewController.xib; sourceTree = "<group>"; };
 		A17792661F2F3771009782F6 /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		A17C81031F30589400EF8B9D /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		A17C81041F30589400EF8B9D /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
 		A17C81051F30589400EF8B9D /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
 		A17C81061F30589400EF8B9D /* success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "success@2x.png"; sourceTree = "<group>"; };
+		A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnzipInfoViewController.swift; sourceTree = "<group>"; };
+		A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnzipInfoViewController.xib; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
 		A1B13AAF1F3982A10049250F /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -384,6 +392,10 @@
 				A1C1BDA11F00ACE0002FC0E0 /* ManagerController.swift */,
 				A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */,
 				A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */,
+				A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */,
+				A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */,
+				A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */,
+				A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -587,6 +599,7 @@
 				A1BBCF5A1F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png in Resources */,
 				A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
+				A16C1A5C1F3D9BE900D961C9 /* UpdateBookViewController.xib in Resources */,
 				A1BBCF581F2ACBFF007374B7 /* bookmarkOn@2x.png in Resources */,
 				A10648391F04C21E002D088C /* AppIcon-B2C40x40~ipad.png in Resources */,
 				A1C06BD91F0A35AC00A29620 /* deletePub.png in Resources */,
@@ -605,6 +618,7 @@
 				A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */,
 				A1BBCF561F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png in Resources */,
 				A1BBCF551F2ACBFF007374B7 /* bookmarkOffHighlighted.png in Resources */,
+				A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */,
 				A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */,
 				A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */,
 				A1C1BD671F00A0AA002FC0E0 /* LaunchScreen.storyboard in Resources */,
@@ -693,9 +707,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */,
 				A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */,
 				A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */,
 				A1C1AB0D1F037D2900C29333 /* BaseViewControllerWithTable.swift in Sources */,
+				A16C1A5B1F3D9BE900D961C9 /* UpdateBookViewController.swift in Sources */,
 				A136F11E1F1322DE00349572 /* Model.m in Sources */,
 				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,

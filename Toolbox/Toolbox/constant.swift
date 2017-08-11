@@ -63,6 +63,11 @@ let knotification_airplane_changed = Notification.Name(rawValue: "knotification_
 let knotification_publication_changed = Notification.Name(rawValue: "knotification_publication_changed")
 let knotification_segment_changed = Notification.Name(rawValue: "knotification_segment_changed")
 
+//
+var kUnzipprogress: UIProgressView!
+var kUnzipProgressStatus:Float = 0.0
+
+
 ///PATH
 /*
  "/var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary

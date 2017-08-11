@@ -38,6 +38,13 @@ class HUD: NSObject {
         SVProgressHUD.showSuccess(withStatus: str)
     }
     
+    
+    static func showProgress(progress:Float,status:String) {
+        SVProgressHUD.showProgress(progress, status:status )
+    }
+    
+    
+    
     static func dismiss() {
         SVProgressHUD.dismiss()
     }

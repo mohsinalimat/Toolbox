@@ -14,6 +14,8 @@ class DBManager: NSObject {
     static let `default` :DBManager = DBManager()
     let fm = FileManager.default
     
+    var unzipFilesnumber = 0
+    
     ///////
     let queue:OperationQueue
     
@@ -118,6 +120,7 @@ class DBManager: NSObject {
         }
     }
     
+    /*
     func getAirplanes(){
         //获取apaList.json所有路径
         let path = getPath()
@@ -133,6 +136,7 @@ class DBManager: NSObject {
     
         updateTableinfo(cls: AirplaneModel.self)
     }
+    */
     
     //飞机信息
     func getAirplanes(withPath path:String){
@@ -186,7 +190,7 @@ class DBManager: NSObject {
         updateTableinfo(cls: PublicationsModel.self)
     }
     
-    
+    /*
     //获取手册信息
     func getbooks() {
         var paths = DBManager.default.getPath()
@@ -226,7 +230,7 @@ class DBManager: NSObject {
         }
 
         updateTableinfo(cls: PublicationsModel.self)
-    }
+    }*/
     
     func getSegments(withBookPath path:String ,bookName:String) {
         var path = path
@@ -262,7 +266,7 @@ class DBManager: NSObject {
         }
     }
     
-    
+    /*
     //获取节点目录-现在处理的指定手册，需完善？？？？？
     func getSegments(model:PublicationsModel? = nil) {
         var path = getPath()[0]
@@ -299,7 +303,7 @@ class DBManager: NSObject {
         }
         
         
-    }
+    }*/
     
     
     /// 遍历节点
@@ -469,7 +473,7 @@ class DBManager: NSObject {
 //MARK: 文件解压及数据处理
 extension DBManager : SSZipArchiveDelegate {
     
-    func getFilesAt(path:String) -> [NSString] {
+    func getFilesAt(path:String) -> [String] {
         var files = [String]()
         do {
             files = try fm.contentsOfDirectory(atPath: path)
@@ -477,13 +481,28 @@ extension DBManager : SSZipArchiveDelegate {
             print("\(#function)" + error.localizedDescription)
         }
         
-        return files as [NSString]
+        return files
     }
+    
+    func getZipFiles(items:[String]) -> [String] {
+        var zips = [String]()
+        
+        for item in items {
+            if item.hasSuffix(".zip") {
+                zips.append(item)
+            }
+        }
+        
+        return zips
+    }
+    
     
     
     //安装手册
     func installBook(){
 
+        //...检测是否有更新
+        
         self.queue.addOperation({
             self.unzipDocFile()
         })
@@ -539,7 +558,7 @@ extension DBManager : SSZipArchiveDelegate {
                         }, completionHandler: { (path, success, error) in
                             print("DOCMENT解压完成：\(path)")
                             //////////删除源文件
-                            ///self.deleteFile(path: path)
+                            self.deleteFile(path: path)
                     })
                 }
             }
@@ -549,11 +568,17 @@ extension DBManager : SSZipArchiveDelegate {
     }
     
     
-    //--2//解压缓存目录
+    //--2//解压缓存目录到指定目录，然后解压资源文件
     func unzipTmpFile()  {
         let path = ROOTPATH.appending("/tmp")
         let fileArr = getFilesAt(path: path)
-        for item in fileArr {
+        let zipArr = getZipFiles(items: fileArr)
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_filesnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
+        }
+        
+        for item in zipArr {
             if item.hasSuffix(".zip") {//解压tmp目录
                 let srcpath = path.appending("/\(item)")
                 let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
@@ -561,13 +586,22 @@ extension DBManager : SSZipArchiveDelegate {
                 
                 SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total) in
                         print("\(entrynumber) - \(total)")
+                    DispatchQueue.main.async {
+//                        HUD.showProgress(progress: Float(entrynumber) / Float(total) , status: "文件解压中...")
+                        kUnzipProgressStatus =  Float(entrynumber) / Float(total)
+                        kUnzipprogress.progress = kUnzipProgressStatus
+                    }
                     },completionHandler:{/*[weak self]*/(path, success, error) in
                         print("TMP解压完成:\(path)")
+//                        DispatchQueue.main.async {
+//                            NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipfile_complete")))
+//                        }
+                        
                         self.deleteFile(path: path)
                         
                         //遍历资源目录
                         self.unzipSourceFile(filePath: newpath)
-
+                        
                         /*
                         //删除源文件
                         guard let strongSelf = self else { return }
@@ -603,15 +637,33 @@ extension DBManager : SSZipArchiveDelegate {
                         })
                 }
             }
+           
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipfile_complete")))
+            }
             
         }catch{}
     }
 
     
-    //移动到正式路径
+    //移动到正式路径,数据解析
     func moveAndParse() {
         let files = getFilesAt(path: ROOTPATH)
-        for item in files {
+        let pubs = {(_ items: [String]) -> ([String]) in
+            var zips = [String]()
+            for item in items {
+                if Double(item as String) != nil {
+                    zips.append(item)
+                }
+            }
+            return zips
+        }(files)
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove"), object: nil, userInfo: ["filesnumber":pubs.count])
+        }
+        
+        for item in pubs {
             if Double(item as String) != nil {//item.hasPrefix("150")
                 let path1 = ROOTPATH.appending("/\(item)")
                 let f2 = getFilesAt(path: path1)
@@ -624,7 +676,7 @@ extension DBManager : SSZipArchiveDelegate {
                     let despath = path_cca.appending("/\(bookname)")
                     if LocationManager.default.checkPathIsExist(path: path_cca){//owner 已存在
                         let cca_files = getFilesAt(path: path_cca)
-                        if !cca_files.contains(bookname as NSString) {
+                        if !cca_files.contains(bookname) {
                             do{
                                 try fm.moveItem(atPath: srcpath, toPath: despath)
                                 deleteFile(path: path1)
@@ -656,8 +708,14 @@ extension DBManager : SSZipArchiveDelegate {
                     
                     getSegments(withBookPath: bookpath,bookName:bookname as String)
                     
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove_complete"), object: nil, userInfo: nil)
+                    }
                 }
             }
+            
+            //
+            
         }
         
         

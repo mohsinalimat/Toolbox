@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func init_system(){
         HUD.config()
         
-        DBManager.default.installBook()
+//        DBManager.default.installBook()
         
     }
     
