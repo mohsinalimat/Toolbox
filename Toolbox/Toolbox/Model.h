@@ -33,6 +33,9 @@
 +(NSArray*)searchWith:(NSString*)query
               orderBy:(NSString*)order;
 
+
++(NSArray*)searchWithSql:(NSString*)sql;
+
 +(BOOL)deleteWith:(NSString*)query;
 
 
@@ -145,6 +148,14 @@
 
 @property(nonatomic,assign)NSInteger data_type;//RESERVE...
 @end
+
+
+@interface APMMap : Model
+@property(nonatomic,copy)NSString * primary_id;
+@property(nonatomic,copy)NSString * bookid;
+@property(nonatomic,copy)NSString * msn;
+@end
+
 
 #pragma mark - other 辅助
 //表更新记录

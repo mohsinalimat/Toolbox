@@ -70,16 +70,6 @@
         return self;
     }
 
-
-+(void)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)des {
-    NSFileManager * fm = [NSFileManager defaultManager];
-    
-   BOOL _b = [fm moveItemAtPath:srcPath toPath:des error:nil];
-    
-    NSLog(@"%d",_b);
-}
-
-
     //返回数据表名称
     + (NSString *)getTableName{
         return [[NSStringFromClass(self) stringByReplacingOccurrencesOfString:@"Model" withString:@""] uppercaseString];
@@ -105,7 +95,7 @@
         else if ([data isKindOfClass:[NSDictionary class]]){
             [[[self alloc]init] saveModelWith:data];
         }
-        NSLog(@"插入完成%lu条数据!",(unsigned long)([data isKindOfClass:[NSArray class]]?((NSArray*)data).count:1));
+        //NSLog(@"插入完成%lu条数据!",(unsigned long)([data isKindOfClass:[NSArray class]]?((NSArray*)data).count:1));
     }
 
     -(instancetype)modelWith:(NSDictionary*)dic{
@@ -149,6 +139,15 @@
     +(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order
     {
         return [[[self alloc]init ] searchWith:query orderBy:order];
+    }
+
+    -(NSArray*)searchWithSql:(NSString*)sql{
+        
+            return [[DBTool default].helper search:[self class] withSQL:[NSString stringWithFormat:@"%@",sql]];
+    }
+
+    +(NSArray*)searchWithSql:(NSString*)sql{
+        return [[[self alloc]init] searchWithSql:sql];
     }
 
     -(BOOL)deleteWith:(NSString*)query{
@@ -196,6 +195,15 @@
 
 @end
 
+
+@implementation APMMap
+
+-(NSString *)getPrimarykey
+{
+    return @"primary_id";
+}
+
+@end
 #pragma mark - other
 
 @implementation UpdateInfo

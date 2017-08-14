@@ -99,8 +99,7 @@ class DBManager: NSObject {
     
         getapMpdel()
     
-        //...test
-//        getSegments()
+//        kAllPublications = nil;
     
     }
 
@@ -119,32 +118,22 @@ class DBManager: NSObject {
             }
         }
     }
-    
-    /*
-    func getAirplanes(){
-        //获取apaList.json所有路径
-        let path = getPath()
-        
-        //解析数据并保存
-        for index in 0..<path.count {
-            DBManager.parseJsonData(path: path[index].appending(APLISTJSONPATH), completionHandler: { (obj) in
-                let obj =  obj as? [String:Any]
-                guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
-                AirplaneModel.saveToDb(with: airplaneEntryArr)
-            })
-        }
-    
-        updateTableinfo(cls: AirplaneModel.self)
-    }
-    */
-    
+
     //飞机信息
-    func getAirplanes(withPath path:String){
+    func getAirplanes(withPath path:String,bookName:String){
         
         DBManager.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
             guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
             AirplaneModel.saveToDb(with: airplaneEntryArr)
+            
+            for item in airplaneEntryArr {
+                let item = item as? [String:Any]
+                if let msn = item?["airplaneSerialNumber"]{
+                    let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
+                    APMMap.saveToDb(with: dic)
+                }
+            }
         })
         
         updateTableinfo(cls: AirplaneModel.self)
@@ -189,49 +178,14 @@ class DBManager: NSObject {
         
         updateTableinfo(cls: PublicationsModel.self)
     }
-    
-    /*
-    //获取手册信息
-    func getbooks() {
-        var paths = DBManager.default.getPath()
-        for index in 0..<paths.count {
-            var path = paths[index]
-            let booklocalurl = path.substring(from: ROOTPATH.endIndex)
-            let metadataurl = booklocalurl.appending("/resources/toc.xml")
-            
-            var des:[String:String] = [:]
-            des["booklocalurl"] = booklocalurl
-            des["metadataurl"] = metadataurl
-            
-            path = path.appending("/resources/book.xml")
-            do{
-                let jsonString = try String(contentsOfFile: path)
-                if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
-                    let doc = try DDXMLDocument.init(data: jsondata, options: 0)
-                    //let bookElement:DDXMLNode = try doc.nodes(forXPath: "//books/book")[0]
-                    
-                    let rootE:DDXMLElement! = doc.rootElement()
-                    let book:DDXMLElement! = rootE.elements(forName: "book")[0]
-                    let attrNodes =  book.attributes
-                    guard let attributeArr = attrNodes else {
-                        return
-                    }
-                    
-                    for node in attributeArr {
-                        if let key = node.name,let value = node.stringValue{
-                            des[key] = value
-                        }
-                    }
-                    PublicationsModel.saveToDb(with: des)
-                }
-            }catch{
-                print(error)
-            }
-        }
 
-        updateTableinfo(cls: PublicationsModel.self)
-    }*/
-    
+    /*
+     66] 已存在：CCAA330CCAAMM_20170101EN52510000013300018
+     2017-08-14 18:22:02.642 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000013350003
+     2017-08-14 18:22:02.664 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000013400006
+     2017-08-14 18:22:02.687 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000017350008
+     
+     */
     func getSegments(withBookPath path:String ,bookName:String) {
         var path = path
         path = path.appending("/resources/toc.xml")
@@ -265,46 +219,7 @@ class DBManager: NSObject {
             print(error)
         }
     }
-    
-    /*
-    //获取节点目录-现在处理的指定手册，需完善？？？？？
-    func getSegments(model:PublicationsModel? = nil) {
-        var path = getPath()[0]
-        path = path.appending("/resources/toc.xml")
-        
-        let book_id = "CCAA320CCAAIPC20161101"
-        
-        do{
-            let jsonString = try String(contentsOfFile: path)
-            if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
-                let doc = try DDXMLDocument.init(data: jsondata, options: 0)
-                
-                let rootE:DDXMLElement! = doc.rootElement()
-                let segs:[DDXMLElement] = rootE.elements(forName: "segment")
-                
-                
-                //建立索引
-                for element in segs {
-                    let parent_id = book_id
-                    traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
-                }
-      
-//                updateTableinfo(cls: SegmentModel.self,id:model?.book_uuid)
-                
-//               let queue = DispatchQueue.init(label: "lable")
-//              queue.async(execute: {
-//                
-//              })
-                
-                
-            }
-        }catch{
-            print(error)
-        }
-        
-        
-    }*/
-    
+
     
     /// 遍历节点
     ///
@@ -464,9 +379,14 @@ class DBManager: NSObject {
         }
     }
     
+    
+    //Document 是否有更新
+   static func hasBookNeedUpdate() ->Bool{
+        let zipArr = DBManager.default.getFilesAt(path: DocumentPath)
+        return zipArr.count > 0
+    }
+    
 }
-
-
 
 
 //1502086746.428690
@@ -496,12 +416,15 @@ extension DBManager : SSZipArchiveDelegate {
         return zips
     }
     
-    
+
     
     //安装手册
     func installBook(){
 
-        //...检测是否有更新
+        //检测是否有更新
+        guard DBManager.hasBookNeedUpdate() else{return}
+        
+        UIApplication.shared.isIdleTimerDisabled = false
         
         self.queue.addOperation({
             self.unzipDocFile()
@@ -514,6 +437,9 @@ extension DBManager : SSZipArchiveDelegate {
         
         self.queue.addOperation({
             print("解压完成！！")
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
+            }
         })
         
         self.queue.addOperation({
@@ -574,8 +500,10 @@ extension DBManager : SSZipArchiveDelegate {
         let fileArr = getFilesAt(path: path)
         let zipArr = getZipFiles(items: fileArr)
         
+        guard zipArr.count > 0 else{return}
+        
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_filesnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
+            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_totalnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
         }
         
         for item in zipArr {
@@ -593,10 +521,10 @@ extension DBManager : SSZipArchiveDelegate {
                     }
                     },completionHandler:{/*[weak self]*/(path, success, error) in
                         print("TMP解压完成:\(path)")
-//                        DispatchQueue.main.async {
-//                            NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipfile_complete")))
-//                        }
                         
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
+                        }
                         self.deleteFile(path: path)
                         
                         //遍历资源目录
@@ -619,6 +547,7 @@ extension DBManager : SSZipArchiveDelegate {
         print("filePath:\(filePath)")
         do{
             let fileArr = try fm.contentsOfDirectory(atPath: filePath)
+            guard fileArr.count > 0 else{return}
             for item in fileArr {
                 var isDir = ObjCBool(false)
                 let path = filePath.appending("/\(item)")
@@ -637,10 +566,7 @@ extension DBManager : SSZipArchiveDelegate {
                         })
                 }
             }
-           
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipfile_complete")))
-            }
+            
             
         }catch{}
     }
@@ -659,8 +585,10 @@ extension DBManager : SSZipArchiveDelegate {
             return zips
         }(files)
         
+        guard pubs.count > 0 else{return}
+        
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove"), object: nil, userInfo: ["filesnumber":pubs.count])
+            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil, userInfo: ["filesnumber":pubs.count])
         }
         
         for item in pubs {
@@ -702,14 +630,14 @@ extension DBManager : SSZipArchiveDelegate {
                      */
                    let bookpath = getBookPath(withRelPath: despath)
                     
-                    getAirplanes(withPath: bookpath)
+                    getAirplanes(withPath: bookpath,bookName:bookname as String)
                     
                     getbooks(withPath: bookpath)
                     
                     getSegments(withBookPath: bookpath,bookName:bookname as String)
                     
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove_complete"), object: nil, userInfo: nil)
+                        NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
                     }
                 }
             }

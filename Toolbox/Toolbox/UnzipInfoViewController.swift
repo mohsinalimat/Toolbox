@@ -23,40 +23,51 @@ class UnzipInfoViewController: BaseViewController {
         view.backgroundColor = kTableviewBackgroundColor
         // Do any additional setup after loading the view.
         
-        NotificationCenter.default.addObserver(self, selector: #selector(unzipfileFinish(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_complete"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(unzipfileNunber(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_filesnumber"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_parseAndMove"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipSinglefileFinish(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipfileNunber(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_totalnumber"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        HUD.show(withStatus: "文件分析中...")
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    func startParsebook(_ noti:Notification) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01, execute: {
-            
-        })
-    }
-    
-    func unzipfileFinish(_ noti:Notification) {
-        hasUnzipFilesnumber = hasUnzipFilesnumber + 1
-        fileNumber.text = "(安装文件: \(hasUnzipFilesnumber)/\(totalUnzipFilsnumber))"
-        
-        if hasUnzipFilesnumber == totalUnzipFilsnumber {
-            self.dismiss(animated: false, completion: nil)
-            kUnzipprogress = nil
-        }
-    }
-    
     func unzipfileNunber(_ noti:Notification) {
+        print("通知-解压文件数.")
+        HUD.dismiss()
+        
         let num = noti.userInfo?["filesnumber"] as? Int
         if let num = num{
             totalUnzipFilsnumber = num
             fileNumber.text = "(安装文件: \(hasUnzipFilesnumber)/\(totalUnzipFilsnumber))"
         }
         
+    }
+    
+    
+    func unzipSinglefileFinish(_ noti:Notification) {
+        hasUnzipFilesnumber = hasUnzipFilesnumber + 1
+        fileNumber.text = "(安装文件: \(hasUnzipFilesnumber)/\(totalUnzipFilsnumber))"
+        
+        print("通知-解压单个文件完成.")
+        if hasUnzipFilesnumber == totalUnzipFilsnumber {
+//            self.dismiss(animated: false, completion: nil)
+//            kUnzipprogress = nil
+        }
+    }
+    
+
+    
+    func unzipAllComplete(_ noti:Notification) {
+        self.dismiss(animated: false, completion: nil)
+        kUnzipprogress = nil
     }
     
     

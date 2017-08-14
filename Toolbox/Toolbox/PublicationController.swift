@@ -41,13 +41,17 @@ class PublicationController: BaseViewControllerWithTable {
         currentAirplaneModel = selectedAirplane
         
         let msn:String = currentAirplaneModel.airplaneSerialNumber
+        /*
         let books:[String:String] = kAllPublications[msn] as! [String : String]
         let sorted =  books.sorted { (s1, s2) -> Bool in
             return s1 < s2
         }
+        */
+        
+        let bookArr = APMMap.search(withSql: "select bookid from APMMAP where msn = '\(msn)' order by bookid asc") as! [APMMap]
         var sql = "("
-        for (_,value) in sorted {
-           sql =  sql.appending("'\(value)',")
+        for (value) in bookArr {
+           sql =  sql.appending("'\(value.bookid!)',")
         }
         
         sql.remove(at: sql.index(before: sql.endIndex))

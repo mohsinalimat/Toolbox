@@ -28,7 +28,7 @@ class AirplaneController:BaseViewControllerWithTable {
         navigationItem.titleView = nil
 
         //...第一次解析后保存标记
-        DBManager.default.startParse()
+//        DBManager.default.startParse()
         
 //        loadData()
         

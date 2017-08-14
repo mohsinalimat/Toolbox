@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpdateBookViewController" customModule="Toolbox" customModuleProvider="target">
             <connections>
+                <outlet property="activity" destination="Gg2-TV-iuu" id="Q8L-4L-yqq"/>
                 <outlet property="updateNumberLab" destination="GF1-Ka-xPY" id="bfJ-NG-1JG"/>
                 <outlet property="view" destination="pnT-kO-1PL" id="Sln-wX-O11"/>
             </connections>
@@ -16,33 +17,26 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="280"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="文件更新中..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1AA-cq-kRT">
-                    <constraints>
-                        <constraint firstAttribute="width" constant="100" id="blO-91-Gcx"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=".." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GF1-Ka-xPY">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="updateing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GF1-Ka-xPY">
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="icN-Tv-SVv"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Gg2-TV-iuu"/>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="GF1-Ka-xPY" firstAttribute="top" secondItem="1AA-cq-kRT" secondAttribute="bottom" constant="59" id="9Br-mG-K3J"/>
-                <constraint firstItem="1AA-cq-kRT" firstAttribute="top" secondItem="pnT-kO-1PL" secondAttribute="top" constant="30" id="GBp-Lc-wSQ"/>
-                <constraint firstItem="1AA-cq-kRT" firstAttribute="centerX" secondItem="pnT-kO-1PL" secondAttribute="centerX" id="QwX-PL-GYE"/>
+                <constraint firstItem="Gg2-TV-iuu" firstAttribute="top" secondItem="pnT-kO-1PL" secondAttribute="top" constant="30" id="77c-aH-FTD"/>
+                <constraint firstItem="Gg2-TV-iuu" firstAttribute="centerX" secondItem="pnT-kO-1PL" secondAttribute="centerX" id="Jn3-On-Xcp"/>
+                <constraint firstItem="GF1-Ka-xPY" firstAttribute="top" secondItem="Gg2-TV-iuu" secondAttribute="bottom" constant="30" id="XTU-n7-rpr"/>
                 <constraint firstItem="GF1-Ka-xPY" firstAttribute="centerX" secondItem="pnT-kO-1PL" secondAttribute="centerX" id="nUU-ec-pfK"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="77.5" y="-175"/>
+            <point key="canvasLocation" x="-135" y="-331"/>
         </view>
     </objects>
 </document>
