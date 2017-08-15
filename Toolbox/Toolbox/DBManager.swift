@@ -71,6 +71,7 @@ class DBManager: NSObject {
     //MARK:
     //飞机信息
     func getAirplanesData(withPath path:String,bookName:String){
+        print("\(bookName) : 获取飞机信息")
         DBManager.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
             guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
@@ -89,6 +90,7 @@ class DBManager: NSObject {
     
     //获取手册信息
     func getBookData(withPath path:String) {
+        print("\(path) : 获取手册")
             var path = path
             let booklocalurl = path.substring(from: ROOTPATH.endIndex)
             let metadataurl = booklocalurl.appending("/resources/toc.xml")
@@ -124,6 +126,7 @@ class DBManager: NSObject {
     }
 
     func getSegmentsData(withBookPath path:String ,bookName:String) {
+        print("\(bookName) : 获取getSegmentsData")
         var path = path
         path = path.appending("/resources/toc.xml")
         let book_id = bookName//book_id = bookname
@@ -282,7 +285,7 @@ class DBManager: NSObject {
 
 //1502086746.428690
 //MARK: 文件解压及数据处理
-extension DBManager : SSZipArchiveDelegate {
+extension DBManager  {
     
     //获取手册路径
     func getBookPath(withRelPath path:String) -> String {
@@ -446,36 +449,39 @@ extension DBManager : SSZipArchiveDelegate {
     
     /*手册内部遍历*/
     func unzipSourceFile(filePath:String){
-        print("filePath:\(filePath)")
-        do{
-            let fileArr = try fm.contentsOfDirectory(atPath: filePath)
-            guard fileArr.count > 0 else{return}
-            for item in fileArr {
-                var isDir = ObjCBool(false)
-                let path = filePath.appending("/\(item)")
-                let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
-                if isexist && isDir.boolValue && !filePath.hasSuffix("resources") {
-                    unzipSourceFile(filePath: path)
-                    
-                }else if filePath.hasSuffix("resources") /*||  filePath.hasSuffix("images")*/ {
-                    //解压资源目录,然后删除ZIP
-                    SSZipArchive.unzipFile(atPath: path, toDestination: filePath,
-                                           progressHandler: {(entry, zipinfo, entrynumber, total) in
-                        },
-                                           completionHandler: { [weak self] (path, success, error) in
-                                            guard let strongSelf = self else { return }
-                                            strongSelf.deleteFile(path: path)
-                        })
+        autoreleasepool { () -> () in
+            do{
+                let fileArr = try fm.contentsOfDirectory(atPath: filePath)
+                guard fileArr.count > 0 else{return}
+                for item in fileArr {
+                    var isDir = ObjCBool(false)
+                    let path = filePath.appending("/\(item)")
+                    let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
+                    if isexist && isDir.boolValue && !filePath.hasSuffix("resources") {
+                        unzipSourceFile(filePath: path)
+                        
+                    }else if filePath.hasSuffix("resources") /*||  filePath.hasSuffix("images")*/ {
+                        //解压资源目录,然后删除ZIP
+                        SSZipArchive.unzipFile(atPath: path, toDestination: filePath,
+                                               progressHandler: {(entry, zipinfo, entrynumber, total) in
+                            },
+                                               completionHandler: { [weak self] (path, success, error) in
+                                                guard let strongSelf = self else { return }
+                                                strongSelf.deleteFile(path: path)
+                            })
+                    }
                 }
-            }
-            
-            
-        }catch{}
+                
+                
+            }catch{}
+        }
+        
     }
 
     
     //移动到正式路径,数据解析
     func moveAndParse() {
+    autoreleasepool(invoking: { () -> () in
         let files = getFilesAt(path: ROOTPATH)
         let pubs = {(_ items: [String]) -> ([String]) in
             var zips = [String]()
@@ -494,61 +500,80 @@ extension DBManager : SSZipArchiveDelegate {
         }
         
         for item in pubs {
-            if Double(item as String) != nil {//item.hasPrefix("150")
-                let path1 = ROOTPATH.appending("/\(item)")
-                let f2 = getFilesAt(path: path1)
-                for item in f2{//cca
-                    let path_cca = ROOTPATH.appending("/\(item)")
-                    let path2 = path1.appending("/\(item)")
-                    
-                    guard let bookname  = getFilesAt(path: path2).first else{return}
-                    let srcpath = path2.appending("/\(bookname)")
-                    let despath = path_cca.appending("/\(bookname)")
-                    if LocationManager.default.checkPathIsExist(path: path_cca){//owner 已存在
-                        let cca_files = getFilesAt(path: path_cca)
-                        if !cca_files.contains(bookname) {
+            
+                if Double(item as String) != nil {//item.hasPrefix("150")
+                    let path1 = ROOTPATH.appending("/\(item)")
+                    let f2 = getFilesAt(path: path1)
+                    for item in f2{//cca
+                        let path_cca = ROOTPATH.appending("/\(item)")
+                        let path2 = path1.appending("/\(item)")
+                        
+                        guard let bookname  = getFilesAt(path: path2).first else{return}
+                        let srcpath = path2.appending("/\(bookname)")
+                        let despath = path_cca.appending("/\(bookname)")
+                        if LocationManager.default.checkPathIsExist(path: path_cca){//owner 已存在
+                            let cca_files = getFilesAt(path: path_cca)
+                            if !cca_files.contains(bookname) {
+                                do{
+                                    try fm.moveItem(atPath: srcpath, toPath: despath)
+                                    deleteFile(path: path1)
+                                }catch{
+                                    print(error)
+                                }
+                            }else{
+                                //RESERVE
+                            }
+                            
+                        }else{
                             do{
                                 try fm.moveItem(atPath: srcpath, toPath: despath)
                                 deleteFile(path: path1)
                             }catch{
                                 print(error)
                             }
-                        }else{
-                            //RESERVE
+                        }
+                        /////解析
+                        /*
+                         /var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary
+                         /CCA/CCAA320CCAAIPC20161101/aipc
+                         */
+                        let bookpath = getBookPath(withRelPath: despath)
+                        let group = DispatchGroup()
+                        
+                        DispatchQueue.global().async {
+                            group.enter()
+                           self.getAirplanesData(withPath: bookpath,bookName:bookname as String)
+                            group.leave()
                         }
                         
-                    }else{
-                        do{
-                            try fm.moveItem(atPath: srcpath, toPath: despath)
-                            deleteFile(path: path1)
-                        }catch{
-                            print(error)
+                        
+                        DispatchQueue.global().async {
+                            group.enter()
+                          self.getBookData(withPath: bookpath)
+                            group.leave()
                         }
-                    }
-                    /////解析
-                    /*
-                     /var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary
-                     /CCA/CCAA320CCAAIPC20161101/aipc
-                     */
-                   let bookpath = getBookPath(withRelPath: despath)
-                    
-                    getAirplanesData(withPath: bookpath,bookName:bookname as String)
-                    
-                    getBookData(withPath: bookpath)
-                    
-                    getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
-                    
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                        
+                        DispatchQueue.global().async {
+                            group.enter()
+                          self.getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
+                            group.leave()
+                        }
+                        
+                        
+                        
+                        group.notify(queue: DispatchQueue.main, execute: {
+                            print("单个手册数据处理完成")
+                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                        })
+//                        DispatchQueue.main.async {
+//                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+//                        }
                     }
                 }
-            }
             
-            //
-            
+       
         }
-        
-        
+            })
     }
     
     
@@ -567,7 +592,7 @@ extension DBManager : SSZipArchiveDelegate {
                 print(error)
             }
         }else {
-            print("文件删除失败")
+            print("文件删除失败-----------------------")
         }
         
         

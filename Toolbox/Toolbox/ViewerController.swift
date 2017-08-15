@@ -303,26 +303,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         
         Dismiss()
     }
-    
-    
-    /*
-     2017-07-28 16:19:23.577 Toolbox[3011:167775] void SendDelegateMessage(NSInvocation *): delegate (webView:decidePolicyForNavigationAction:request:frame:decisionListener:) failed to return after waiting 10 seconds. main run loop mode: kCFRunLoopDefaultMode
-     webView(_:didFailLoadWithError:)
-     */
 
-    /*
-     [SSZipArchive] Set attributes failed for directory: /var/mobile/Containers/Data/Application/169034CB-A0A2-4DB9-A695-F5331D5613FC/Library/210/04/EN04050001.html.
-     2017-07-26 17:00:57.224 Toolbox[14264:1313126] [SSZipArchive] Error setting directory file modification date attribute: The file “EN04050001.html” doesn’t exist.
-     
-     
-     --------
-     
-     Error Domain=NSCocoaErrorDomain Code=513 "“EN21210101C.html.zip” couldn’t be removed because you don’t have permission to access it." UserInfo={NSFilePath=/var/mobile/Containers/Data/Application/53C98F87-F04A-4BF0-AAC1-377EB6B25C5A/Library/TDLibrary/CCA/CCAA320CCAAIPC20161101/aipc/21/EN21210101C.html.zip, NSUserStringVariant=(
-     Remove
-     ), NSUnderlyingError=0x1377ba110 {Error Domain=NSPOSIXErrorDomain Code=13 "Permission denied"}}
-     
-     */
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
