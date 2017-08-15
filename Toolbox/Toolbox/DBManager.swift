@@ -13,12 +13,10 @@ import SSZipArchive
 class DBManager: NSObject {
     static let `default` :DBManager = DBManager()
     let fm = FileManager.default
-    
     var unzipFilesnumber = 0
-    
-    ///////
     let queue:OperationQueue
     
+    //MARK:-
     override init() {
         self.queue = {
             let operationQueue = OperationQueue()
@@ -32,8 +30,6 @@ class DBManager: NSObject {
             return operationQueue
         }() 
     }
-    
-    
     
     /// 解析json格式的数据
     ///
@@ -72,56 +68,9 @@ class DBManager: NSObject {
 
     }
 
-    ///主调方法
-   public func startParse() {
-    
-    /*
-        if !updateTableInfoisExist(cls: AirplaneModel.self) {
-            getAirplanes()
-        }
-        else{
-            print("Airplane已存在");
-        }
-        if !updateTableInfoisExist(cls: PublicationsModel.self) {
-            getbooks()
-        }
-        else{
-            print("Publications已存在");
-        }
-    
-        if !updateTableInfoisExist(cls: SegmentModel.self) {
-            getSegments()
-        }
-        else{
-            print("SegmentModel已存在");
-        }
-    */
-    
-        getapMpdel()
-    
-//        kAllPublications = nil;
-    
-    }
-
-    
     //MARK:
-    //获取apmodel赋值给全局变量- kAllPublications
-    func getapMpdel(){
-        DBManager.parseJsonData(path: APMODELMAPJSPATH,preprogressHandler: { str in
-            let s = str
-            let newstr = s.replacingOccurrences(of: "varapModelMap=", with: "").replacingOccurrences(of: ";", with: "")
-            return newstr
-        }){(obj) in
-            let obj =  obj as? [String:Any]
-            if obj != nil{
-                kAllPublications = obj!
-            }
-        }
-    }
-
     //飞机信息
-    func getAirplanes(withPath path:String,bookName:String){
-        
+    func getAirplanesData(withPath path:String,bookName:String){
         DBManager.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
             guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
@@ -135,13 +84,11 @@ class DBManager: NSObject {
                 }
             }
         })
-        
-        updateTableinfo(cls: AirplaneModel.self)
     }
 
     
     //获取手册信息
-    func getbooks(withPath path:String) {
+    func getBookData(withPath path:String) {
             var path = path
             let booklocalurl = path.substring(from: ROOTPATH.endIndex)
             let metadataurl = booklocalurl.appending("/resources/toc.xml")
@@ -174,19 +121,9 @@ class DBManager: NSObject {
             }catch{
                 print(error)
             }
-        
-        
-        updateTableinfo(cls: PublicationsModel.self)
     }
 
-    /*
-     66] 已存在：CCAA330CCAAMM_20170101EN52510000013300018
-     2017-08-14 18:22:02.642 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000013350003
-     2017-08-14 18:22:02.664 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000013400006
-     2017-08-14 18:22:02.687 Toolbox[15826:1493666] 已存在：CCAA330CCAAMM_20170101EN52510000017350008
-     
-     */
-    func getSegments(withBookPath path:String ,bookName:String) {
+    func getSegmentsData(withBookPath path:String ,bookName:String) {
         var path = path
         path = path.appending("/resources/toc.xml")
         let book_id = bookName//book_id = bookname
@@ -195,25 +132,21 @@ class DBManager: NSObject {
             let jsonString = try String(contentsOfFile: path)
             if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
                 let doc = try DDXMLDocument.init(data: jsondata, options: 0)
-                
                 let rootE:DDXMLElement! = doc.rootElement()
                 let segs:[DDXMLElement] = rootE.elements(forName: "segment")
                 
-                
                 //建立索引
                 for element in segs {
-                    let parent_id = book_id
-                    traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
+                    autoreleasepool(invoking: { () -> () in
+                        let parent_id = book_id
+                        traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
+                    })
                 }
-                
-                //                updateTableinfo(cls: SegmentModel.self,id:model?.book_uuid)
-                
+
                 //               let queue = DispatchQueue.init(label: "lable")
                 //              queue.async(execute: {
                 //
                 //              })
-                
-                
             }
         }catch{
             print(error)
@@ -307,47 +240,11 @@ class DBManager: NSObject {
         }
    
     }
-    
-    
-    
-    //获取手册路径
-    func getPath() -> [String] {
-        let basepath = ROOTPATH + ROOTSUBPATH
-        let fm = FileManager.default
-        var pathArr = [String]()
-        do{
-            let files = try fm.contentsOfDirectory(atPath: basepath)
-            for item in files {
-                var isDir = ObjCBool(false)
-                let path = basepath + item
-                let isexist = fm.fileExists(atPath: path, isDirectory: &isDir)
-                
-                if isexist && isDir.boolValue {
-                    let sub = try fm.contentsOfDirectory(atPath: path)
-                    if sub.count > 0 {
-                        pathArr.append(path.appending("/\(sub[0])"))
-                    }
-                }
-            }
-        }catch{
-            print("GET PATH ERROR:\(error)")
-        }
-      
-        return pathArr
-    }
-    
-    func getBookPath(withRelPath path:String) -> String {
-        var bookpath:String = path
-        let files = getFilesAt(path: bookpath)
-        if files.count > 0 {
-            bookpath.append("/\(files[0])")
-        }
-        
-        return bookpath
-    }
+
     
     
     //MARK:-
+    /*
     //表更新记录
     private func updateTableinfo(cls:Model.Type,id:String? = nil)  {
         var infodic = [String:Any]()
@@ -359,13 +256,7 @@ class DBManager: NSObject {
         
         UpdateInfo.saveToDb(with: infodic)
     }
-    
-    //是否存在
-    private func updateTableInfoisExist(cls:Model.Type) -> Bool {
-        let m = UpdateInfo.search(with: "table_name='\(cls.getTableName())'", orderBy: nil)
-        return (m != nil) && (m?.count)! > 0 ? true:false
-    }
-    
+*/
     
     func deleteFile(path:String) {
         if FileManager.default.isDeletableFile(atPath: path) {
@@ -393,6 +284,18 @@ class DBManager: NSObject {
 //MARK: 文件解压及数据处理
 extension DBManager : SSZipArchiveDelegate {
     
+    //获取手册路径
+    func getBookPath(withRelPath path:String) -> String {
+        var bookpath:String = path
+        let files = getFilesAt(path: bookpath)
+        if files.count > 0 {
+            bookpath.append("/\(files[0])")
+        }
+        
+        return bookpath
+    }
+    
+    //获取指定路径下文件名
     func getFilesAt(path:String) -> [String] {
         var files = [String]()
         do {
@@ -404,6 +307,7 @@ extension DBManager : SSZipArchiveDelegate {
         return files
     }
     
+    //获取指定路径下zip文件名
     func getZipFiles(items:[String]) -> [String] {
         var zips = [String]()
         
@@ -427,11 +331,11 @@ extension DBManager : SSZipArchiveDelegate {
         UIApplication.shared.isIdleTimerDisabled = false
         
         self.queue.addOperation({
-            self.unzipDocFile()
+            self.unzipFileFromDocument()
         })
         
         self.queue.addOperation({
-            self.unzipTmpFile()
+            self.unzipFileFromTmp()
         })
 
         
@@ -448,16 +352,16 @@ extension DBManager : SSZipArchiveDelegate {
 
         self.queue.addOperation({
             print("移动完成！！")
+            self.queue.isSuspended = true
+            UIApplication.shared.isIdleTimerDisabled = true
         })
         
         self.queue.isSuspended = false
-        
-        
-        
+   
     }
     
     //--1
-    func unzipDocFile() {
+    func unzipFileFromDocument() {
         
         let despath = LibraryPath.appending("/TDLibrary/tmp")
         let baseinfodatapath = LibraryPath.appending("/Application data")
@@ -495,7 +399,7 @@ extension DBManager : SSZipArchiveDelegate {
     
     
     //--2//解压缓存目录到指定目录，然后解压资源文件
-    func unzipTmpFile()  {
+    func unzipFileFromTmp()  {
         let path = ROOTPATH.appending("/tmp")
         let fileArr = getFilesAt(path: path)
         let zipArr = getZipFiles(items: fileArr)
@@ -520,8 +424,6 @@ extension DBManager : SSZipArchiveDelegate {
                         kUnzipprogress.progress = kUnzipProgressStatus
                     }
                     },completionHandler:{/*[weak self]*/(path, success, error) in
-                        print("TMP解压完成:\(path)")
-                        
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
                         }
@@ -630,11 +532,11 @@ extension DBManager : SSZipArchiveDelegate {
                      */
                    let bookpath = getBookPath(withRelPath: despath)
                     
-                    getAirplanes(withPath: bookpath,bookName:bookname as String)
+                    getAirplanesData(withPath: bookpath,bookName:bookname as String)
                     
-                    getbooks(withPath: bookpath)
+                    getBookData(withPath: bookpath)
                     
-                    getSegments(withBookPath: bookpath,bookName:bookname as String)
+                    getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)

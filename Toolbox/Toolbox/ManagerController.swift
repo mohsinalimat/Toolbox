@@ -284,6 +284,8 @@ class ManagerController: BaseViewControllerWithTable {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
+        print("收到内存告警!!!")
         // Dispose of any resources that can be recreated.
     }
     
