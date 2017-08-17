@@ -14,7 +14,7 @@ class FILESManager: NSObject {
     let fm = FileManager.default
 
     @discardableResult
-    func checkPathIsExist(path:String,createWhenNotExist:Bool? = true) -> Bool {
+    func fileExistsAt(path:String,createWhenNotExist:Bool? = true) -> Bool {
         let exist = fm.fileExists(atPath: path)
         if !exist && createWhenNotExist!
         {

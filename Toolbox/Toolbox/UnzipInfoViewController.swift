@@ -30,7 +30,12 @@ class UnzipInfoViewController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        HUD.show(withStatus: "文件分析中...")
+        if totalUnzipFilsnumber == 0{
+            HUD.show(withStatus: "文件分析中...")
+        }
+        
+        
+        fileNumber.text = "(安装文件: \(hasUnzipFilesnumber)/\(totalUnzipFilsnumber))"
     }
     
     

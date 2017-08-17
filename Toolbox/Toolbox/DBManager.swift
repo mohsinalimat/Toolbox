@@ -126,33 +126,36 @@ class DBManager: NSObject {
     }
 
     func getSegmentsData(withBookPath path:String ,bookName:String) {
-        print("\(bookName) : 获取getSegmentsData")
-        var path = path
-        path = path.appending("/resources/toc.xml")
-        let book_id = bookName//book_id = bookname
-        
-        do{
-            let jsonString = try String(contentsOfFile: path)
-            if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
-                let doc = try DDXMLDocument.init(data: jsondata, options: 0)
-                let rootE:DDXMLElement! = doc.rootElement()
-                let segs:[DDXMLElement] = rootE.elements(forName: "segment")
-                
-                //建立索引
-                for element in segs {
-                    autoreleasepool(invoking: { () -> () in
-                        let parent_id = book_id
-                        traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
-                    })
-                }
+        autoreleasepool { () -> () in
+            print("\(bookName) : 获取getSegmentsData")
+            
+            var path = path
+            path = path.appending("/resources/toc.xml")
+            let book_id = bookName//book_id = bookname
+            
+            do{
+                let jsonString = try String(contentsOfFile: path)
+                if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
+                    let doc = try DDXMLDocument.init(data: jsondata, options: 0)
+                    let rootE:DDXMLElement! = doc.rootElement()
+                    let segs:[DDXMLElement] = rootE.elements(forName: "segment")
+                    let parent_id = book_id
+                    
+                    //建立索引
+                    let group = DispatchGroup()
+                    for element in segs {
+                        let item  = DispatchWorkItem.init(block: { [weak self] in
+                            guard let strongSelf = self else{return}
+                            strongSelf.traversalNode(element: element, parentId: parent_id, bookId: book_id,lv:1)
+                        })
 
-                //               let queue = DispatchQueue.init(label: "lable")
-                //              queue.async(execute: {
-                //
-                //              })
+                       DispatchQueue.global().async(group: group, execute: item)
+                    }
+                    group.wait()
+                }
+            }catch{
+                print(error)
             }
-        }catch{
-            print(error)
         }
     }
 
@@ -167,45 +170,14 @@ class DBManager: NSObject {
                                parentId:String,
                                bookId:String,
                                lv:Int) {
-        let parentId = parentId
-        let attrs = element.attributes
-        var des:[String:String]! = [:]
-        let lv = lv;
+        autoreleasepool { () -> () in
         
-        guard let attributeArr = attrs else {
-            return
-        }
-        for node in attributeArr {
-            if let key = node.name,let value = node.stringValue{
-                des[key] = value
-            }
-        }
-        
-        let titleElement = element.elements(forName: "title")
-        if titleElement.count > 0 {
-            des["title"] = titleElement[0].stringValue
-        }
-        
-        
-        //....
-        
-        let _id = des["id"]
-        if _id == nil {
-            print("ID 数据有问题。。。")
-        }
-        let primaryid = bookId + _id!
-        des["toc_id"] = _id
-        des["primary_id"] = primaryid
-        des["parent_id"] = parentId
-        des["book_id"] = bookId
-        des["nodeLevel"] = "\(lv)"
-    
-        //有效性判断
-        let effect = element.elements(forName: "effect")
-        if  effect.count > 0 {
-            let effect = effect[0]
-            let effAttrs = effect.attributes
-            guard let attributeArr = effAttrs else {
+            let parentId = parentId
+            let attrs = element.attributes
+            var des:[String:String]! = [:]
+            let lv = lv;
+            
+            guard let attributeArr = attrs else {
                 return
             }
             for node in attributeArr {
@@ -213,35 +185,69 @@ class DBManager: NSObject {
                     des[key] = value
                 }
             }
-        }
-        
-        //是否还有子节点
-        /*
-         <segment has_content="0" id="EN21210003011450001" is_leaf="1" is_visible="0" original_tag="graphic" revision_type="OEM" toc_code="21-21-00-11450">
-         <effect effrg="001999" tocdisplayeff="** ON A/C ALL" />
-         <title>21-21-00-11450</title>
-         <segment content_location="../21/images/f_ts_212100_3_aam0_01_00.svg" has_content="1" is_leaf="1" is_visible="0" mime_type="image/svg" original_tag="sheet" revision_type="OEM" toc_code="21-21-00-11450-1">
-         <effect effrg="001999" tocdisplayeff="** ON A/C ALL" />
-         </segment>
-         </segment>
-            是叶节点，又有子节点，图片，不可见
-         */
-        let isleaf = Int(des["is_leaf"]!)!
-        let isvisible = Int(des["is_visible"]!)!
-        if isleaf == 1 && isvisible == 1 {
-            let localtion :String! = des["content_location"]
-            let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
-            des["content_location"] = new
-        }
-        SegmentModel.saveToDb(with: des)
-    
-        if isleaf == 0  /*|| (isleaf == 1 && isvisible == 0)*/ {//有问题
-            let eles = element.elements(forName: "segment")
-            for ele in eles {
-                traversalNode(element: ele, parentId: primaryid, bookId: bookId,lv:lv + 1)
+            
+            let titleElement = element.elements(forName: "title")
+            if titleElement.count > 0 {
+                des["title"] = titleElement[0].stringValue
             }
+            
+            
+            //....
+            
+            let _id = des["id"]
+            if _id == nil {
+                print("ID 数据有问题。。。")
+            }
+            let primaryid = bookId + _id!
+            des["toc_id"] = _id
+            des["primary_id"] = primaryid
+            des["parent_id"] = parentId
+            des["book_id"] = bookId
+            des["nodeLevel"] = "\(lv)"
+        
+            //有效性判断
+            let effect = element.elements(forName: "effect")
+            if  effect.count > 0 {
+                let effect = effect[0]
+                let effAttrs = effect.attributes
+                guard let attributeArr = effAttrs else {
+                    return
+                }
+                for node in attributeArr {
+                    if let key = node.name,let value = node.stringValue{
+                        des[key] = value
+                    }
+                }
+            }
+            
+            //是否还有子节点
+            /*
+             <segment has_content="0" id="EN21210003011450001" is_leaf="1" is_visible="0" original_tag="graphic" revision_type="OEM" toc_code="21-21-00-11450">
+             <effect effrg="001999" tocdisplayeff="** ON A/C ALL" />
+             <title>21-21-00-11450</title>
+             <segment content_location="../21/images/f_ts_212100_3_aam0_01_00.svg" has_content="1" is_leaf="1" is_visible="0" mime_type="image/svg" original_tag="sheet" revision_type="OEM" toc_code="21-21-00-11450-1">
+             <effect effrg="001999" tocdisplayeff="** ON A/C ALL" />
+             </segment>
+             </segment>
+                是叶节点，又有子节点，图片，不可见
+             */
+            let isleaf = Int(des["is_leaf"]!)!
+            let isvisible = Int(des["is_visible"]!)!
+            if isleaf == 1 && isvisible == 1 {
+                let localtion :String! = des["content_location"]
+                let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
+                des["content_location"] = new
+            }
+            SegmentModel.saveToDb(with: des)
+        
+            if isleaf == 0  /*|| (isleaf == 1 && isvisible == 0)*/ {//有问题
+                let eles = element.elements(forName: "segment")
+                for ele in eles {
+                    traversalNode(element: ele, parentId: primaryid, bookId: bookId,lv:lv + 1)
+                }
+            }
+            
         }
-   
     }
 
     
@@ -261,17 +267,7 @@ class DBManager: NSObject {
     }
 */
     
-    func deleteFile(path:String) {
-        if FileManager.default.isDeletableFile(atPath: path) {
-            do {
-                try FileManager.default.removeItem(atPath: path)
-            }catch{
-                print(error)
-            }
-        }else {
-            print("文件删除失败:\(path)")
-        }
-    }
+
     
     
     //Document 是否有更新
@@ -323,41 +319,136 @@ extension DBManager  {
         return zips
     }
     
+    //MARK:-
+    func checkUpdate() {
+        let tmppath = LibraryPath.appending("/TDLibrary/tmp")
+        
+        let document = DBManager.default.getFilesAt(path: DocumentPath)
+        if document.count > 0 {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil, userInfo: nil)
+            }
+            
+            FILESManager.default.deleteFileAt(path: tmppath)
+            //从doc更新
+            self.queue.addOperation({
+                self.unzipFileFromDocument()
+            })
+            
+            self.queue.addOperation {
+                let files = self.getFilesAt(path: DocumentPath)
+                let zipArr = self.getZipFiles(items: files)
+                for p in zipArr {
+                    if p.hasSuffix(".zip") {
+                        let srczip = DocumentPath + "/\(p)"
+                        FILESManager.default.deleteFileAt(path: srczip)
+                    }
+                }
+            }
+            
+            self.queue.addOperation({
+                self.unzipFileFromTmp()
+            })
+            
+            self.queue.addOperation {
+                let path = ROOTPATH.appending("/tmp")
+                FILESManager.default.deleteFileAt(path: path)
+            }
+            
+            self.queue.addOperation({
+                print("解压完成！！")
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
+                }
+            })
+            
+            self.queue.addOperation({
+                self.moveAndParse()
+            })
+            
+            self.queue.addOperation({
+                print("移动完成！！")
+                self.queue.isSuspended = true
+            })
+            
+            
+        }else{
+            
+            if FILESManager.default.fileExistsAt(path: tmppath, createWhenNotExist: false) && DBManager.default.getFilesAt(path: tmppath).count > 0{
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil, userInfo: nil)
+                }
 
+                let files = getFilesAt(path: ROOTPATH)
+                    for item in files {
+                        if Double(item as String) != nil {
+                            let itempath = ROOTPATH.appending("/\(item)")
+                            FILESManager.default.deleteFileAt(path: itempath)
+                        }
+                    }
+                
+                //从tmp更新
+                self.queue.addOperation({
+                    self.unzipFileFromTmp()
+                })
+                
+                self.queue.addOperation {
+                    let path = ROOTPATH.appending("/tmp")
+                    FILESManager.default.deleteFileAt(path: path)
+                }
+                
+                self.queue.addOperation({
+                    print("解压完成！！")
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
+                    }
+                })
+                
+                self.queue.addOperation({
+                    self.moveAndParse()
+                })
+                
+                self.queue.addOperation({
+                    print("移动完成！！")
+                    self.queue.isSuspended = true
+                })
+
+            }else{
+                if let path = UserDefaults.standard.string(forKey: "book_path") {
+                    
+                    let path = ROOTPATH.appending("/\(path)")
+                    FILESManager.default.deleteFileAt(path: path)
+                    //从3.更新
+                    self.queue.addOperation({
+                        self.moveAndParse()
+                    })
+                    
+                    self.queue.addOperation({
+                        print("移动完成！！")
+                        self.queue.isSuspended = true
+                    })
+                    
+                    
+                }else{
+                    print("没有文档需要更新！")
+                }
+                
+            }
+            
+            }
+       
+    }
     
     //安装手册
     func installBook(){
 
         //检测是否有更新
-        guard DBManager.hasBookNeedUpdate() else{return}
+//        guard DBManager.hasBookNeedUpdate() else{return}
         
-        UIApplication.shared.isIdleTimerDisabled = false
+        UIApplication.shared.isIdleTimerDisabled = true
         
-        self.queue.addOperation({
-            self.unzipFileFromDocument()
-        })
-        
-        self.queue.addOperation({
-            self.unzipFileFromTmp()
-        })
-
-        
-        self.queue.addOperation({
-            print("解压完成！！")
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
-            }
-        })
-        
-        self.queue.addOperation({
-            self.moveAndParse()
-        })
-
-        self.queue.addOperation({
-            print("移动完成！！")
-            self.queue.isSuspended = true
-            UIApplication.shared.isIdleTimerDisabled = true
-        })
+        checkUpdate()
         
         self.queue.isSuspended = false
    
@@ -366,49 +457,51 @@ extension DBManager  {
     //--1
     func unzipFileFromDocument() {
         
-        let despath = LibraryPath.appending("/TDLibrary/tmp")
-        let baseinfodatapath = LibraryPath.appending("/Application data")
-        
-        //路径检测
-        LocationManager.default.checkPathIsExist(path: despath)
-        LocationManager.default.checkPathIsExist(path: baseinfodatapath)
-        
-        do{
-            let zipArr = try fm.contentsOfDirectory(atPath: DocumentPath)
-            for p in zipArr {
-                if p.hasSuffix(".zip") {
-                    let srczip = DocumentPath + "/\(p)"
-                    print("开始解压：\(srczip)")
-                    SSZipArchive.unzipFile(atPath: srczip, toDestination: despath, progressHandler: { (entry, zipinfo, entrynumber, total) in
-                        print("\(entrynumber) - \(total)")
-                        if !entry.hasSuffix(".zip") {
-                            do{
-                                try self.fm.moveItem(atPath: despath + "/\(entry)", toPath: baseinfodatapath +  "/\(entry)")
-                            }catch{
-                                print(error)
-                            }
-                         }
-                        }, completionHandler: { (path, success, error) in
-                            print("DOCMENT解压完成：\(path)")
-                            //////////删除源文件
-                            self.deleteFile(path: path)
-                    })
+        autoreleasepool { () -> () in
+            let despath = LibraryPath.appending("/TDLibrary/tmp")
+            let baseinfodatapath = LibraryPath.appending("/Application data")
+            
+            //路径检测
+            FILESManager.default.fileExistsAt(path: despath)
+            FILESManager.default.fileExistsAt(path: baseinfodatapath)
+            do{
+                let fileArr = try fm.contentsOfDirectory(atPath: DocumentPath)
+                let zipArr = getZipFiles(items: fileArr)
+                for p in zipArr {
+                    if p.hasSuffix(".zip") {
+                        let srczip = DocumentPath + "/\(p)"
+                        print("开始解压：\(srczip)")
+                        SSZipArchive.unzipFile(atPath: srczip, toDestination: despath, progressHandler: { (entry, zipinfo, entrynumber, total) in
+                            print("Doc:\(entrynumber) - \(total)")
+                            if !entry.hasSuffix(".zip") {
+                                do{
+                                    try self.fm.moveItem(atPath: despath + "/\(entry)", toPath: baseinfodatapath +  "/\(entry)")
+                                }catch{
+                                    print(error)
+                                }
+                             }
+                            }, completionHandler: { (path, success, error) in
+                                print("DOCMENT解压完成：\(path)")
+                                //////////删除源文件
+//                                FILESManager.default.deleteFileAt(path: path)
+                        })
+                    }
                 }
+            }catch{
+                print(error)
             }
-        }catch{
-            print(error)
+            
         }
     }
     
     
-    //--2//解压缓存目录到指定目录，然后解压资源文件
+    //解压缓存目录到指定目录，然后解压资源文件
     func unzipFileFromTmp()  {
         let path = ROOTPATH.appending("/tmp")
         let fileArr = getFilesAt(path: path)
         let zipArr = getZipFiles(items: fileArr)
         
         guard zipArr.count > 0 else{return}
-        
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_totalnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
         }
@@ -417,10 +510,10 @@ extension DBManager  {
             if item.hasSuffix(".zip") {//解压tmp目录
                 let srcpath = path.appending("/\(item)")
                 let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
-                LocationManager.default.checkPathIsExist(path: newpath)
+                FILESManager.default.fileExistsAt(path: newpath)
                 
                 SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total) in
-                        print("\(entrynumber) - \(total)")
+                        print("Tmp:\(entrynumber) - \(total)")
                     DispatchQueue.main.async {
 //                        HUD.showProgress(progress: Float(entrynumber) / Float(total) , status: "文件解压中...")
                         kUnzipProgressStatus =  Float(entrynumber) / Float(total)
@@ -430,7 +523,7 @@ extension DBManager  {
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
                         }
-                        self.deleteFile(path: path)
+                        //FILESManager.default.deleteFileAt(path: path)
                         
                         //遍历资源目录
                         self.unzipSourceFile(filePath: newpath)
@@ -444,7 +537,7 @@ extension DBManager  {
         }
        
         //删除tmp所有文件
-        deleteFile(path: path)
+        //FILESManager.default.deleteFileAt(path: path)
     }
     
     /*手册内部遍历*/
@@ -465,9 +558,8 @@ extension DBManager  {
                         SSZipArchive.unzipFile(atPath: path, toDestination: filePath,
                                                progressHandler: {(entry, zipinfo, entrynumber, total) in
                             },
-                                               completionHandler: { [weak self] (path, success, error) in
-                                                guard let strongSelf = self else { return }
-                                                strongSelf.deleteFile(path: path)
+                                               completionHandler: {(path, success, error) in
+                                                FILESManager.default.deleteFileAt(path: path)
                             })
                     }
                 }
@@ -511,63 +603,50 @@ extension DBManager  {
                         guard let bookname  = getFilesAt(path: path2).first else{return}
                         let srcpath = path2.appending("/\(bookname)")
                         let despath = path_cca.appending("/\(bookname)")
-                        if LocationManager.default.checkPathIsExist(path: path_cca){//owner 已存在
+                        
+                        UserDefaults.standard.setValue(item + "/\(bookname)", forKey: "book_path")
+                        UserDefaults.standard.synchronize()
+                        
+                        if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
                             let cca_files = getFilesAt(path: path_cca)
                             if !cca_files.contains(bookname) {
                                 do{
-                                    try fm.moveItem(atPath: srcpath, toPath: despath)
-                                    deleteFile(path: path1)
+                                    try fm.copyItem(atPath: srcpath, toPath: despath)
+                                    //FILESManager.default.deleteFileAt(path: path1)
                                 }catch{
                                     print(error)
                                 }
                             }else{
+                                print("已存在：\(bookname)")
+                                UserDefaults.standard.removeObject(forKey: "book_path")
+                                FILESManager.default.deleteFileAt(path: path1)
+                                
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                                }
+                                continue
                                 //RESERVE
                             }
                             
                         }else{
                             do{
-                                try fm.moveItem(atPath: srcpath, toPath: despath)
-                                deleteFile(path: path1)
+                                try fm.copyItem(atPath: srcpath, toPath: despath)
                             }catch{
                                 print(error)
                             }
                         }
                         /////解析
-                        /*
-                         /var/mobile/Containers/Data/Application/E2F03F14-9FA2-415A-87F6-E46B68A03E2A/Library/TDLibrary
-                         /CCA/CCAA320CCAAIPC20161101/aipc
-                         */
                         let bookpath = getBookPath(withRelPath: despath)
-                        let group = DispatchGroup()
+                        getAirplanesData(withPath: bookpath,bookName:bookname as String)
+                        getBookData(withPath: bookpath)
+                        getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
                         
-                        DispatchQueue.global().async {
-                            group.enter()
-                           self.getAirplanesData(withPath: bookpath,bookName:bookname as String)
-                            group.leave()
-                        }
-                        
-                        
-                        DispatchQueue.global().async {
-                            group.enter()
-                          self.getBookData(withPath: bookpath)
-                            group.leave()
-                        }
-                        
-                        DispatchQueue.global().async {
-                            group.enter()
-                          self.getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
-                            group.leave()
-                        }
-                        
-                        
-                        
-                        group.notify(queue: DispatchQueue.main, execute: {
-                            print("单个手册数据处理完成")
+                        UserDefaults.standard.removeObject(forKey: "book_path")
+                        FILESManager.default.deleteFileAt(path: path1)
+                        DispatchQueue.main.async {
+                        print("单个手册数据处理完成")
                             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                        })
-//                        DispatchQueue.main.async {
-//                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-//                        }
+                        }
                     }
                 }
             
@@ -594,8 +673,7 @@ extension DBManager  {
         }else {
             print("文件删除失败-----------------------")
         }
-        
-        
+    
     }
     
     

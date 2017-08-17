@@ -216,7 +216,13 @@
 @end
 
 
+@implementation MsgRecord
 
+-(NSString *)getPrimarykey{
+    return @"path";
+}
+
+@end
 
 
 

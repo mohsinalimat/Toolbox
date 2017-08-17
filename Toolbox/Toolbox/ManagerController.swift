@@ -26,7 +26,8 @@ class ManagerController: BaseViewControllerWithTable {
     override func viewDidLoad() {
         super.viewDidLoad()
          navigationItem.titleView = nil
-        // Do any additional setup after loading the view.""
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
         
@@ -39,6 +40,14 @@ class ManagerController: BaseViewControllerWithTable {
         
     }
 
+    func startUnzip(_ noti:Notification) {
+        ////
+        print("通知-showUnzipViewController.")
+        showUnzipViewController()
+
+    }
+    
+    
     func allbookupdatecomplete(_ noti:Notification)  {
         ///手册更新完毕，刷新列表
         HUD.show(successInfo: "更新完成")
@@ -63,12 +72,16 @@ class ManagerController: BaseViewControllerWithTable {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //检测更新
+        
+        DBManager.default.installBook()
+        
+        /*
         if DBManager.hasBookNeedUpdate() {
             DBManager.default.installBook()
             
             ////
-            showUnzipViewController()
-        }
+            //showUnzipViewController()
+        }*/
   
     }
     

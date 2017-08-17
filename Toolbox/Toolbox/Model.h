@@ -149,7 +149,7 @@
 @property(nonatomic,assign)NSInteger data_type;//RESERVE...
 @end
 
-
+//MSN - BOOKS映射
 @interface APMMap : Model
 @property(nonatomic,copy)NSString * primary_id;
 @property(nonatomic,copy)NSString * bookid;
@@ -157,7 +157,7 @@
 @end
 
 
-#pragma mark - other 辅助
+#pragma mark - other
 //表更新记录
 @interface UpdateInfo : Model
 @property(nonatomic,copy)NSString * table_name;
@@ -165,5 +165,8 @@
 @property(nonatomic,copy)NSString *  ID;
 @end
 
+@interface MsgRecord : Model
+@property(nonatomic,copy)NSString * path;
 
+@end
 
