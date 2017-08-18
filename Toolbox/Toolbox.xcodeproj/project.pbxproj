@@ -95,6 +95,8 @@
 		A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */; };
 		A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */; };
 		A1CA21871F3472CE0055BCB0 /* SetterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */; };
+		A1D5978F1F4689D100C0F5B8 /* DataParseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */; };
+		A1D597911F46CD3F00C0F5B8 /* book.xml in Resources */ = {isa = PBXBuildFile; fileRef = A1D597901F46CD3F00C0F5B8 /* book.xml */; };
 		A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DE045E1F21D06B000C5069 /* SegmentCell.swift */; };
 		A1DE04611F21D06B000C5069 /* SegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1DE045F1F21D06B000C5069 /* SegmentCell.xib */; };
 /* End PBXBuildFile section */
@@ -213,6 +215,8 @@
 		A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg.png; sourceTree = "<group>"; };
 		A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetterViewController.swift; sourceTree = "<group>"; };
 		A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetterViewController.xib; sourceTree = "<group>"; };
+		A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataParseKit.swift; sourceTree = "<group>"; };
+		A1D597901F46CD3F00C0F5B8 /* book.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = book.xml; sourceTree = "<group>"; };
 		A1DE045E1F21D06B000C5069 /* SegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentCell.swift; sourceTree = "<group>"; };
 		A1DE045F1F21D06B000C5069 /* SegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentCell.xib; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
@@ -281,6 +285,7 @@
 			children = (
 				A136F1201F1372BC00349572 /* DBManager.swift */,
 				A1B13AAF1F3982A10049250F /* FILESManager.swift */,
+				A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */,
 			);
 			name = db;
 			sourceTree = "<group>";
@@ -317,6 +322,7 @@
 				A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */,
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
 				A1B7FB171F0F8912009D6CA9 /* apList.json */,
+				A1D597901F46CD3F00C0F5B8 /* book.xml */,
 				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
 				A1C1BD681F00A0AA002FC0E0 /* Info.plist */,
@@ -604,6 +610,7 @@
 				A106483E1F04C21E002D088C /* AppIcon-B2C76x76@2x~ipad.png in Resources */,
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
 				A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */,
+				A1D597911F46CD3F00C0F5B8 /* book.xml in Resources */,
 				A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */,
 				A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */,
 				A1BBCF571F2ACBFF007374B7 /* bookmarkOn.png in Resources */,
@@ -727,6 +734,7 @@
 				A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */,
 				A1B13AB01F3982A10049250F /* FILESManager.swift in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
+				A1D5978F1F4689D100C0F5B8 /* DataParseKit.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
 				A1C1BD8C1F00A5BB002FC0E0 /* BaseTabbarController.swift in Sources */,
 			);

@@ -60,8 +60,19 @@ class AirplaneController:BaseViewControllerWithTable {
 //        queue.async(execute: workitem1)
 //        queue.async(execute: workitem2)
         
+        //Test()
     }
 
+    func Test() {
+      //let path = ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm/resources/book.xml")
+        let path = Bundle.main.path(forResource: "book", ofType: "xml")
+      DataParseKit.default.parserStart(withBookPath: path!, bookName: "CCAA330CCATSM_20170101")
+        
+    }
+    
+    
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         

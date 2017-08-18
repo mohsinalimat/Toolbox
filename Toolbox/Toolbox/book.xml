@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<segment>
+    <segment has_content="0" id="EN8013" is_leaf="0" is_visible="1" mime_type="text/html" original_tag="section" revision_type="OEM" toc_code="80-13">
+        <effect effrg="001999" efftext="** ON A/C ALL" />
+        <title>80-13-DUCTING</title>
+        
+        <segment has_content="0" id="EN801341" is_leaf="0" is_visible="0" original_tag="unit" revision_type="OEM" toc_code="80-13-41">
+            <effect effrg="001999" tocdisplayeff="** ON A/C 001999" />
+            <title>80-13-41-DUCT - LOWER STARTER</title>
+            
+            <segment content_location="../80/EN80134160.html" has_content="1" id="EN80134160" is_leaf="1" is_visible="1" mime_type="text/html" original_tag="figure" revision_type="OEM" toc_code="80-13-41-60">
+                <effect effrg="001999" tocdisplayeff="** ON A/C 001999" />
+                <title>Fig 80-13-41-60-LOWER STARTER AIR DUCT INSTL,RR</title>
+            </segment>
+            
+            <segment content_location="../80/EN80134161.html" has_content="1" id="EN80134161" is_leaf="1" is_visible="1" mime_type="text/html" original_tag="figure" revision_type="OEM" toc_code="80-13-41-61">
+                <effect effrg="001999" tocdisplayeff="** ON A/C 001999" />
+                <title>Fig 80-13-41-61-UPPER STARTER AIR DUCT INSTL-RR</title>
+            </segment>
+            
+            <segment content_location="../80/EN80134162.html" has_content="1" id="EN80134162" is_leaf="1" is_visible="1" mime_type="text/html" original_tag="figure" revision_type="OEM" toc_code="80-13-41-62">
+                <effect effrg="001999" tocdisplayeff="** ON A/C 001999" />
+                <title>Fig 80-13-41-62-PYLON DUCT INSTL-RR</title>
+            </segment>
+            
+        </segment>
+        
+        </segment>
+</segment>

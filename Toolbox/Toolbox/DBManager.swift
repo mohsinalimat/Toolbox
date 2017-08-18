@@ -639,14 +639,17 @@ extension DBManager  {
                         let bookpath = getBookPath(withRelPath: despath)
                         getAirplanesData(withPath: bookpath,bookName:bookname as String)
                         getBookData(withPath: bookpath)
-                        getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
+                        //getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
                         
-                        UserDefaults.standard.removeObject(forKey: "book_path")
-                        FILESManager.default.deleteFileAt(path: path1)
-                        DispatchQueue.main.async {
-                        print("单个手册数据处理完成")
-                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                        }
+                        DataParseKit.default.parserStart(withBookPath: bookpath, bookName: bookname, completeHandler: { 
+                            UserDefaults.standard.removeObject(forKey: "book_path")
+                            FILESManager.default.deleteFileAt(path: path1)
+                            DispatchQueue.main.async {
+                                print("单个手册数据处理完成")
+                                NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                            }
+                        })
+                        
                     }
                 }
             
