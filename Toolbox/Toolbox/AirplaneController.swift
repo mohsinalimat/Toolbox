@@ -61,6 +61,8 @@ class AirplaneController:BaseViewControllerWithTable {
 //        queue.async(execute: workitem2)
         
         //Test()
+        //CoreDataKit.default.insert(dic: ["primary_id":"22"])
+        
     }
 
     func Test() {

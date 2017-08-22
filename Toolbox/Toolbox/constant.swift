@@ -88,7 +88,13 @@ let APLISTJSONPATH = "/resources/apList.json"
 let APMODELMAPJSPATH = ROOTPATH + ROOTSUBPATH + "apModelMap.js"//与MSN字段关联飞机手册
 
 
+#if Debug
+    func print(_: item) {
+        print(item)
+    }
+#else
 
+#endif
 
 
 

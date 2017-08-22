@@ -611,7 +611,7 @@ extension DBManager  {
                             let cca_files = getFilesAt(path: path_cca)
                             if !cca_files.contains(bookname) {
                                 do{
-                                    try fm.copyItem(atPath: srcpath, toPath: despath)
+                                    try fm.moveItem(atPath: srcpath, toPath: despath)
                                     //FILESManager.default.deleteFileAt(path: path1)
                                 }catch{
                                     print(error)
@@ -630,7 +630,7 @@ extension DBManager  {
                             
                         }else{
                             do{
-                                try fm.copyItem(atPath: srcpath, toPath: despath)
+                                try fm.moveItem(atPath: srcpath, toPath: despath)
                             }catch{
                                 print(error)
                             }

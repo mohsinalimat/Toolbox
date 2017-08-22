@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="15F34" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CoreDataModel" representedClassName=".CoreDataModel" syncable="YES">
+        <attribute name="book_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="content_location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="effrg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="has_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="is_leaf" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="is_visible" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mime_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nodeLevel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="original_tag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parent_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="primary_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="revision_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toc_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toc_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tocdisplayeff" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="CoreDataModel" positionX="-63" positionY="-18" width="128" height="283"/>
+    </elements>
+</model>

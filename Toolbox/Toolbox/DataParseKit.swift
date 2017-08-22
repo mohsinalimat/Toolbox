@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DataParseKit: NSObject,XMLParserDelegate {
 
@@ -25,6 +26,10 @@ class DataParseKit: NSObject,XMLParserDelegate {
     var parDic = [Int:String]()
     
     var completeHandlers:((Void)->(Void))?
+    
+    var TotalModel = [Any]()
+    
+    let TEST = false
     
     //MARK:-
     func parserStart(withBookPath path:String ,bookName:String,completeHandler:(()->())? = nil) {
@@ -53,23 +58,28 @@ class DataParseKit: NSObject,XMLParserDelegate {
     
     //MARK:-XMLParserDelegate
     func parserDidStartDocument(_ parser: XMLParser ) {
-        print("\(#function)")
+        //print("\(#function)")
     }
     
     func parserDidEndDocument(_ parser: XMLParser) {
         print("\(#function)")
         
         if !modelDic.isEmpty {
-            SegmentModel.saveToDb(with: modelDic)
+            if TEST{
+                SegmentModel.saveToDb(with: modelDic)
+            }else{
+                CoreDataKit.default.insert(dic: modelDic)
+            }
+            
         }
-        
+
         if let completeHandler = completeHandlers {
             completeHandler()
         }
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        print("\(#function)---- \(elementName)")
+        //print("\(#function)---- \(elementName)")
         
         nodeName = elementName
         
@@ -81,7 +91,11 @@ class DataParseKit: NSObject,XMLParserDelegate {
             print("nodeLevel : \(nodeLevel)")
             
             if !modelDic.isEmpty {
-              SegmentModel.saveToDb(with: modelDic)
+                if TEST{
+                    SegmentModel.saveToDb(with: modelDic)
+                }else{
+                    CoreDataKit.default.insert(dic: modelDic)
+                }
             }
             
             modelDic.removeAll()
@@ -137,7 +151,7 @@ class DataParseKit: NSObject,XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        print("\(#function)----\(nodeName!) : \(string)")
+        //print("\(#function)----\(nodeName!) : \(string)")
         
         if nodeName == "title" {
             modelDic[nodeName] = string
@@ -148,7 +162,7 @@ class DataParseKit: NSObject,XMLParserDelegate {
     
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        print("\(#function)---- \(elementName)")
+        //print("\(#function)---- \(elementName)")
         
         if elementName == "segment" {
              nodeLevel = nodeLevel - 1

@@ -22,12 +22,16 @@
 		A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648331F04C21E002D088C /* Default-Landscape~ipad.png */; };
 		A10648421F04C21E002D088C /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648341F04C21E002D088C /* Default-Portrait@2x~ipad.png */; };
 		A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648351F04C21E002D088C /* Default-Portrait~ipad.png */; };
+		A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */; };
+		A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */; };
 		A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8DF1F063D0300FC7AD3 /* ManagerCell.swift */; };
 		A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */; };
 		A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */; };
 		A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */; };
 		A136F11E1F1322DE00349572 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = A136F11D1F1322DE00349572 /* Model.m */; };
 		A136F1211F1372BC00349572 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A136F1201F1372BC00349572 /* DBManager.swift */; };
+		A13F7E881F4AA61C00ACA39C /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A13F7E861F4AA61C00ACA39C /* Model.xcdatamodeld */; };
+		A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13F7E891F4ABEC300ACA39C /* CoreDataKit.swift */; };
 		A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15580201F05E89D008C1787 /* PublicationCell.swift */; };
 		A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A15580211F05E89E008C1787 /* PublicationCell.xib */; };
 		A16C1A5B1F3D9BE900D961C9 /* UpdateBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */; };
@@ -134,6 +138,8 @@
 		A10648331F04C21E002D088C /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		A10648341F04C21E002D088C /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		A10648351F04C21E002D088C /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataModel+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A12AF8DF1F063D0300FC7AD3 /* ManagerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerCell.swift; sourceTree = "<group>"; };
 		A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerCell.xib; sourceTree = "<group>"; };
 		A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerDetailCell.swift; sourceTree = "<group>"; };
@@ -142,6 +148,8 @@
 		A136F11C1F1322DE00349572 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		A136F11D1F1322DE00349572 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		A136F1201F1372BC00349572 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
+		A13F7E871F4AA61C00ACA39C /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		A13F7E891F4ABEC300ACA39C /* CoreDataKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataKit.swift; sourceTree = "<group>"; };
 		A15580201F05E89D008C1787 /* PublicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicationCell.swift; sourceTree = "<group>"; };
 		A15580211F05E89E008C1787 /* PublicationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublicationCell.xib; sourceTree = "<group>"; };
 		A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateBookViewController.swift; sourceTree = "<group>"; };
@@ -286,6 +294,7 @@
 				A136F1201F1372BC00349572 /* DBManager.swift */,
 				A1B13AAF1F3982A10049250F /* FILESManager.swift */,
 				A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */,
+				A13F7E891F4ABEC300ACA39C /* CoreDataKit.swift */,
 			);
 			name = db;
 			sourceTree = "<group>";
@@ -293,6 +302,8 @@
 		A1C1BD501F00A0AA002FC0E0 = {
 			isa = PBXGroup;
 			children = (
+				A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */,
+				A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */,
 				A1C1BD5B1F00A0AA002FC0E0 /* Toolbox */,
 				A1C1BD701F00A0AA002FC0E0 /* ToolboxTests */,
 				A1C1BD7B1F00A0AA002FC0E0 /* ToolboxUITests */,
@@ -369,6 +380,7 @@
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
 				A136F11C1F1322DE00349572 /* Model.h */,
 				A136F11D1F1322DE00349572 /* Model.m */,
+				A13F7E861F4AA61C00ACA39C /* Model.xcdatamodeld */,
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 				A17792661F2F3771009782F6 /* HUD.swift */,
 				A17C81031F30589400EF8B9D /* error.png */,
@@ -719,6 +731,7 @@
 				A1C1BD8E1F00A5E0002FC0E0 /* BaseViewController.swift in Sources */,
 				A1C1BD9C1F00ACA2002FC0E0 /* ViewerController.swift in Sources */,
 				A1C1BDA21F00ACE0002FC0E0 /* ManagerController.swift in Sources */,
+				A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */,
 				A1C1BD9A1F00AC77002FC0E0 /* TOCViewController.swift in Sources */,
 				A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */,
 				A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */,
@@ -728,11 +741,14 @@
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
+				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
+				A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */,
 				A136F1211F1372BC00349572 /* DBManager.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,
 				A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */,
 				A1B13AB01F3982A10049250F /* FILESManager.swift in Sources */,
+				A13F7E881F4AA61C00ACA39C /* Model.xcdatamodeld in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
 				A1D5978F1F4689D100C0F5B8 /* DataParseKit.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
@@ -1014,6 +1030,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A13F7E861F4AA61C00ACA39C /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A13F7E871F4AA61C00ACA39C /* Model.xcdatamodel */,
+			);
+			currentVersion = A13F7E871F4AA61C00ACA39C /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = A1C1BD511F00A0AA002FC0E0 /* Project object */;
 }

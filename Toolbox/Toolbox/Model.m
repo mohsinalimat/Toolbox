@@ -26,7 +26,10 @@
         }
         return self;
     }
-    
+
+
+
+
 +(instancetype)default
     {
         static DBTool * sigleton = nil;
@@ -68,6 +71,11 @@
         }
         
         return self;
+    }
+
+    +(LKDBHelper *)getUsingLKDBHelper
+    {
+        return [DBTool default].helper;
     }
 
     //返回数据表名称
@@ -116,15 +124,18 @@
 
 
      -(void)saveModelWith:(NSDictionary*)dic{
+        /*
          NSString * query = [NSString stringWithFormat:@"%@='%@'",[self getPrimarykey],dic[[self getPrimarykey]]];
          id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
          if (obj) {
              NSLog(@"已存在：%@",dic[[self getPrimarykey]]);
              return;
          }
+         */
          
          id _m  = [self modelWith:dic];
-         [[DBTool default].helper insertToDB:_m];
+//         [[DBTool default].helper insertToDB:_m];
+         [_m updateToDB];
     }
 
 
