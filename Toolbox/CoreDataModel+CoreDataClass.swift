@@ -8,8 +8,8 @@
 
 import Foundation
 import CoreData
+import CoreDataHelper
 
-
-public class CoreDataModel: NSManagedObject {
+public class CoreDataModel: NSManagedObject,CDHelperEntity {
 
 }

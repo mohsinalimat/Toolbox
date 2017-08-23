@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+import CoreDataHelper
+
 class CoreDataKit: NSObject {
 
     static let `default` = CoreDataKit()
@@ -17,7 +19,7 @@ class CoreDataKit: NSObject {
     var manageredModel:NSManagedObjectModel!
     var persistentStoreCoordinator:NSPersistentStoreCoordinator!
     
-    
+    var cnt = 0
     
     
     override init() {
@@ -32,13 +34,17 @@ class CoreDataKit: NSObject {
             url = url?.appendingPathComponent("CoreData.sqlite")
             try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
             
-            manageredContext = NSManagedObjectContext.init(concurrencyType: .privateQueueConcurrencyType)
+            manageredContext = NSManagedObjectContext.init(concurrencyType: .mainQueueConcurrencyType)
             manageredContext.persistentStoreCoordinator = persistentStoreCoordinator
+            manageredContext.stalenessInterval = 0
+            //manageredContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         }catch{
             print("addPersistentStore-- : \(error.localizedDescription)")
         }
         
     
+        CDHelper.initializeWithMainContext(self.manageredContext)
+        
         //let batchUpdate = NSBatchUpdateRequest(entityName: "myEntityName")
 
         
@@ -62,8 +68,44 @@ class CoreDataKit: NSObject {
         return m
     }
     
+    func update(data:[[String:Any]]){
+        for dic in data{
+            
+                 let m:CoreDataModel = NSEntityDescription.insertNewObject(forEntityName: "CoreDataModel", into: manageredContext) as!CoreDataModel
+                 
+                 var outCount:UInt32 = 0
+                 let list = class_copyPropertyList(CoreDataModel.self, &outCount);
+                 for i in 0..<outCount{
+                 let property = list?[Int(i)];
+                 let charname = property_getName(property);
+                 let name:String! = String (utf8String: charname!)
+                 m.setValue(dic[name], forKey: name)
+             }
+             
+             free(list)
+            
+            if manageredContext.hasChanges {
+                do{
+                    try manageredContext.save()
+                }catch{
+                    print("manageredContext.save()-error : \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        
+        
+    }
     
     func insert(dic:[String:Any]) {
+        
+        let m:CoreDataModel = CoreDataModel.new(dic)
+        
+        m.save()
+        
+        cnt = cnt + 1
+        
+        /*
         let m:CoreDataModel = NSEntityDescription.insertNewObject(forEntityName: "CoreDataModel", into: manageredContext) as!CoreDataModel
         
         var outCount:UInt32 = 0
@@ -77,16 +119,19 @@ class CoreDataKit: NSObject {
         
         free(list)
 
-        manageredContext.performAndWait {[weak self] in
-            guard let strongSelf = self else{return}
-            
-            do{
-                try strongSelf.manageredContext.save()
-            }catch{
-                print("manageredContext.save()-error : \(error.localizedDescription)")
+        //NSPersistentContainer
+        if manageredContext.hasChanges {
+            manageredContext.performAndWait {[weak self] in
+                guard let strongSelf = self else{return}
+                
+                do{
+                    strongSelf.cnt = strongSelf.cnt + 1
+                    try strongSelf.manageredContext.save()
+                }catch{
+                    print("manageredContext.save()-error : \(error.localizedDescription)")
+                }
             }
-        }
-
+        }*/
         
     }
     

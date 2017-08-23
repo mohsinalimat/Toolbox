@@ -106,6 +106,12 @@
         //NSLog(@"插入完成%lu条数据!",(unsigned long)([data isKindOfClass:[NSArray class]]?((NSArray*)data).count:1));
     }
 
+    +(void)saveToDbNotCheckWith:(id)data{
+        if ([data isKindOfClass:[NSDictionary class]]){
+            [[[self alloc]init] saveModelNotCheck:data];
+        }
+    }
+
     -(instancetype)modelWith:(NSDictionary*)dic{
         unsigned int outCount = 0;
         id _m = [[[self class]alloc]init];
@@ -124,20 +130,20 @@
 
 
      -(void)saveModelWith:(NSDictionary*)dic{
-        /*
          NSString * query = [NSString stringWithFormat:@"%@='%@'",[self getPrimarykey],dic[[self getPrimarykey]]];
          id obj = [[DBTool default].helper searchSingle:[self class] where:query orderBy:nil];
          if (obj) {
              NSLog(@"已存在：%@",dic[[self getPrimarykey]]);
              return;
          }
-         */
          
-         id _m  = [self modelWith:dic];
-//         [[DBTool default].helper insertToDB:_m];
-         [_m updateToDB];
+         [self saveModelNotCheck:dic];
     }
 
+    -(void)saveModelNotCheck:(NSDictionary*)dic{
+        id _m  = [self modelWith:dic];
+        [[DBTool default].helper insertToDB:_m];
+    }
 
     #pragma mark - 查找删除
     -(NSArray*)searchWith:(NSString*)query orderBy:(NSString*)order

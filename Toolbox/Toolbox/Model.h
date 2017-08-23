@@ -13,7 +13,6 @@
 //BASE MODEL
 @interface Model : NSObject
 
-+(void)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)des;
 
 /**
  写入数据库
@@ -21,6 +20,9 @@
  @param data 数据集合（数组或字典）
  */
 +(void)saveToDbWith:(id)data;
+
+//直接插入，不检测是否存在
++(void)saveToDbNotCheckWith:(id)data;
 
 /**
  根据查询条件查找

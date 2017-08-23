@@ -29,7 +29,9 @@ class DataParseKit: NSObject,XMLParserDelegate {
     
     var TotalModel = [Any]()
     
-    let TEST = false
+    let isCoreData = false
+    
+    var cnt = 0
     
     //MARK:-
     func parserStart(withBookPath path:String ,bookName:String,completeHandler:(()->())? = nil) {
@@ -55,24 +57,26 @@ class DataParseKit: NSObject,XMLParserDelegate {
         
     }
 
-    
-    //MARK:-XMLParserDelegate
-    func parserDidStartDocument(_ parser: XMLParser ) {
-        //print("\(#function)")
-    }
-    
-    func parserDidEndDocument(_ parser: XMLParser) {
-        print("\(#function)")
-        
+    private func _save(){
         if !modelDic.isEmpty {
-            if TEST{
-                SegmentModel.saveToDb(with: modelDic)
+            /*let dic = modelDic
+            TotalModel.append(dic)*/
+            
+            if !isCoreData{
+                SegmentModel.saveToDbNotCheck(with: modelDic)
             }else{
                 CoreDataKit.default.insert(dic: modelDic)
             }
-            
+            modelDic.removeAll()
         }
-
+    }
+    
+    //MARK:-XMLParserDelegate
+    func parserDidEndDocument(_ parser: XMLParser) {
+        print("\(#function)")
+        
+        _save()
+        //CoreDataKit.default.update(data: TotalModel as! [[String : Any]])
         if let completeHandler = completeHandlers {
             completeHandler()
         }
@@ -88,19 +92,7 @@ class DataParseKit: NSObject,XMLParserDelegate {
         }
         
         if elementName == "segment" {
-            print("nodeLevel : \(nodeLevel)")
-            
-            if !modelDic.isEmpty {
-                if TEST{
-                    SegmentModel.saveToDb(with: modelDic)
-                }else{
-                    CoreDataKit.default.insert(dic: modelDic)
-                }
-            }
-            
-            modelDic.removeAll()
-            
-            
+            _save()
             if nodeLevel == 1 {
                 parent_id = book_id
                 parDic.removeAll()
@@ -156,8 +148,6 @@ class DataParseKit: NSObject,XMLParserDelegate {
         if nodeName == "title" {
             modelDic[nodeName] = string
         }
-        
-        
     }
     
     

@@ -12,6 +12,8 @@ import CoreData
 
 extension CoreDataModel {
 
+    public static var entityName: String! { return "CoreDataModel" } // Required
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataModel> {
         return NSFetchRequest<CoreDataModel>(entityName: "CoreDataModel");
     }

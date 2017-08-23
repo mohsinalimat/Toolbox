@@ -63,13 +63,19 @@ class AirplaneController:BaseViewControllerWithTable {
         //Test()
         //CoreDataKit.default.insert(dic: ["primary_id":"22"])
         
+        
     }
 
     func Test() {
       //let path = ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm/resources/book.xml")
         let path = Bundle.main.path(forResource: "book", ofType: "xml")
       DataParseKit.default.parserStart(withBookPath: path!, bookName: "CCAA330CCATSM_20170101")
+      
         
+        DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm"), bookName: "CCAA330CCATSM_20170101", completeHandler: {
+            
+            print("all ok")
+        })
     }
     
     
