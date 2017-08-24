@@ -141,8 +141,10 @@
     }
 
     -(void)saveModelNotCheck:(NSDictionary*)dic{
-        id _m  = [self modelWith:dic];
-        [[DBTool default].helper insertToDB:_m];
+        @autoreleasepool {
+            id _m  = [self modelWith:dic];
+            [[DBTool default].helper insertToDB:_m];
+        }
     }
 
     #pragma mark - 查找删除

@@ -8,6 +8,7 @@
 
 import UIKit
 import SSZipArchive
+import WebKit
 
 class AirplaneController:BaseViewControllerWithTable {
     var selectedDataArray = [String]()//当前已选择展开的model标记
@@ -67,6 +68,8 @@ class AirplaneController:BaseViewControllerWithTable {
     }
 
     func Test() {
+        let wk = WKWebView()
+        
       //let path = ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm/resources/book.xml")
         let path = Bundle.main.path(forResource: "book", ofType: "xml")
       DataParseKit.default.parserStart(withBookPath: path!, bookName: "CCAA330CCATSM_20170101")

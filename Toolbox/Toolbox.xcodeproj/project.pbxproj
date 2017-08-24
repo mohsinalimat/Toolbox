@@ -49,6 +49,7 @@
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
 		A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */ = {isa = PBXBuildFile; fileRef = A1B7FB171F0F8912009D6CA9 /* apList.json */; };
+		A1B928DC1F4E71F600E45EBE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B928DB1F4E71F600E45EBE /* WebKit.framework */; };
 		A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */; };
 		A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */; };
 		A1BBCF541F2ACBFF007374B7 /* bookmarkOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */; };
@@ -167,6 +168,7 @@
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
 		A1B7FB171F0F8912009D6CA9 /* apList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = apList.json; sourceTree = "<group>"; };
+		A1B928DB1F4E71F600E45EBE /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkBtnIcon.png; path = "1-icon/bookmarkBtnIcon.png"; sourceTree = "<group>"; };
 		A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkOff.png; path = "1-icon/bookmarkOff.png"; sourceTree = "<group>"; };
 		A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmarkOff@2x.png"; path = "1-icon/bookmarkOff@2x.png"; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B928DC1F4E71F600E45EBE /* WebKit.framework in Frameworks */,
 				580FA73E81F8CBC9254CF0E4 /* Pods_Toolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -469,6 +472,7 @@
 		B495764C74D6D6E244280D7C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A1B928DB1F4E71F600E45EBE /* WebKit.framework */,
 				F082408167EDD359A7B14175 /* Pods_Toolbox.framework */,
 			);
 			name = Frameworks;
@@ -903,7 +907,7 @@
 				INFOPLIST_FILE = Toolbox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.Toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.ToolBox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cd157c8e-bf3d-4834-9a6e-1618c8133e81";
 				PROVISIONING_PROFILE_SPECIFIER = "wygtest-dev";
@@ -919,13 +923,15 @@
 			baseConfigurationReference = C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 8R29X3H9MY;
 				INFOPLIST_FILE = Toolbox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.Toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.ToolBox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b62dd149-ca61-4408-948b-2607b7ee4738";
+				PROVISIONING_PROFILE_SPECIFIER = ToolBox;
 				SWIFT_OBJC_BRIDGING_HEADER = "Toolbox/Toolbox-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;

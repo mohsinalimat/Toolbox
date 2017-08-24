@@ -67,13 +67,19 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         
         Loading()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
-        webview.loadRequest(URLRequest.init(url: URL.init(string: urlStr)!))
+        
+        /*let key:String! = kAirplaneKeyValue[kAIRPLANE_SORTEDOPTION_KEY]
+        let value:String! = kSelectedAirplane?.value(forKey: key) as! String!*/
+        let key:String = "cec"
+        let value:String! = kSelectedAirplane?.value(forKey: "customerEffectivity") as! String
+        let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
+        webview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))
         hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
         loveBtn.isSelected = hasloved
-        
         addModel(m: model())
     }
     
+    //提示无内容
     func getTapNodata() {
         let lab = UILabel.init(frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 70))
         lab.text = "No airplane selected. please select an airplane first."
@@ -269,11 +275,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     
     //MARK:- UIWebViewDelegate
-    
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         let url  = request.url
         let fm = FileManager.default
-        
         if let url = url {
             let path = "\(url.path)"
             let exist = fm.fileExists(atPath: path)
@@ -289,6 +293,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             }
         }
         
+        //var path =  webView.stringByEvaluatingJavaScript(from: "document.location.href")
         return true
     }
     
@@ -300,7 +305,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         print("\(#function)")
-        
+
         Dismiss()
     }
 

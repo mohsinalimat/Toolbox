@@ -33,6 +33,10 @@ class DataParseKit: NSObject,XMLParserDelegate {
     
     var cnt = 0
     
+    deinit {
+        print("DataParseKit - deinit---------------")
+    }
+    
     //MARK:-
     func parserStart(withBookPath path:String ,bookName:String,completeHandler:(()->())? = nil) {
         print("\(path)")
@@ -80,10 +84,12 @@ class DataParseKit: NSObject,XMLParserDelegate {
         if let completeHandler = completeHandlers {
             completeHandler()
         }
+        
+        xmlParser = nil
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        //print("\(#function)---- \(elementName)")
+        print("\(#function)---- \(elementName)")
         
         nodeName = elementName
         

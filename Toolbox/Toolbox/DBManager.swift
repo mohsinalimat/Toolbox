@@ -322,7 +322,6 @@ extension DBManager  {
     //MARK:-
     func checkUpdate() {
         let tmppath = LibraryPath.appending("/TDLibrary/tmp")
-        
         let document = DBManager.default.getFilesAt(path: DocumentPath)
         if document.count > 0 {
             DispatchQueue.main.async {
@@ -335,6 +334,7 @@ extension DBManager  {
                 self.unzipFileFromDocument()
             })
             
+            //delete doc
             self.queue.addOperation {
                 let files = self.getFilesAt(path: DocumentPath)
                 let zipArr = self.getZipFiles(items: files)
@@ -350,6 +350,7 @@ extension DBManager  {
                 self.unzipFileFromTmp()
             })
             
+            //delete tmp
             self.queue.addOperation {
                 let path = ROOTPATH.appending("/tmp")
                 FILESManager.default.deleteFileAt(path: path)
@@ -417,9 +418,15 @@ extension DBManager  {
             }else{
                 if let path = UserDefaults.standard.string(forKey: "book_path") {
                     
-                    let path = ROOTPATH.appending("/\(path)")
-                    FILESManager.default.deleteFileAt(path: path)
+                    let bookpath = getBookPath(withRelPath: ROOTPATH.appending("/\(path)"))
+                    let arr  = path.components(separatedBy: "/")
+                    let name = arr.last
+                    
                     //从3.更新
+                    self.queue.addOperation({
+                        self.parseBook(bookpath: bookpath, bookname: name!)
+                    })
+                    
                     self.queue.addOperation({
                         self.moveAndParse()
                     })
@@ -444,14 +451,11 @@ extension DBManager  {
     func installBook(){
 
         //检测是否有更新
-//        guard DBManager.hasBookNeedUpdate() else{return}
-        
         UIApplication.shared.isIdleTimerDisabled = true
         
         checkUpdate()
         
         self.queue.isSuspended = false
-   
     }
     
     //--1
@@ -523,8 +527,6 @@ extension DBManager  {
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
                         }
-                        //FILESManager.default.deleteFileAt(path: path)
-                        
                         //遍历资源目录
                         self.unzipSourceFile(filePath: newpath)
                         
@@ -591,8 +593,7 @@ extension DBManager  {
             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil, userInfo: ["filesnumber":pubs.count])
         }
         
-        for item in pubs {
-            
+        for item in pubs {            
                 if Double(item as String) != nil {//item.hasPrefix("150")
                     let path1 = ROOTPATH.appending("/\(item)")
                     let f2 = getFilesAt(path: path1)
@@ -635,21 +636,11 @@ extension DBManager  {
                                 print(error)
                             }
                         }
+                        FILESManager.default.deleteFileAt(path: path1)
+                        
                         /////解析
                         let bookpath = getBookPath(withRelPath: despath)
-                        getAirplanesData(withPath: bookpath,bookName:bookname as String)
-                        getBookData(withPath: bookpath)
-                        //getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
-                        
-                        DataParseKit.default.parserStart(withBookPath: bookpath, bookName: bookname, completeHandler: { 
-                            UserDefaults.standard.removeObject(forKey: "book_path")
-                            FILESManager.default.deleteFileAt(path: path1)
-                            DispatchQueue.main.async {
-                                print("单个手册数据处理完成")
-                                NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                            }
-                        })
-                        
+                        parseBook(bookpath: bookpath, bookname: bookname)
                     }
                 }
             
@@ -658,6 +649,25 @@ extension DBManager  {
             })
     }
     
+    func parseBook(bookpath:String,bookname:String){
+        autoreleasepool(invoking: { () -> () in
+        HUD.show(withStatus: "数据更新中...")
+        getAirplanesData(withPath: bookpath,bookName:bookname as String)
+        getBookData(withPath: bookpath)
+        #if false
+        getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
+        #else
+        DataParseKit.default.parserStart(withBookPath: bookpath, bookName: bookname, completeHandler: {
+            UserDefaults.standard.removeObject(forKey: "book_path")
+            DispatchQueue.main.async {
+                print("单个手册数据处理完成")
+                HUD.dismiss()
+                NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+            }
+        })
+        #endif
+        })
+    }
     
     //MARK: - SSZipArchiveDelegate
     func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
