@@ -41,6 +41,7 @@
 		A17C81081F30589400EF8B9D /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81041F30589400EF8B9D /* error@2x.png */; };
 		A17C81091F30589400EF8B9D /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81051F30589400EF8B9D /* success.png */; };
 		A17C810A1F30589400EF8B9D /* success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81061F30589400EF8B9D /* success@2x.png */; };
+		A181511F1F500D2E00A74779 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = A181511E1F500D2E00A74779 /* ajax_handler.js */; };
 		A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */; };
 		A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
@@ -160,6 +161,7 @@
 		A17C81041F30589400EF8B9D /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
 		A17C81051F30589400EF8B9D /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
 		A17C81061F30589400EF8B9D /* success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "success@2x.png"; sourceTree = "<group>"; };
+		A181511E1F500D2E00A74779 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
 		A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnzipInfoViewController.swift; sourceTree = "<group>"; };
 		A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnzipInfoViewController.xib; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
@@ -298,8 +300,44 @@
 				A1B13AAF1F3982A10049250F /* FILESManager.swift */,
 				A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */,
 				A13F7E891F4ABEC300ACA39C /* CoreDataKit.swift */,
+				A136F11C1F1322DE00349572 /* Model.h */,
+				A136F11D1F1322DE00349572 /* Model.m */,
+				A13F7E861F4AA61C00ACA39C /* Model.xcdatamodeld */,
 			);
 			name = db;
+			sourceTree = "<group>";
+		};
+		A181511D1F500CAE00A74779 /* img */ = {
+			isa = PBXGroup;
+			children = (
+				A1C1BDA91F00FF85002FC0E0 /* downSleft.png */,
+				A1C06BCD1F0A356400A29620 /* cancel.png */,
+				A1BBCF4E1F2ACBFF007374B7 /* bookmarkOn.png */,
+				A1C06BCE1F0A356400A29620 /* cancel@2x.png */,
+				A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */,
+				A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */,
+				A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */,
+				A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */,
+				A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */,
+				A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */,
+				A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */,
+				A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */,
+				A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */,
+				A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */,
+				A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */,
+				A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */,
+				A1C06BD31F0A35AC00A29620 /* deletePub.png */,
+				A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */,
+				A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */,
+				A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */,
+				A1BBCF5B1F2ACFDF007374B7 /* hash_row.png */,
+				A1BBCF5C1F2ACFDF007374B7 /* hashout.png */,
+				A1BBCF5D1F2ACFDF007374B7 /* hashout@2x.png */,
+				A1BBCF5E1F2ACFDF007374B7 /* header_band.png */,
+				A1BBCF5F1F2ACFDF007374B7 /* header_band@2x.png */,
+				A10648271F04C21E002D088C /* icon */,
+			);
+			name = img;
 			sourceTree = "<group>";
 		};
 		A1C1BD501F00A0AA002FC0E0 = {
@@ -337,9 +375,7 @@
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
 				A1B7FB171F0F8912009D6CA9 /* apList.json */,
 				A1D597901F46CD3F00C0F5B8 /* book.xml */,
-				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
-				A1C1BD681F00A0AA002FC0E0 /* Info.plist */,
 			);
 			path = Toolbox;
 			sourceTree = "<group>";
@@ -381,9 +417,6 @@
 			children = (
 				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
-				A136F11C1F1322DE00349572 /* Model.h */,
-				A136F11D1F1322DE00349572 /* Model.m */,
-				A13F7E861F4AA61C00ACA39C /* Model.xcdatamodeld */,
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 				A17792661F2F3771009782F6 /* HUD.swift */,
 				A17C81031F30589400EF8B9D /* error.png */,
@@ -439,32 +472,10 @@
 		A1C1BDA81F00FF5B002FC0E0 /* source */ = {
 			isa = PBXGroup;
 			children = (
-				A10648271F04C21E002D088C /* icon */,
-				A1C1BDA91F00FF85002FC0E0 /* downSleft.png */,
-				A1C06BCD1F0A356400A29620 /* cancel.png */,
-				A1C06BCE1F0A356400A29620 /* cancel@2x.png */,
-				A1C1BDAA1F00FF85002FC0E0 /* downSleft@2x.png */,
-				A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */,
-				A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */,
-				A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */,
-				A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */,
-				A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */,
-				A1BBCF4E1F2ACBFF007374B7 /* bookmarkOn.png */,
-				A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */,
-				A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */,
-				A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */,
-				A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */,
-				A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */,
-				A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */,
-				A1C06BD31F0A35AC00A29620 /* deletePub.png */,
-				A1C06BD41F0A35AC00A29620 /* deletePub@2x.png */,
-				A1C06BD51F0A35AC00A29620 /* donwload_data_button.png */,
-				A1C06BD61F0A35AC00A29620 /* download_data_button@2x.png */,
-				A1BBCF5B1F2ACFDF007374B7 /* hash_row.png */,
-				A1BBCF5C1F2ACFDF007374B7 /* hashout.png */,
-				A1BBCF5D1F2ACFDF007374B7 /* hashout@2x.png */,
-				A1BBCF5E1F2ACFDF007374B7 /* header_band.png */,
-				A1BBCF5F1F2ACFDF007374B7 /* header_band@2x.png */,
+				A181511E1F500D2E00A74779 /* ajax_handler.js */,
+				A1C1BD631F00A0AA002FC0E0 /* Assets.xcassets */,
+				A1C1BD681F00A0AA002FC0E0 /* Info.plist */,
+				A181511D1F500CAE00A74779 /* img */,
 			);
 			name = source;
 			sourceTree = "<group>";
@@ -612,6 +623,7 @@
 				A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */,
 				A1BBCF5A1F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png in Resources */,
 				A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */,
+				A181511F1F500D2E00A74779 /* ajax_handler.js in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
 				A16C1A5C1F3D9BE900D961C9 /* UpdateBookViewController.xib in Resources */,
 				A1BBCF581F2ACBFF007374B7 /* bookmarkOn@2x.png in Resources */,

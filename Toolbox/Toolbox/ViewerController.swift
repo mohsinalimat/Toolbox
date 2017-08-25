@@ -279,6 +279,11 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let url  = request.url
         let fm = FileManager.default
         if let url = url {
+            if url.scheme == "mpAjaxHandler"{
+                print("-------------- :\(url)")
+                //return false
+            }
+            
             let path = "\(url.path)"
             let exist = fm.fileExists(atPath: path)
             if !exist {
@@ -293,10 +298,23 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             }
         }
         
-        //var path =  webView.stringByEvaluatingJavaScript(from: "document.location.href")
         return true
     }
     
+    func webViewDidStartLoad(_ webView: UIWebView) {
+    
+        if let url = Bundle.main.url(forResource: "ajax_handler", withExtension:"js"){
+            do{
+                let str = try String.init(contentsOf: url, encoding: String.Encoding.utf8)
+                webView.stringByEvaluatingJavaScript(from: str)
+                //webView.stringByEvaluatingJavaScript(from: str)
+            }catch{
+                print(error)
+            }
+            
+        }
+
+    }
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("\(#function)-error：\(error.localizedDescription)")

@@ -75,9 +75,11 @@ class TOCViewController: BaseViewControllerWithTable {
             
             if currentSegment?.primary_id == model.primary_id {//是否选中
                 cell.backgroundColor = kCellSelectedBgColor
+                cell.cellIsSelected(true)
             }
             else{
                 cell.backgroundColor = kCellDefaultBgColor
+                cell.cellIsSelected(false)
             }
             
             
@@ -117,13 +119,34 @@ class TOCViewController: BaseViewControllerWithTable {
                     kSelectedSegment = m
                     tableView.reloadData()
                 
+                if cell?.backgroundView != nil{
+                    showMsg()
+                }
+                else {
                     RootControllerChangeWithIndex(3)
+                }
+                
                 
             }
         }
         
     }
     
+    func showMsg() {
+       let alert = UIAlertController.init(title: "提示", message: "将要打开的内容不适合当前选择的机型，是否是要继续查看?", preferredStyle: .alert)
+       let action_1 = UIAlertAction.init(title: "取消", style: .cancel) { (action) in
+        
+        }
+        let action_2 = UIAlertAction.init(title: "继续", style: .default) { (action) in
+            RootControllerChangeWithIndex(3)
+        }
+        
+        alert.addAction(action_1)
+        alert.addAction(action_2)
+        
+        self.present(alert, animated: true)
+        
+    }
     
     //MARK: - 数据处理
     func loadData() {
