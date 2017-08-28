@@ -322,8 +322,9 @@ extension DBManager  {
     //MARK:-
     func checkUpdate() {
         let tmppath = LibraryPath.appending("/TDLibrary/tmp")
-        let document = DBManager.default.getFilesAt(path: DocumentPath)
-        if document.count > 0 {
+        
+        let doczip = getZipFiles(items: DBManager.default.getFilesAt(path: DocumentPath))
+        if doczip.count > 0 {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil, userInfo: nil)
             }
@@ -417,7 +418,6 @@ extension DBManager  {
 
             }else{
                 if let path = UserDefaults.standard.string(forKey: "book_path") {
-                    
                     let bookpath = getBookPath(withRelPath: ROOTPATH.appending("/\(path)"))
                     let arr  = path.components(separatedBy: "/")
                     let name = arr.last
@@ -435,8 +435,6 @@ extension DBManager  {
                         print("移动完成！！")
                         self.queue.isSuspended = true
                     })
-                    
-                    
                 }else{
                     print("没有文档需要更新！")
                 }

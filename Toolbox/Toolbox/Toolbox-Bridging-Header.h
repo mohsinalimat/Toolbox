@@ -4,3 +4,6 @@
 
 #import "Model.h"
 
+#import "FMDB.h"
+
+#import <FMDB/FMDB.h>

@@ -68,22 +68,17 @@ class AirplaneController:BaseViewControllerWithTable {
     }
 
     func Test() {
-        let wk = WKWebView()
         
-      //let path = ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm/resources/book.xml")
-        let path = Bundle.main.path(forResource: "book", ofType: "xml")
-      DataParseKit.default.parserStart(withBookPath: path!, bookName: "CCAA330CCATSM_20170101")
-      
-        
+        print(Date())
         DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm"), bookName: "CCAA330CCATSM_20170101", completeHandler: {
-            
+            print(Date())
             print("all ok")
         })
     }
     
     
     
-    
+    //////
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         

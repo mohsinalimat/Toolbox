@@ -63,14 +63,17 @@ class DataParseKit: NSObject,XMLParserDelegate {
 
     private func _save(){
         if !modelDic.isEmpty {
-            /*let dic = modelDic
-            TotalModel.append(dic)*/
+            let dic = modelDic
+            TotalModel.append(dic)
             
-            if !isCoreData{
-                SegmentModel.saveToDbNotCheck(with: modelDic)
-            }else{
-                CoreDataKit.default.insert(dic: modelDic)
-            }
+//            if !isCoreData{
+//                SegmentModel.saveToDbNotCheck(with: modelDic)
+//            }else{
+//                CoreDataKit.default.insert(dic: modelDic)
+//            }
+            
+            //FMDB.default().insert(withDic: modelDic)
+            
             modelDic.removeAll()
         }
     }
@@ -80,16 +83,21 @@ class DataParseKit: NSObject,XMLParserDelegate {
         print("\(#function)")
         
         _save()
+        
+        FMDB.default().insert(with: TotalModel)
+        
         //CoreDataKit.default.update(data: TotalModel as! [[String : Any]])
         if let completeHandler = completeHandlers {
             completeHandler()
         }
         
+        TotalModel.removeAll()
+        parDic.removeAll()
         xmlParser = nil
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        print("\(#function)---- \(elementName)")
+        //print("\(#function)---- \(elementName)")
         
         nodeName = elementName
         
@@ -112,7 +120,7 @@ class DataParseKit: NSObject,XMLParserDelegate {
             
             var _id = modelDic["id"]
             if _id == nil {
-                print("ID nillll。。。")
+                //print("ID nillll。。。")
                 _id = book_id//.................
             }
             
