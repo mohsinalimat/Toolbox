@@ -70,7 +70,7 @@ class AirplaneController:BaseViewControllerWithTable {
     func Test() {
         
         print(Date())
-        DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCATSM_20170101/tsm"), bookName: "CCAA330CCATSM_20170101", completeHandler: {
+        DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCAAIPC20170101/aipc"), bookName: "CCAA330CCAAIPC20170101", completeHandler: {
             print(Date())
             print("all ok")
         })

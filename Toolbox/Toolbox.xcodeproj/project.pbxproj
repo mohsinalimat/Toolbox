@@ -24,6 +24,7 @@
 		A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648351F04C21E002D088C /* Default-Portrait~ipad.png */; };
 		A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */; };
 		A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */; };
+		A11058231F5540B900B0D283 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A11058221F5540B700B0D283 /* Settings.bundle */; };
 		A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8DF1F063D0300FC7AD3 /* ManagerCell.swift */; };
 		A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */; };
 		A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */; };
@@ -143,6 +144,7 @@
 		A10648351F04C21E002D088C /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataModel+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A11058221F5540B700B0D283 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A12AF8DF1F063D0300FC7AD3 /* ManagerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerCell.swift; sourceTree = "<group>"; };
 		A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerCell.xib; sourceTree = "<group>"; };
 		A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerDetailCell.swift; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 				A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */,
 				A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */,
 				A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */,
+				A11058221F5540B700B0D283 /* Settings.bundle */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -660,6 +663,7 @@
 				A1C06BDB1F0A35AC00A29620 /* donwload_data_button.png in Resources */,
 				A1C06BCC1F0A2D2800A29620 /* PopViewController.xib in Resources */,
 				A1C1BDAB1F00FF85002FC0E0 /* downSleft.png in Resources */,
+				A11058231F5540B900B0D283 /* Settings.bundle in Resources */,
 				A10648421F04C21E002D088C /* Default-Portrait@2x~ipad.png in Resources */,
 				A1C06BCF1F0A356400A29620 /* cancel.png in Resources */,
 				A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */,

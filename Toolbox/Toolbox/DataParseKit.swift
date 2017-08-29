@@ -66,6 +66,10 @@ class DataParseKit: NSObject,XMLParserDelegate {
             let dic = modelDic
             TotalModel.append(dic)
             
+            if TotalModel.count > 10000{
+                FMDB.default().insert(with: TotalModel)
+                TotalModel.removeAll()
+            }
 //            if !isCoreData{
 //                SegmentModel.saveToDbNotCheck(with: modelDic)
 //            }else{
