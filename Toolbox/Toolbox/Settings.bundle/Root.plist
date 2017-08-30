@@ -36,7 +36,51 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>更新</string>
+			<string>PREFERENCES</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Airplane Identifier</string>
+			<key>Key</key>
+			<string>setter_airplane_identifier</string>
+			<key>DefaultValue</key>
+			<string>Registry</string>
+			<key>Titles</key>
+			<array>
+				<string>Tail Number</string>
+				<string>Registry Number</string>
+				<string>Customer Effectivity Code</string>
+				<string>Serial Number</string>
+				<string>Variable Number</string>
+				<string>Line Number</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>Tail</string>
+				<string>Registry</string>
+				<string>MSN</string>
+				<string>Variable</string>
+				<string>CEC</string>
+				<string>Line</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Ghost Handle</string>
+			<key>Key</key>
+			<string>setter_ghos_handle</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>手册更新</string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -8,9 +8,9 @@
 	<string>MyToolbox</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIconFiles</key>
-	<array/>
-	<key>CFBundleIcons~ipad</key>
+	<key>CFBundleIcons</key>
+	<dict/>
+	<key>CFBundleIcons~ipad_nouse</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
@@ -35,7 +35,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>20170830</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

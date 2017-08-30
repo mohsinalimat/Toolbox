@@ -29,14 +29,67 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    //MARK:-
     private func init_system(){
         HUD.config()
         
-//        DBManager.default.installBook()
+        _setterConfig()
+ 
+    }
+    
+    
+   private func _setterConfig() {
+        //获取系统设置
+        let bundlepath:String = Bundle.main.path(forResource: "Settings", ofType: "bundle")!
+        let rootDic = NSDictionary.init(contentsOfFile: bundlepath.appending("/Root.plist"))
+        let rootPrefers:[[String:Any]] = rootDic?["PreferenceSpecifiers"] as! [[String : Any]]
+        var newDic = [String:String]()
+        
+        for d in rootPrefers{
+            let key = d["Key"] as? String
+            if let key = key {
+                newDic[key] = d["DefaultValue"] as? String
+                UserDefaults.standard.setValue(d["DefaultValue"], forKey: key)
+                UserDefaults.standard.synchronize()
+            }
+        }
+        
+        let infoDic = Bundle.main.infoDictionary
+        if let info = infoDic {
+            let appversion = info["CFBundleShortVersionString"]
+            let buildno = info["CFBundleVersion"]
+            newDic["app_version"] = "\(buildno!)_\(appversion!)"
+            UserDefaults.standard.setValue("\(buildno!)_\(appversion!)", forKey: "app_version")
+            UserDefaults.standard.synchronize()
+        }
+        
+        UserDefaults.standard.register(defaults: newDic)
+        
+        //data source
+        let dsDic = NSDictionary.init(contentsOfFile: bundlepath.appending("/DataSourceLocation.plist"))
+        let dataprefers:[[String:Any]] = dsDic?["PreferenceSpecifiers"] as! [[String : Any]]
+        for d in dataprefers{
+            let key = d["Key"] as? String
+            if let key = key {
+                let str = UserDefaults.standard.value(forKey: key) as? String
+                if var location = str {
+                    if location.lengthOfBytes(using: .utf8) > 0 && location.hasPrefix("http://"){
+                        print("Location:\(location)")
+                        if !location.hasSuffix("/") {
+                            location = location.appending("/")
+                        }
+                        kDataSourceLocations.append(location)
+                    }
+                }
+            }
+        }
+        
         
     }
     
     
+    
+    //MARK:
     func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
         print("will change statueBar frame to  \(newStatusBarFrame) !")
     }

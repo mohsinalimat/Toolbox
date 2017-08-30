@@ -12,7 +12,7 @@
 			<key>Title</key>
 			<string>数据源#1</string>
 			<key>Key</key>
-			<string>local_1_idenetifier</string>
+			<string>datasource_url_1</string>
 			<key>DefaultValue</key>
 			<string></string>
 			<key>IsSecure</key>
@@ -30,7 +30,7 @@
 			<key>Title</key>
 			<string>数据源#2</string>
 			<key>Key</key>
-			<string>local_2_idenetifier</string>
+			<string>datasource_url_2</string>
 			<key>DefaultValue</key>
 			<string></string>
 			<key>IsSecure</key>
@@ -48,7 +48,7 @@
 			<key>Title</key>
 			<string>数据源#3</string>
 			<key>Key</key>
-			<string>local_3_idenetifier</string>
+			<string>datasource_url_3</string>
 			<key>DefaultValue</key>
 			<string></string>
 			<key>IsSecure</key>
@@ -66,7 +66,7 @@
 			<key>Title</key>
 			<string>数据源#4</string>
 			<key>Key</key>
-			<string>local_4_idenetifier</string>
+			<string>datasource_url_4</string>
 			<key>DefaultValue</key>
 			<string></string>
 			<key>IsSecure</key>
@@ -84,9 +84,57 @@
 			<key>Title</key>
 			<string>数据源#5</string>
 			<key>Key</key>
-			<string>local_5_idenetifier</string>
+			<string>datasource_url_5</string>
 			<key>DefaultValue</key>
 			<string></string>
+			<key>IsSecure</key>
+			<false/>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>数据源#6</string>
+			<key>Key</key>
+			<string>datasource_url_6</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>数据源#7</string>
+			<key>Key</key>
+			<string>datasource_url_7</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>数据源#8</string>
+			<key>Key</key>
+			<string>datasource_url_8</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>
