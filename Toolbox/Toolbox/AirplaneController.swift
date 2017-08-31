@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SSZipArchive
+import Alamofire
 import WebKit
 
 class AirplaneController:BaseViewControllerWithTable {
@@ -25,11 +25,8 @@ class AirplaneController:BaseViewControllerWithTable {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataArray = dataArray as! [AirplaneModel]
-        
         navigationItem.titleView = nil
 
-        //...第一次解析后保存标记
-        
 //        loadData()
         
 //        var arr = [11,22,33]
@@ -61,19 +58,45 @@ class AirplaneController:BaseViewControllerWithTable {
 //        queue.async(execute: workitem1)
 //        queue.async(execute: workitem2)
         
-        //Test()
-        //CoreDataKit.default.insert(dic: ["primary_id":"22"])
+        Test()
         
         
     }
 
     func Test() {
         
+        if let baseurl = kDataSourceLocations.first{
+            let url = baseurl + kpackage_info
+//            
+//            let destation : DownloadRequest.DownloadFileDestination = {_,_ in
+//                let des = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+//                let desurl = des?.appendingPathComponent(kpackageInfo)
+//                
+//                return (desurl!,[.removePreviousFile, .createIntermediateDirectories])
+//            
+//            }
+//            
+//            let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
+//            Alamofire.download(url, to: destation).response(completionHandler: { (response) in
+//                print(response)
+//            })
+
+            Alamofire.request(url).responseJSON(completionHandler: { (response) in
+                print(response.result.value)
+            })
+            
+        }
+        
+
+        
+        
+        /*
         print(Date())
         DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCAAIPC20170101/aipc"), bookName: "CCAA330CCAAIPC20170101", completeHandler: {
             print(Date())
             print("all ok")
-        })
+        })*/
+        
     }
     
     

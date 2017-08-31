@@ -48,24 +48,25 @@ class SegmentCell: UITableViewCell {
         guard Int(model.is_leaf)==1 ,Int(model.is_visible)==1 else {
             return
         }
-        let msn:Int! = Int((kSelectedAirplane?.customerEffectivity)!)
-        let eff:String = model.effrg
-        if  eff.characters.count > 0{
-            var b = false
-            let arr = eff.components(separatedBy: " ")
-            for e in arr {
-                let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
-                let s2 = e.substring(from: s1.endIndex)
-                if msn >= Int(s1)! && msn <= Int(s2)!  {
-                    b = true;break
+        let msn = Int((kSelectedAirplane?.customerEffectivity)!)
+        let eff = model.effrg
+        if let eff = eff,let msn = msn{
+            if  eff.characters.count > 0{
+                var b = false
+                let arr = eff.components(separatedBy: " ")
+                for e in arr {
+                    let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
+                    let s2 = e.substring(from: s1.endIndex)
+                    if msn >= Int(s1)! && msn <= Int(s2)!  {
+                        b = true;break
+                    }
+                }
+                
+                if !b {
+                    self.backgroundView = UIImageView.init(image: UIImage (named: "hashrow"))
                 }
             }
-        
-            if !b {
-                self.backgroundView = UIImageView.init(image: UIImage (named: "hashrow"))
-            }
         }
-        
     }
     
     override func prepareForReuse() {

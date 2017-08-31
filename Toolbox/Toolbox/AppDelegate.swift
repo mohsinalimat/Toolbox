@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //初始化操作
         init_system()
+        sleep(2)
         
         return true
     }
@@ -44,7 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let rootDic = NSDictionary.init(contentsOfFile: bundlepath.appending("/Root.plist"))
         let rootPrefers:[[String:Any]] = rootDic?["PreferenceSpecifiers"] as! [[String : Any]]
         var newDic = [String:String]()
-        
         for d in rootPrefers{
             let key = d["Key"] as? String
             if let key = key {
@@ -62,7 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserDefaults.standard.setValue("\(buildno!)_\(appversion!)", forKey: "app_version")
             UserDefaults.standard.synchronize()
         }
-        
         UserDefaults.standard.register(defaults: newDic)
         
         //data source

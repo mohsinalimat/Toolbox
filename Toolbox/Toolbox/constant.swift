@@ -90,6 +90,10 @@ let APMODELMAPJSPATH = ROOTPATH + ROOTSUBPATH + "apModelMap.js"//与MSN字段关
 
 //dataSource
 var kDataSourceLocations = [String]()
+let kpackage_info = "package_info.json"
+let ksync_manifest = "sync_manifest.json"
+let ktdafactorymobilebaseline = "tdafactorymobilebaseline.json"
+
 
 
 
