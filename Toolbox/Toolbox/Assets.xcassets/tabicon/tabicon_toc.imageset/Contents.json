@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabicon_toc.png",
+      "filename" : "toc@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabicon_toc@2x.png",
+      "filename" : "toc@2x.png",
       "scale" : "2x"
     },
     {

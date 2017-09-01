@@ -65,6 +65,9 @@ class AirplaneController:BaseViewControllerWithTable {
 
     func Test() {
         
+        DataSourceManager.default.checkupdateFromServer()
+        
+        /*
         if let baseurl = kDataSourceLocations.first{
             let url = baseurl + kpackage_info
 //            
@@ -80,12 +83,8 @@ class AirplaneController:BaseViewControllerWithTable {
 //            Alamofire.download(url, to: destation).response(completionHandler: { (response) in
 //                print(response)
 //            })
-
-            Alamofire.request(url).responseJSON(completionHandler: { (response) in
-                print(response.result.value)
-            })
             
-        }
+        }*/
         
 
         

@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabicon_airplane_selector.png",
+      "filename" : "airplane@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabicon_airplane_selector@2x.png",
+      "filename" : "airplane@2x.png",
       "scale" : "2x"
     },
     {

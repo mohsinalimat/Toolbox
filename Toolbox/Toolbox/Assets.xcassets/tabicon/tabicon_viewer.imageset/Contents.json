@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabicon_viewer.png",
+      "filename" : "viewer@1x .png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabicon_viewer@2x.png",
+      "filename" : "viewer@2x .png",
       "scale" : "2x"
     },
     {

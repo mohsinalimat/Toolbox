@@ -223,6 +223,15 @@
 }
 
 @end
+
+@implementation DataSourceModel
+
+-(NSString *)getPrimarykey
+{
+    return @"location_url";
+}
+
+@end
 #pragma mark - other
 
 @implementation UpdateInfo

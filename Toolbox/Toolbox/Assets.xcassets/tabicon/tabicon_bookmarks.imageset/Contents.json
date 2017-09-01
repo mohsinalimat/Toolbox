@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tabicon_bookmarks.png",
+      "filename" : "bookmarks@1x .png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tabicon_bookmarks@2x.png",
+      "filename" : "bookmarks@2x .png",
       "scale" : "2x"
     },
     {

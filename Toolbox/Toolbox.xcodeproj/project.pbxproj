@@ -50,6 +50,7 @@
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
 		A1B13AB01F3982A10049250F /* FILESManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B13AAF1F3982A10049250F /* FILESManager.swift */; };
+		A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */; };
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
 		A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */ = {isa = PBXBuildFile; fileRef = A1B7FB171F0F8912009D6CA9 /* apList.json */; };
@@ -175,6 +176,7 @@
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
 		A1B13AAF1F3982A10049250F /* FILESManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FILESManager.swift; sourceTree = "<group>"; };
+		A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceManager.swift; sourceTree = "<group>"; };
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
 		A1B7FB171F0F8912009D6CA9 /* apList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = apList.json; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 				A1ED124E1F56B53900FCD259 /* NetHelper.swift */,
+				A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -780,6 +783,7 @@
 				A1C1BD5D1F00A0AA002FC0E0 /* AppDelegate.swift in Sources */,
 				A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */,
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
+				A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,

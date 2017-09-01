@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //初始化操作
         init_system()
-        sleep(2)
+        sleep(1)
         
         return true
     }
