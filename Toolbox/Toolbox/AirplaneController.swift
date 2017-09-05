@@ -58,7 +58,7 @@ class AirplaneController:BaseViewControllerWithTable {
 //        queue.async(execute: workitem1)
 //        queue.async(execute: workitem2)
         
-        Test()
+        //Test()
         
         
     }

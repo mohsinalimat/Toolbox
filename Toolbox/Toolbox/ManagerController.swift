@@ -18,6 +18,7 @@ class ManagerController: BaseViewControllerWithTable {
     var popViewDataArray = ["Publications","Document Type","Document #","Document Title","Modified Date"]
     var popViewHeadTitle = "Sort Documents By"
     
+    var _navigationController:BaseNavigationController?
     
     let managerCellIdentifier = "ManagerCellReuseIdentifier"
     let managerDetailCellReuseIdentifier = "ManagerDetailCellReuseIdentifier"
@@ -27,6 +28,7 @@ class ManagerController: BaseViewControllerWithTable {
         super.viewDidLoad()
          navigationItem.titleView = nil
         
+        initNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
@@ -40,6 +42,127 @@ class ManagerController: BaseViewControllerWithTable {
         
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //检测更新
+        
+        DBManager.default.installBook()
+        
+        /*
+         if DBManager.hasBookNeedUpdate() {
+         DBManager.default.installBook()
+         
+         ////
+         //showUnzipViewController()
+         }*/
+        
+    }
+    
+    
+    //MARK:-
+    func initNavigationBarItem(){
+        var itemArr = navigationItem.rightBarButtonItems;
+        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//23 * 23
+        btn.setImage(UIImage (named: "update_button"), for: .normal)
+        btn.setImage(UIImage (named: "update_button"), for: .highlighted)
+        btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
+        btn.tag = 100
+        
+        let ritem = UIBarButtonItem (customView: btn)
+        itemArr?.append(ritem)
+        navigationItem.rightBarButtonItems = itemArr
+
+        let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fixed.width = 8
+        //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
+        
+        navigationItem.leftBarButtonItem = self.editButtonItem
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        return
+        
+        if !editing {
+            self.editButtonItem.title = "Edit"
+            tableview?.isEditing = false
+        }else{
+            self.editButtonItem.title = "Cancle"
+            tableview?.isEditing = true
+        }
+    }
+    
+    
+    func downloadBtnClicked(_ btn:UIButton){
+        let vc = BaseViewControllerWithTable.init()
+        let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
+        //...先赋值？才会走到 viewDidLoad
+        vc.needtitleView = false
+        vc.view.frame = rect
+        
+        let ds = DataSourceModel.search(with: nil, orderBy: nil) as! [DataSourceModel]
+        
+        vc.dataArray = ds
+        vc.navigationItem.rightBarButtonItems = nil
+        vc.title = "Updates"
+
+        vc.tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
+        
+        vc.kTableviewCellRowHeight = 88
+        vc.tableview?.backgroundColor = UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 0.6)
+        vc.tableview?.backgroundView = nil
+        vc.tableview?.frame = rect
+        vc.tableview?.separatorStyle = .none
+        vc.tableview?.bounces = true
+        vc.tableview?.showsVerticalScrollIndicator = false
+        vc.cellSelectedAction = {
+            index in
+            
+        }
+        
+        //checkupdatebtn
+        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 30))
+        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
+        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
+        checkupdatebtn.setTitle("检测更新", for: .normal)
+        checkupdatebtn.setTitleColor(UIColor.white, for: .normal)
+        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: 1)
+        checkupdatebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
+        checkupdatebtn.tag = 100
+        checkupdatebtn.layer.cornerRadius = 10
+        checkupdatebtn.layer.masksToBounds = true
+        
+        let ritem = UIBarButtonItem (customView: checkupdatebtn)
+        vc.navigationItem.rightBarButtonItem = ritem
+        
+        //close
+        let closebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 60, height: 40))
+        closebtn.setTitle("取消", for: .normal)
+        closebtn.setTitleColor(UIColor.white, for: .normal)
+        closebtn.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: 1)
+        closebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
+        closebtn.tag = 100
+        let litem = UIBarButtonItem (customView: closebtn)
+        vc.navigationItem.leftBarButtonItem = litem
+        
+        
+        ///
+        let nav = BaseNavigationController(rootViewController:vc)
+        _navigationController = nav
+        
+        nav.modalPresentationStyle = UIModalPresentationStyle.formSheet
+        nav.preferredContentSize = rect.size
+        self.present(nav, animated: false)
+        
+    }
+    
+    func closeBtn(){
+        _navigationController?.dismiss(animated: false, completion: nil)
+    }
+    
+    
+    //MARK:- Notification
     func startUnzip(_ noti:Notification) {
         ////
         print("通知-showUnzipViewController.")
@@ -69,22 +192,6 @@ class ManagerController: BaseViewControllerWithTable {
         self.navigationController?.present(vc, animated: false, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //检测更新
-        
-        DBManager.default.installBook()
-        
-        /*
-        if DBManager.hasBookNeedUpdate() {
-            DBManager.default.installBook()
-            
-            ////
-            //showUnzipViewController()
-        }*/
-  
-    }
-    
     func test_update(){
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
         let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
@@ -95,6 +202,7 @@ class ManagerController: BaseViewControllerWithTable {
         self.navigationController?.present(vc, animated: false, completion: nil)
     }
    
+    //MARK:
     func showUnzipViewController() {
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
         let vc :UnzipInfoViewController = UnzipInfoViewController.init(nibName: "UnzipInfoViewController", bundle: nil)
@@ -289,7 +397,9 @@ class ManagerController: BaseViewControllerWithTable {
         
     }
     
-    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     
     
     

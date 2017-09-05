@@ -163,6 +163,7 @@
 @property(nonatomic,copy)NSString * package_info;
 @property(nonatomic,copy)NSString * sync_manifest;
 @property(nonatomic,copy)NSString * server_baseline;
+@property(nonatomic,assign)NSInteger  update_status;//更新状态
 @property(nonatomic,copy)NSString * misc;
 @end
 

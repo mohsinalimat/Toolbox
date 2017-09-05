@@ -105,10 +105,13 @@
 		A1C1BDAE1F0101E9002FC0E0 /* buttonBg.png in Resources */ = {isa = PBXBuildFile; fileRef = A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */; };
 		A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */; };
 		A1CA21871F3472CE0055BCB0 /* SetterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */; };
+		A1CAEA5E1F5E6C4500CE751B /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */; };
 		A1D5978F1F4689D100C0F5B8 /* DataParseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */; };
 		A1D597911F46CD3F00C0F5B8 /* book.xml in Resources */ = {isa = PBXBuildFile; fileRef = A1D597901F46CD3F00C0F5B8 /* book.xml */; };
 		A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DE045E1F21D06B000C5069 /* SegmentCell.swift */; };
 		A1DE04611F21D06B000C5069 /* SegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1DE045F1F21D06B000C5069 /* SegmentCell.xib */; };
+		A1E9BF931F5E808C005251C8 /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9BF911F5E808C005251C8 /* DownloadCell.swift */; };
+		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
 /* End PBXBuildFile section */
 
@@ -237,10 +240,13 @@
 		A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg.png; sourceTree = "<group>"; };
 		A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetterViewController.swift; sourceTree = "<group>"; };
 		A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetterViewController.xib; sourceTree = "<group>"; };
+		A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = "<group>"; };
 		A1D5978E1F4689D100C0F5B8 /* DataParseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataParseKit.swift; sourceTree = "<group>"; };
 		A1D597901F46CD3F00C0F5B8 /* book.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = book.xml; sourceTree = "<group>"; };
 		A1DE045E1F21D06B000C5069 /* SegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentCell.swift; sourceTree = "<group>"; };
 		A1DE045F1F21D06B000C5069 /* SegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentCell.xib; sourceTree = "<group>"; };
+		A1E9BF911F5E808C005251C8 /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
+		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		F082408167EDD359A7B14175 /* Pods_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -456,6 +462,7 @@
 				A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */,
 				A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */,
 				A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */,
+				A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -477,6 +484,8 @@
 				A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */,
 				A1B71D061F0B36570054CA04 /* BookmarksCell.swift */,
 				A1B71D071F0B36570054CA04 /* BookmarksCell.xib */,
+				A1E9BF911F5E808C005251C8 /* DownloadCell.swift */,
+				A1E9BF921F5E808C005251C8 /* DownloadCell.xib */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -683,6 +692,7 @@
 				A1C1BDAB1F00FF85002FC0E0 /* downSleft.png in Resources */,
 				A11058231F5540B900B0D283 /* Settings.bundle in Resources */,
 				A10648421F04C21E002D088C /* Default-Portrait@2x~ipad.png in Resources */,
+				A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */,
 				A1C06BCF1F0A356400A29620 /* cancel.png in Resources */,
 				A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */,
 				A10648381F04C21E002D088C /* AppIcon-B2C40x40@2x~ipad.png in Resources */,
@@ -768,11 +778,13 @@
 				A16C1A5B1F3D9BE900D961C9 /* UpdateBookViewController.swift in Sources */,
 				A136F11E1F1322DE00349572 /* Model.m in Sources */,
 				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
+				A1CAEA5E1F5E6C4500CE751B /* DownloadViewController.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,
 				A1C1BD931F00A718002FC0E0 /* constant.swift in Sources */,
 				A17792671F2F3771009782F6 /* HUD.swift in Sources */,
 				A1C1BD8E1F00A5E0002FC0E0 /* BaseViewController.swift in Sources */,
 				A1C1BD9C1F00ACA2002FC0E0 /* ViewerController.swift in Sources */,
+				A1E9BF931F5E808C005251C8 /* DownloadCell.swift in Sources */,
 				A1C1BDA21F00ACE0002FC0E0 /* ManagerController.swift in Sources */,
 				A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */,
 				A1C1BD9A1F00AC77002FC0E0 /* TOCViewController.swift in Sources */,

@@ -15,7 +15,8 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     var cellSelectedAction:((Int) -> (Void))?
     var cellSelectedIndex : Int?
-
+    var kTableviewCellRowHeight : Int = 0
+    
     var needtitleView:Bool = true
     var titleViewBtn:UIButton?
     let titleViewBtnRect = CGRect (x: 0, y: 0, width: 200, height: 40)
@@ -186,6 +187,15 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if kTableviewCellRowHeight > 0 {
+            let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
+            //cell.backgroundView = nil
+            cell.backgroundColor = UIColor.clear //UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 1)
+            let m = dataArray[indexPath.row] as! DataSourceModel
+            cell.fileCellWith(m)
+            
+            return cell
+        }
         
         var cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier")
         if cell == nil
@@ -223,7 +233,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        return 44;
+        return CGFloat(kTableviewCellRowHeight == 0 ? 44 : kTableviewCellRowHeight);
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -235,7 +245,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         if let tmp = cellSelectedAction {
             tmp(indexPath.row)
             
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: false, completion: nil)
         }
     }
     

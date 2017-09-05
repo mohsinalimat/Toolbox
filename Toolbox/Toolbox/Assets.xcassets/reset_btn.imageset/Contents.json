@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "red_update_button.png",
+      "filename" : "reset_btn.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "red_update_button@2x.png",
+      "filename" : "reset_btn@2x.png",
       "scale" : "2x"
     },
     {

@@ -161,9 +161,13 @@ class DataSourceManager: NSObject {
                 return (des,[.removePreviousFile, .createIntermediateDirectories])
             }
             
-            Alamofire.download( path, to: downloadDestination).downloadProgress(queue: DispatchQueue.main) { (progress) in
-                print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
-                }.response { (response) in
+            Alamofire.download( path, to: downloadDestination)
+                .downloadProgress(queue: DispatchQueue.main) {
+                    (progress) in
+                    print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
+                }
+                .response {
+                    (response) in
                     print("download single file ok.")
                     let des = response.request?.url
                     self.getPlistWith(filePath: "\(des!)", isAdd: false)

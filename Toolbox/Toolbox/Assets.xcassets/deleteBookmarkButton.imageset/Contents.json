@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "red_X_badge.png",
+      "filename" : "deleteBookmarkButton.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "red_X_badge@2x.png",
+      "filename" : "deleteBookmarkButton@2x.png",
       "scale" : "2x"
     },
     {
