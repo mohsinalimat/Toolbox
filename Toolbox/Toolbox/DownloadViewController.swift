@@ -8,54 +8,57 @@
 
 import UIKit
 
-class DownloadViewController: UIViewController {
+class DownloadViewController: BaseViewControllerWithTable {
 
-    var popViewDataArray = ["Publications","Document Type","Document #","Document Title","Modified Date"]
     var ttt :Int = 0
-    
-    var _navigationController:BaseNavigationController?
+    var progressView : UIProgressView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        initSubviews()
+        title = "更新列表"
+
+        let dsm = DataSourceManager.default
+        dsm.addObserver(self, forKeyPath: "ds_downloadprogress", options: .new, context: nil)
     }
 
     
-    func initSubviews( ) {
-        let vc = BaseViewControllerWithTable.init()
-        //...先赋值？才会走到 viewDidLoad
-        vc.needtitleView = false
-        vc.view.frame =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
-        vc.dataArray = popViewDataArray
-        vc.navigationItem.rightBarButtonItems = nil
-        title = "Updates"
-        
-        vc.kTableviewCellRowHeight = 60
-        vc.tableview?.backgroundColor = UIColor.lightGray
-        vc.tableview?.backgroundView = nil
-        vc.tableview?.frame = view.frame
-        vc.tableview?.separatorStyle = .singleLine
-        vc.tableview?.bounces = true
-        vc.tableview?.showsVerticalScrollIndicator = false
-        vc.cellSelectedAction = {
-            index in
-            
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let change = change?[NSKeyValueChangeKey.newKey] as? Float {
+            progressView.progress = change
         }
         
+    }
+    
+    
+    override func initSubview() {
+        tableview?.frame = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
+        tableview?.backgroundColor = UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 0.6)
+        tableview?.backgroundView = nil
+        tableview?.separatorStyle = .none
+        tableview?.bounces = true
+        tableview?.showsVerticalScrollIndicator = false
+        needtitleView = false
+
+        dataArray = DataSourceModel.search(with: nil, orderBy: nil) as! [DataSourceModel]
+        tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
+        
         //checkupdatebtn
-        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 40))
+        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 30))
         checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
         checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
         checkupdatebtn.setTitle("检测更新", for: .normal)
         checkupdatebtn.setTitleColor(UIColor.white, for: .normal)
-        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: 1)
-        checkupdatebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
+        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: 1)
+        checkupdatebtn.addTarget(self, action: #selector(checkUpdateBtn), for: .touchUpInside)
         checkupdatebtn.tag = 100
+        checkupdatebtn.layer.cornerRadius = 10
+        checkupdatebtn.layer.masksToBounds = true
         let ritem = UIBarButtonItem (customView: checkupdatebtn)
+        navigationItem.rightBarButtonItems = nil
         navigationItem.rightBarButtonItem = ritem
-        
+    
         //close
         let closebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 60, height: 40))
         closebtn.setTitle("取消", for: .normal)
@@ -64,17 +67,57 @@ class DownloadViewController: UIViewController {
         closebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
         closebtn.tag = 100
         let litem = UIBarButtonItem (customView: closebtn)
-        
         navigationItem.leftBarButtonItem = litem
-        
-        self.view.addSubview(vc.view)
+    }
+    
+
+    //MARK:
+    func closeBtn(){
+        self.dismiss(animated: false, completion: nil)
+    }
+    
+    func checkUpdateBtn() {
+        DataSourceManager.default.checkupdateFromServer()
     }
     
     
-    func closeBtn(){
-        _navigationController?.dismiss(animated: false, completion: nil)
+    
+    //MARK:-
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
+        //cell.backgroundView = nil
+        cell.backgroundColor = UIColor.clear //UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 1)
+        let m = dataArray[indexPath.row] as! DataSourceModel
+        cell.fileCellWith(m)
+        
+        progressView = cell.progressview
+        
+        return cell
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 88
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = DownloadDetailViewController()
+        self.navigationController?.pushViewController(vc, animated: false)
+        
+//        let rect = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 100), height: 60 * 8)
+//        vc.view.frame = rect
+//        
+//        vc.modalPresentationStyle = UIModalPresentationStyle.formSheet
+//        vc.preferredContentSize = rect.size
+        
+//        let nav = BaseNavigationController(rootViewController:vc)
+//        nav.modalPresentationStyle = .formSheet
+//        nav.preferredContentSize = rect.size
+//        self.present(vc, animated: false)
+        
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -82,14 +125,5 @@ class DownloadViewController: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

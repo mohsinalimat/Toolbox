@@ -22,6 +22,7 @@ class DownloadCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        progressview.progress = 0
     }
 
     
@@ -31,6 +32,14 @@ class DownloadCell: UITableViewCell {
         dsLocationLable.text = model.location_url
         
     }
+    
+    
+    override func prepareForReuse() {
+        progressview.progress = 0
+        
+    }
+    
+    
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

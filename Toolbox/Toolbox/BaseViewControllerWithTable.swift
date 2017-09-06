@@ -15,7 +15,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     var cellSelectedAction:((Int) -> (Void))?
     var cellSelectedIndex : Int?
-    var kTableviewCellRowHeight : Int = 0
+    var kTableviewCellRowHeight : Int = 0 //Cell高度
     
     var needtitleView:Bool = true
     var titleViewBtn:UIButton?
@@ -187,16 +187,6 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if kTableviewCellRowHeight > 0 {
-            let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
-            //cell.backgroundView = nil
-            cell.backgroundColor = UIColor.clear //UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 1)
-            let m = dataArray[indexPath.row] as! DataSourceModel
-            cell.fileCellWith(m)
-            
-            return cell
-        }
-        
         var cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier")
         if cell == nil
         {

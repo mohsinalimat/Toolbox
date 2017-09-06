@@ -38,6 +38,7 @@
 		A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = A15AF50A1F53B51C00E57031 /* FMDB.m */; };
 		A16C1A5B1F3D9BE900D961C9 /* UpdateBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */; };
 		A16C1A5C1F3D9BE900D961C9 /* UpdateBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */; };
+		A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A170C6861F5FBB86008D2AC7 /* DownloadDetailViewController.swift */; };
 		A17792671F2F3771009782F6 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17792661F2F3771009782F6 /* HUD.swift */; };
 		A17C81071F30589400EF8B9D /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81031F30589400EF8B9D /* error.png */; };
 		A17C81081F30589400EF8B9D /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81041F30589400EF8B9D /* error@2x.png */; };
@@ -167,6 +168,7 @@
 		A15AF50A1F53B51C00E57031 /* FMDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDB.m; sourceTree = "<group>"; };
 		A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateBookViewController.swift; sourceTree = "<group>"; };
 		A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpdateBookViewController.xib; sourceTree = "<group>"; };
+		A170C6861F5FBB86008D2AC7 /* DownloadDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailViewController.swift; sourceTree = "<group>"; };
 		A17792661F2F3771009782F6 /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		A17C81031F30589400EF8B9D /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		A17C81041F30589400EF8B9D /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
@@ -463,6 +465,7 @@
 				A16C1A591F3D9BE900D961C9 /* UpdateBookViewController.swift */,
 				A16C1A5A1F3D9BE900D961C9 /* UpdateBookViewController.xib */,
 				A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */,
+				A170C6861F5FBB86008D2AC7 /* DownloadDetailViewController.swift */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
 				A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
+				A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,

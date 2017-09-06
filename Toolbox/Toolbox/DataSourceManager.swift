@@ -14,8 +14,10 @@ class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
     let subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
     
-    var totalDownloadCnt:UInt8 = 0;
-    var currentDownloadCnt:UInt8 = 0;
+    var ds_totalDownloadCnt:UInt8 = 0;
+    var ds_currentDownloadCnt:UInt8 = 0;
+    var ds_downloadprogress:Float = 0
+    
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
     let kDownload_queue_path:String
@@ -164,21 +166,23 @@ class DataSourceManager: NSObject {
             Alamofire.download( path, to: downloadDestination)
                 .downloadProgress(queue: DispatchQueue.main) {
                     (progress) in
-                    print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
+                    let progress = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
+                    DataSourceManager.default.setValue(progress, forKey: "ds_downloadprogress")
+                    print(DataSourceManager.default.ds_downloadprogress)
                 }
                 .response {
                     (response) in
                     print("download single file ok.")
                     let des = response.request?.url
                     self.getPlistWith(filePath: "\(des!)", isAdd: false)
-                    self.currentDownloadCnt = self.currentDownloadCnt + 1
+                    self.ds_currentDownloadCnt = self.ds_currentDownloadCnt + 1
                     semaphore.signal()
             }
             
         }
         
         if let downloadfiles = downloadfiles {
-            totalDownloadCnt = UInt8(downloadfiles.count)
+            ds_totalDownloadCnt = UInt8(downloadfiles.count)
             
             for url in downloadfiles {
                 semaphore.wait()

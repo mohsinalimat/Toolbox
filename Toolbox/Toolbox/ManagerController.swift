@@ -44,9 +44,9 @@ class ManagerController: BaseViewControllerWithTable {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+       
         //检测更新
-        
-        DBManager.default.installBook()
+        //...DBManager.default.installBook()
         
         /*
          if DBManager.hasBookNeedUpdate() {
@@ -95,72 +95,17 @@ class ManagerController: BaseViewControllerWithTable {
     
     
     func downloadBtnClicked(_ btn:UIButton){
-        let vc = BaseViewControllerWithTable.init()
+        let vc = DownloadViewController.init()
         let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
-        //...先赋值？才会走到 viewDidLoad
-        vc.needtitleView = false
-        vc.view.frame = rect
-        
-        let ds = DataSourceModel.search(with: nil, orderBy: nil) as! [DataSourceModel]
-        
-        vc.dataArray = ds
-        vc.navigationItem.rightBarButtonItems = nil
-        vc.title = "Updates"
+        vc.view.frame = rect////////开始创建view
 
-        vc.tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
-        
-        vc.kTableviewCellRowHeight = 88
-        vc.tableview?.backgroundColor = UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 0.6)
-        vc.tableview?.backgroundView = nil
-        vc.tableview?.frame = rect
-        vc.tableview?.separatorStyle = .none
-        vc.tableview?.bounces = true
-        vc.tableview?.showsVerticalScrollIndicator = false
-        vc.cellSelectedAction = {
-            index in
-            
-        }
-        
-        //checkupdatebtn
-        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 30))
-        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
-        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
-        checkupdatebtn.setTitle("检测更新", for: .normal)
-        checkupdatebtn.setTitleColor(UIColor.white, for: .normal)
-        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: 1)
-        checkupdatebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
-        checkupdatebtn.tag = 100
-        checkupdatebtn.layer.cornerRadius = 10
-        checkupdatebtn.layer.masksToBounds = true
-        
-        let ritem = UIBarButtonItem (customView: checkupdatebtn)
-        vc.navigationItem.rightBarButtonItem = ritem
-        
-        //close
-        let closebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 60, height: 40))
-        closebtn.setTitle("取消", for: .normal)
-        closebtn.setTitleColor(UIColor.white, for: .normal)
-        closebtn.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: 1)
-        closebtn.addTarget(self, action: #selector(closeBtn), for: .touchUpInside)
-        closebtn.tag = 100
-        let litem = UIBarButtonItem (customView: closebtn)
-        vc.navigationItem.leftBarButtonItem = litem
-        
-        
         ///
         let nav = BaseNavigationController(rootViewController:vc)
-        _navigationController = nav
-        
         nav.modalPresentationStyle = UIModalPresentationStyle.formSheet
         nav.preferredContentSize = rect.size
         self.present(nav, animated: false)
-        
     }
-    
-    func closeBtn(){
-        _navigationController?.dismiss(animated: false, completion: nil)
-    }
-    
+
     
     //MARK:- Notification
     func startUnzip(_ noti:Notification) {
@@ -235,7 +180,6 @@ class ManagerController: BaseViewControllerWithTable {
     
     
     override func initSubview(){
-        
         title = "Manager"
         let topview : UIView  = {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 60))
@@ -270,9 +214,9 @@ class ManagerController: BaseViewControllerWithTable {
             
             return v
         }()
-        view.addSubview(topview)
+        //view.addSubview(topview)
 
-        tableview?.frame = CGRect (x: 0, y: topview.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 60)
+        tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 0)
         sectionHeadtitle =  "Publications on Devices"
         tableViewRegisterCell()
         
