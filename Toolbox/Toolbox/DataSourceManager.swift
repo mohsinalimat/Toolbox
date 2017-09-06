@@ -87,7 +87,7 @@ class DataSourceManager: NSObject {
                         let zip:String! = sdic["file_loc"]
                         let fileurl = url + "\(zip!)"
                         
-                        getPlistWith(filePath: fileurl)
+                        getPlistWith(key:url,filePath: fileurl)
                         }
                     }
                 }
@@ -117,7 +117,7 @@ class DataSourceManager: NSObject {
             for sdic in server_syncArr{
                 let zip:String! = sdic["file_loc"]
                 let fileurl = url + "\(zip!)"
-                getPlistWith(filePath: fileurl)
+                getPlistWith(key:url,filePath: fileurl)
             }
         }
       
@@ -127,21 +127,40 @@ class DataSourceManager: NSObject {
         
     }
     
-    func getPlistWith(filePath:String,isAdd:Bool = true) {
+    func getPlistWith(key:String, filePath:String,isAdd:Bool = true) {
         let fileurl = filePath
         let plist = kDownload_queue_path
-        let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String]
-        var added = [String]();
+        let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String : [String]]
+        var added = [String:[String]]();
         
         if let old = old {
-            added = added + old
+            for (key,value) in old{
+                added[key] = value
+            }
         }
         if isAdd{
-            added.append(fileurl)
-        }else{
-            if added.contains(filePath) {
-                added.remove(at: added.index(of: filePath)!)
+            let arr = added[key]
+            if var arr = arr{
+                arr.append(fileurl)
+                added[key] = arr
+            }else{
+                added[key] = [fileurl]
             }
+
+        }else{
+            let arr = added[key]
+            if var arr = arr{
+                if arr.contains(fileurl) {
+                    arr.remove(at: arr.index(of: fileurl)!)
+                }
+                if arr.count == 0{
+                    added.removeValue(forKey: key)
+                }else{
+                    added[key] = arr
+                }
+                
+            }
+    
         }
 
         NSKeyedArchiver.archiveRootObject(added, toFile: plist)
@@ -149,7 +168,7 @@ class DataSourceManager: NSObject {
 
     func startDownload() {
         let plist = kDownload_queue_path
-        let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String]
+        let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
 
         let semaphore = DispatchSemaphore.init(value: 1)
         //下载单个文件
@@ -171,23 +190,28 @@ class DataSourceManager: NSObject {
                     print(DataSourceManager.default.ds_downloadprogress)
                 }
                 .response {
-                    (response) in
+                   [weak self] (response) in
                     print("download single file ok.")
                     let des = response.request?.url
-                    self.getPlistWith(filePath: "\(des!)", isAdd: false)
-                    self.ds_currentDownloadCnt = self.ds_currentDownloadCnt + 1
+                    let base = des?.deletingLastPathComponent()
+                    guard let strongSelf = self else{return}
+                    strongSelf.getPlistWith(key:"\(base!)",filePath: "\(des!)", isAdd: false)
+                    strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
+//                    if strongSelf
                     semaphore.signal()
             }
             
         }
         
         if let downloadfiles = downloadfiles {
-            ds_totalDownloadCnt = UInt8(downloadfiles.count)
-            
-            for url in downloadfiles {
-                semaphore.wait()
-                let u = URL (string: url)
-                downloadFileFrom(path: u)
+            for (_,value) in downloadfiles {
+                ds_totalDownloadCnt = UInt8(value.count)
+                for url in value{
+                    semaphore.wait()
+                    let u = URL (string: url)
+                    downloadFileFrom(path: u)
+
+                }
             
             }
             

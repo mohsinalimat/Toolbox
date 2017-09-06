@@ -23,6 +23,9 @@ class DownloadViewController: BaseViewControllerWithTable {
         dsm.addObserver(self, forKeyPath: "ds_downloadprogress", options: .new, context: nil)
     }
 
+    deinit {
+        self.removeObserver(DataSourceManager.default, forKeyPath: "ds_downloadprogress")
+    }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if let change = change?[NSKeyValueChangeKey.newKey] as? Float {
