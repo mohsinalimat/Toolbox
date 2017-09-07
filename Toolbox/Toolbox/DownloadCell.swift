@@ -23,6 +23,7 @@ class DownloadCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         progressview.progress = 0
+        statueLable.text = " "
     }
 
     
@@ -31,12 +32,23 @@ class DownloadCell: UITableViewCell {
         
         dsLocationLable.text = model.location_url
         
+        switch model.update_status {
+        case 1:
+            statueLable.text = "下载文件: \(DataSourceManager.default.ds_currentDownloadCnt) / \(DataSourceManager.default.ds_totalDownloadCnt)"
+            break
+        default:break
+        }
+        
     }
     
+    func setCellStatus(_ str :String) {
+        
+        statueLable.text = str
+    }
     
     override func prepareForReuse() {
         progressview.progress = 0
-        
+        statueLable.text = " "
     }
     
     

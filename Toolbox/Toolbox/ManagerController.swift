@@ -26,20 +26,11 @@ class ManagerController: BaseViewControllerWithTable {
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
-         navigationItem.titleView = nil
-        
+        navigationItem.titleView = nil
         initNavigationBarItem()
-        NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
-        
-        //UpdateBookViewController
-        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
+        addNotifications()
         
         loadData()
-        
-        
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +98,25 @@ class ManagerController: BaseViewControllerWithTable {
     }
 
     
-    //MARK:- Notification
+    //MARK:- Notification Mehods
+    func addNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
+        
+        //UpdateBookViewController
+        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate(_:)), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
+    }
+    
+    //检测服务器是否更新
+    func checkdsUpdate(_ noti:Notification) {
+        if !DataSourceManager.default.ds_isdownloading {
+            DataSourceManager.default.checkupdateFromServer()
+        }
+    }
+    
     func startUnzip(_ noti:Notification) {
         ////
         print("通知-showUnzipViewController.")

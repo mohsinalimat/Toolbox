@@ -10,13 +10,15 @@ import UIKit
 import Alamofire
 
 class DataSourceManager: NSObject {
-
     static let `default` = DataSourceManager()
     let subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
     
     var ds_totalDownloadCnt:UInt8 = 0;
     var ds_currentDownloadCnt:UInt8 = 0;
     var ds_downloadprogress:Float = 0
+    var ds_serverupdatestatus:Int = 0
+    var ds_serverlocationurl:String?
+    var ds_isdownloading:Bool = false
     
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
@@ -66,11 +68,13 @@ class DataSourceManager: NSObject {
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
       guard info.keys.count == 3 else {return}
       if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil){
-        let m = ret.first as! DataSourceModel
         guard let server_syncArr = info["sync_manifest.json"] as?[[String:String]] else {return}
-        guard let syncjsonStr = m.sync_manifest else{return}
         
         if !ret.isEmpty && ret.count > 0{
+            let m = ret.first as! DataSourceModel
+            
+            guard let syncjsonStr = m.sync_manifest else{return}
+            
             //比较同步信息
             do{
                 guard let data = syncjsonStr.data(using: String.Encoding.utf8) else{return}
@@ -183,28 +187,50 @@ class DataSourceManager: NSObject {
             }
             
             Alamofire.download( path, to: downloadDestination)
-                .downloadProgress(queue: DispatchQueue.main) {
-                    (progress) in
+                .downloadProgress(queue: DispatchQueue.main) {(progress) in
                     let progress = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
                     DataSourceManager.default.setValue(progress, forKey: "ds_downloadprogress")
                     print(DataSourceManager.default.ds_downloadprogress)
                 }
-                .response {
-                   [weak self] (response) in
+                .response {[weak self] (response) in
                     print("download single file ok.")
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
+                    
                     guard let strongSelf = self else{return}
                     strongSelf.getPlistWith(key:"\(base!)",filePath: "\(des!)", isAdd: false)
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
-//                    if strongSelf
+                    if strongSelf.ds_totalDownloadCnt == strongSelf.ds_currentDownloadCnt{
+                        print("全部下载完成!")
+                        if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
+                            ret.update_status = 2
+                            if ret.saveToDB() {
+                                DataSourceManager.default.setValue(2, forKey: "ds_serverupdatestatus")
+                            }
+                        }
+                        
+                        DataSourceManager.default.ds_isdownloading = false
+                        
+                        DBManager.default.installBook()
+                    }
+                    
                     semaphore.signal()
             }
             
         }
         
         if let downloadfiles = downloadfiles {
-            for (_,value) in downloadfiles {
+            for (key,value) in downloadfiles {
+                if let ret = DataSourceModel.search(with: "location_url='\(key)'", orderBy: nil).first as? DataSourceModel{
+                    ret.update_status = 1
+                    if ret.saveToDB() {
+                        DataSourceManager.default.setValue(1, forKey: "ds_serverupdatestatus")
+                    }
+                }
+                
+                ds_serverlocationurl = key
+                ds_isdownloading = true
+                
                 ds_totalDownloadCnt = UInt8(value.count)
                 for url in value{
                     semaphore.wait()

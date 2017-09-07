@@ -11,27 +11,50 @@ import UIKit
 class DownloadViewController: BaseViewControllerWithTable {
 
     var ttt :Int = 0
-    var progressView : UIProgressView!
+    //var progressView : UIProgressView!
+    
+    let dsm = DataSourceManager.default
+    
+    var current_download_cell:DownloadCell!
+    var cell_status:UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         title = "更新列表"
-
-        let dsm = DataSourceManager.default
         dsm.addObserver(self, forKeyPath: "ds_downloadprogress", options: .new, context: nil)
+        dsm.addObserver(self, forKeyPath: "ds_serverupdatestatus", options: .new, context: nil)
     }
 
     deinit {
-        self.removeObserver(DataSourceManager.default, forKeyPath: "ds_downloadprogress")
+        dsm.removeObserver(self, forKeyPath: "ds_downloadprogress")
+        dsm.removeObserver(self, forKeyPath: "ds_serverupdatestatus")
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if let change = change?[NSKeyValueChangeKey.newKey] as? Float {
-            progressView.progress = change
+        guard let keyPath = keyPath ,let change = change ,let download_cell = current_download_cell  else {
+            return
         }
         
+        switch keyPath {
+        case "ds_downloadprogress":
+            if let change = change[NSKeyValueChangeKey.newKey] as? Float{
+                //progressView.progress = change
+                download_cell.progressview.progress = change
+            };break
+        case "ds_serverupdatestatus":
+            if let change  = change[NSKeyValueChangeKey.newKey] as? Int{
+                if change == 1{
+                    print("++++++++++++++")
+                    download_cell.statueLable.text = "下载文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)"
+                }else if change == 2{
+                    download_cell.statueLable.text = "解压文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)";
+                }
+            };break
+            
+        default:break
+        }
     }
     
     
@@ -80,20 +103,34 @@ class DownloadViewController: BaseViewControllerWithTable {
     }
     
     func checkUpdateBtn() {
-        DataSourceManager.default.checkupdateFromServer()
+        NotificationCenter.default.post(name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
+        
+        self.dismiss(animated: false, completion: nil)
+        
+        //DataSourceManager.default.checkupdateFromServer()
     }
     
     
     
     //MARK:-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if dataArray.count == 0 {
+            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+        }
+        
         let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
-        //cell.backgroundView = nil
         cell.backgroundColor = UIColor.clear //UIColor.init(red: 109/255.0, green: 109/255.0, blue: 109/255.0, alpha: 1)
         let m = dataArray[indexPath.row] as! DataSourceModel
         cell.fileCellWith(m)
         
-        progressView = cell.progressview
+        //progressView = cell.progressview
+        cell_status = cell.statueLable
+        current_download_cell = cell
+        if let m_url = m.location_url ,let s_url = dsm.ds_serverlocationurl {
+            if m_url == s_url{
+                current_download_cell = cell
+            }
+        }
         
         return cell
     }
@@ -109,7 +146,6 @@ class DownloadViewController: BaseViewControllerWithTable {
         
 //        let rect = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 100), height: 60 * 8)
 //        vc.view.frame = rect
-//        
 //        vc.modalPresentationStyle = UIModalPresentationStyle.formSheet
 //        vc.preferredContentSize = rect.size
         
