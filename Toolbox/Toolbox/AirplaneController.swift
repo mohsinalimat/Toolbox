@@ -91,7 +91,7 @@ class AirplaneController:BaseViewControllerWithTable {
         
         /*
         print(Date())
-        DataParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCAAIPC20170101/aipc"), bookName: "CCAA330CCAAIPC20170101", completeHandler: {
+        XMLParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCAAIPC20170101/aipc"), bookName: "CCAA330CCAAIPC20170101", completeHandler: {
             print(Date())
             print("all ok")
         })*/

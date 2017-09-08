@@ -14,9 +14,11 @@ class DownloadViewController: BaseViewControllerWithTable {
     //var progressView : UIProgressView!
     
     let dsm = DataSourceManager.default
+    let unzip = UNZIPFile.default
     
     var current_download_cell:DownloadCell!
     var cell_status:UILabel!
+    var is_loading :Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,12 +26,22 @@ class DownloadViewController: BaseViewControllerWithTable {
         // Do any additional setup after loading the view.
         title = "更新列表"
         dsm.addObserver(self, forKeyPath: "ds_downloadprogress", options: .new, context: nil)
-        dsm.addObserver(self, forKeyPath: "ds_serverupdatestatus", options: .new, context: nil)
+        dsm.addObserver(self, forKeyPath: "ds_currentDownloadCnt", options: .new, context: nil)
+        dsm.addObserver(self, forKeyPath: "ds_totalDownloadCnt", options: .new, context: nil)
+        
+        unzip.addObserver(self, forKeyPath: "zip_total_filescnt", options: .new, context: nil)
+        unzip.addObserver(self, forKeyPath: "zip_current_filescnt", options: .new, context: nil)
+        unzip.addObserver(self, forKeyPath: "zip_unzip_progress", options: .new, context: nil)
     }
 
     deinit {
         dsm.removeObserver(self, forKeyPath: "ds_downloadprogress")
-        dsm.removeObserver(self, forKeyPath: "ds_serverupdatestatus")
+        dsm.removeObserver(self, forKeyPath: "ds_currentDownloadCnt")
+        dsm.removeObserver(self, forKeyPath: "ds_totalDownloadCnt")
+        
+        unzip.removeObserver(self, forKeyPath: "zip_total_filescnt")
+        unzip.removeObserver(self, forKeyPath: "zip_current_filescnt")
+        unzip.removeObserver(self, forKeyPath: "zip_unzip_progress")
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -38,23 +50,34 @@ class DownloadViewController: BaseViewControllerWithTable {
         }
         
         switch keyPath {
-        case "ds_downloadprogress":
+        case "ds_downloadprogress","zip_unzip_progress":
             if let change = change[NSKeyValueChangeKey.newKey] as? Float{
-                //progressView.progress = change
                 download_cell.progressview.progress = change
             };break
+            
+       case "ds_totalDownloadCnt","ds_currentDownloadCnt":
+            download_cell.statueLable.text = "下载文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)"
+            break
+        case "zip_total_filescnt","zip_current_filescnt":
+            download_cell.statueLable.text = "解压文件: \(unzip.zip_current_filescnt) / \(unzip.zip_total_filescnt)"
+            break
+      
+            /*
         case "ds_serverupdatestatus":
             if let change  = change[NSKeyValueChangeKey.newKey] as? Int{
                 if change == 1{
                     print("++++++++++++++")
+                    is_loading = true
                     download_cell.statueLable.text = "下载文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)"
                 }else if change == 2{
+                    is_loading = false
                     download_cell.statueLable.text = "解压文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)";
                 }
-            };break
+            };break*/
             
         default:break
         }
+        
     }
     
     
@@ -124,8 +147,8 @@ class DownloadViewController: BaseViewControllerWithTable {
         cell.fileCellWith(m)
         
         //progressView = cell.progressview
-        cell_status = cell.statueLable
-        current_download_cell = cell
+        //cell_status = cell.statueLable
+        //current_download_cell = cell
         if let m_url = m.location_url ,let s_url = dsm.ds_serverlocationurl {
             if m_url == s_url{
                 current_download_cell = cell

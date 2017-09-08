@@ -37,11 +37,11 @@ class ManagerController: BaseViewControllerWithTable {
         super.viewWillAppear(animated)
        
         //检测更新
-        //...DBManager.default.installBook()
+        //...UNZIPFile.default.installBook()
         
         /*
-         if DBManager.hasBookNeedUpdate() {
-         DBManager.default.installBook()
+         if UNZIPFile.hasBookNeedUpdate() {
+         UNZIPFile.default.installBook()
          
          ////
          //showUnzipViewController()
@@ -118,9 +118,8 @@ class ManagerController: BaseViewControllerWithTable {
     }
     
     func startUnzip(_ noti:Notification) {
-        ////
         print("通知-showUnzipViewController.")
-        showUnzipViewController()
+       // showUnzipViewController()
 
     }
     

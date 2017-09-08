@@ -13,12 +13,14 @@ class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
     let subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
     
-    var ds_totalDownloadCnt:UInt8 = 0;
-    var ds_currentDownloadCnt:UInt8 = 0;
+    var ds_totalDownloadCnt:Int = 0;
+    var ds_currentDownloadCnt:Int = 0;
     var ds_downloadprogress:Float = 0
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false
+    
+    private var is_thelast:Bool = false
     
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
@@ -86,7 +88,7 @@ class DataSourceManager: NSObject {
                     for ldic in local_arr {
                        guard let doc_number_l = ldic["doc_number"] else{return}
                        guard let doc_version_l = ldic["revision_number"] else{return}
-                       if doc_number == doc_number_l && doc_version == doc_version_l {/////////////////
+                       if doc_number == doc_number_l && doc_version == doc_version_l {///....
                         //添加到下载
                         let zip:String! = sdic["file_loc"]
                         let fileurl = url + "\(zip!)"
@@ -200,6 +202,8 @@ class DataSourceManager: NSObject {
                     guard let strongSelf = self else{return}
                     strongSelf.getPlistWith(key:"\(base!)",filePath: "\(des!)", isAdd: false)
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
+                    DataSourceManager.default.setValue(strongSelf.ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
+                    
                     if strongSelf.ds_totalDownloadCnt == strongSelf.ds_currentDownloadCnt{
                         print("全部下载完成!")
                         if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
@@ -211,7 +215,8 @@ class DataSourceManager: NSObject {
                         
                         DataSourceManager.default.ds_isdownloading = false
                         
-                        DBManager.default.installBook()
+                        ///
+                        UNZIPFile.default.installBook()
                     }
                     
                     semaphore.signal()
@@ -219,7 +224,7 @@ class DataSourceManager: NSObject {
             
         }
         
-        if let downloadfiles = downloadfiles {
+        if let downloadfiles = downloadfiles {//多个数据源地址未测试
             for (key,value) in downloadfiles {
                 if let ret = DataSourceModel.search(with: "location_url='\(key)'", orderBy: nil).first as? DataSourceModel{
                     ret.update_status = 1
@@ -230,8 +235,11 @@ class DataSourceManager: NSObject {
                 
                 ds_serverlocationurl = key
                 ds_isdownloading = true
+                ds_totalDownloadCnt = value.count
+                DataSourceManager.default.setValue(ds_totalDownloadCnt, forKey: "ds_totalDownloadCnt")
+                ds_currentDownloadCnt = 0
+                DataSourceManager.default.setValue(ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
                 
-                ds_totalDownloadCnt = UInt8(value.count)
                 for url in value{
                     semaphore.wait()
                     let u = URL (string: url)
@@ -240,38 +248,13 @@ class DataSourceManager: NSObject {
                 }
             
             }
-            
-           print("download finished...")
-
-        //...解压文件
-            
-            
+   
         }
-        
-        
-        
+
     }
     
-    
- 
-    
-    
-    
+  
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

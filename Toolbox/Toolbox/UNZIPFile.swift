@@ -18,6 +18,7 @@ class UNZIPFile: NSObject {
     
     var zip_total_filescnt:Int = 0
     var zip_current_filescnt:Int = 0
+    var zip_unzip_progress:Float = 0
     
     
     //MARK:-
@@ -404,12 +405,14 @@ extension UNZIPFile  {
                     FILESManager.default.deleteFileAt(path: path)
                 }
                 
+                
                 self.queue.addOperation({
                     print("解压完成！！")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
                     }
                 })
+                
                 
                 self.queue.addOperation({
                     self.moveAndParse()
@@ -510,7 +513,10 @@ extension UNZIPFile  {
         guard zipArr.count > 0 else{return}
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_totalnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
+            
+            UNZIPFile.default.setValue(zipArr.count, forKey: "zip_total_filescnt")
         }
+        
         
         
         for item in zipArr {
@@ -523,13 +529,22 @@ extension UNZIPFile  {
                         print("Tmp:\(entrynumber) - \(total)")
                     DispatchQueue.main.async {
 //                        HUD.showProgress(progress: Float(entrynumber) / Float(total) , status: "文件解压中...")
-                        kUnzipProgressStatus =  Float(entrynumber) / Float(total)
-                        kUnzipprogress.progress = kUnzipProgressStatus
+                        let progress =  Float(entrynumber) / Float(total)
+                        //kUnzipprogress.progress = kUnzipProgressStatus
+                        UNZIPFile.default.setValue(progress, forKey: "zip_unzip_progress")
+                        
                     }
                     },completionHandler:{/*[weak self]*/(path, success, error) in
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
+                            
+                            //已解压完的zip
+                            self.zip_current_filescnt = self.zip_current_filescnt + 1
+                            UNZIPFile.default.setValue(self.zip_current_filescnt, forKey: "zip_current_filescnt")
+                            print("++++++++++已解压完成的文件数 : \(self.zip_current_filescnt)")
+                            
                         }
+
                         //遍历资源目录
                         self.unzipSourceFile(filePath: newpath)
                         
@@ -564,12 +579,12 @@ extension UNZIPFile  {
                                                progressHandler: {(entry, zipinfo, entrynumber, total) in
                             },
                                                completionHandler: {(path, success, error) in
+                                                guard success && path != "" else{return}
                                                 FILESManager.default.deleteFileAt(path: path)
                             })
                     }
                 }
-                
-                
+
             }catch{}
         }
         
