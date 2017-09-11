@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManagerController: BaseViewControllerWithTable {
+class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
 
     var selectedDataArray = [String]()
     var selectButton : UIButton?
@@ -28,7 +28,7 @@ class ManagerController: BaseViewControllerWithTable {
         super.viewDidLoad()
         navigationItem.titleView = nil
         initNavigationBarItem()
-        addNotifications()
+        addObservers()
         
         loadData()
     }
@@ -37,7 +37,7 @@ class ManagerController: BaseViewControllerWithTable {
         super.viewWillAppear(animated)
        
         //检测更新
-        //...UNZIPFile.default.installBook()
+        UNZIPFile.default.installBook()
         
         /*
          if UNZIPFile.hasBookNeedUpdate() {
@@ -49,11 +49,28 @@ class ManagerController: BaseViewControllerWithTable {
         
     }
     
-    
     //MARK:-
+    func downloadTotalFilesCompleted() {
+        //UNZIPFile.default.installBook();return
+        UNZIPFile.default.unzipWithCompleted {
+            print("download completed!")
+            let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+            let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
+                ////
+                UNZIPFile.default.update()
+            })
+
+            let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
+            ac.addAction(action_1)
+            ac.addAction(action_2)
+            self.present(ac, animated: false, completion: nil)
+        }
+    }
+    
+    //MARK:- navigation Item
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
-        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//23 * 23
+        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
         btn.setImage(UIImage (named: "update_button"), for: .normal)
         btn.setImage(UIImage (named: "update_button"), for: .highlighted)
         btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
@@ -99,7 +116,7 @@ class ManagerController: BaseViewControllerWithTable {
 
     
     //MARK:- Notification Mehods
-    func addNotifications() {
+    func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
@@ -108,18 +125,43 @@ class ManagerController: BaseViewControllerWithTable {
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate(_:)), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
+        
+        let zips  = UNZIPFile.default
+        zips.addObserver(self, forKeyPath: "update_total_filescnt", options: .new, context: nil)
+        
     }
+    
+    /*
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "update_total_filescnt"{
+            let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
+            let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
+            
+            vc.view.frame = rect
+            vc.modalPresentationStyle = .formSheet
+            vc.preferredContentSize = rect.size
+            
+            if let num = change?[NSKeyValueChangeKey.newKey] {
+                vc.totalBookssnumber = num as! Int
+            }
+            
+            self.present(vc, animated: false, completion: nil)
+        }
+        
+    }*/
     
     //检测服务器是否更新
     func checkdsUpdate(_ noti:Notification) {
         if !DataSourceManager.default.ds_isdownloading {
-            DataSourceManager.default.checkupdateFromServer()
+            let ds = DataSourceManager.default
+            ds.delegate = self
+            ds.checkupdateFromServer()
         }
     }
     
     func startUnzip(_ noti:Notification) {
         print("通知-showUnzipViewController.")
-       // showUnzipViewController()
+        showUnzipViewController()
 
     }
     
@@ -131,6 +173,7 @@ class ManagerController: BaseViewControllerWithTable {
     }
     
     func startParsebook(_ noti:Notification) {
+        print("+++++++++++ startParsebook");//return
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
         let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
         
@@ -142,7 +185,7 @@ class ManagerController: BaseViewControllerWithTable {
             vc.totalBookssnumber = num as! Int
         }
         
-        self.navigationController?.present(vc, animated: false, completion: nil)
+        self.present(vc, animated: false, completion: nil)
     }
     
     func test_update(){

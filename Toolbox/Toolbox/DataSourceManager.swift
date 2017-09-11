@@ -9,6 +9,13 @@
 import UIKit
 import Alamofire
 
+protocol DownloadCompletedDelegate : NSObjectProtocol {
+    
+    func downloadTotalFilesCompleted()
+    
+}
+
+
 class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
     let subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
@@ -19,18 +26,19 @@ class DataSourceManager: NSObject {
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false
-    
-    private var is_thelast:Bool = false
-    
+
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
     let kDownload_queue_path:String
+    weak var delegate: DownloadCompletedDelegate?
+    private var is_thelast:Bool = false
     
     override init() {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
         FILESManager.default.fileExistsAt(path: kPlistinfo_path)
         kDownload_queue_path = kPlistinfo_path.appending("/downloadqueuelist.plist")
     }
+    
     
     
     //MARK:-
@@ -215,8 +223,8 @@ class DataSourceManager: NSObject {
                         
                         DataSourceManager.default.ds_isdownloading = false
                         
-                        ///
-                        UNZIPFile.default.installBook()
+                        ///全部下载完成
+                        strongSelf.delegate?.downloadTotalFilesCompleted()
                     }
                     
                     semaphore.signal()

@@ -32,6 +32,8 @@ class DownloadViewController: BaseViewControllerWithTable {
         unzip.addObserver(self, forKeyPath: "zip_total_filescnt", options: .new, context: nil)
         unzip.addObserver(self, forKeyPath: "zip_current_filescnt", options: .new, context: nil)
         unzip.addObserver(self, forKeyPath: "zip_unzip_progress", options: .new, context: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
     }
 
     deinit {
@@ -42,7 +44,13 @@ class DownloadViewController: BaseViewControllerWithTable {
         unzip.removeObserver(self, forKeyPath: "zip_total_filescnt")
         unzip.removeObserver(self, forKeyPath: "zip_current_filescnt")
         unzip.removeObserver(self, forKeyPath: "zip_unzip_progress")
+        NotificationCenter.default.removeObserver(self)
     }
+    
+    func unzipAllComplete(_ noti:Notification) {
+        self.dismiss(animated: false, completion: nil)
+    }
+    
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath ,let change = change ,let download_cell = current_download_cell  else {

@@ -35,6 +35,11 @@ class DownloadCell: UITableViewCell {
         switch model.update_status {
         case 1:
             statueLable.text = "下载文件: \(DataSourceManager.default.ds_currentDownloadCnt) / \(DataSourceManager.default.ds_totalDownloadCnt)"
+            statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
+            break
+        case 2:
+            statueLable.text = "已是最新"
+            statueIconBtn.setBackgroundImage(UIImage (named: "green_checkmark"), for: .normal)
             break
         default:break
         }
