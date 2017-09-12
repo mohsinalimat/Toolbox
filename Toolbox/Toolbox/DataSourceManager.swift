@@ -32,16 +32,24 @@ class DataSourceManager: NSObject {
     let kDownload_queue_path:String
     weak var delegate: DownloadCompletedDelegate?
     private var is_thelast:Bool = false
+    let _opreationqueue:OperationQueue
     
     override init() {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
         FILESManager.default.fileExistsAt(path: kPlistinfo_path)
         kDownload_queue_path = kPlistinfo_path.appending("/downloadqueuelist.plist")
+        
+        _opreationqueue = OperationQueue.init()
+        _opreationqueue.maxConcurrentOperationCount = 1
+        _opreationqueue.isSuspended = true
+        _opreationqueue.qualityOfService = .utility
+        
     }
     
     
     
     //MARK:-
+    /*
     func checkupdateFromServer() {
         let semaphore = DispatchSemaphore.init(value: 1)
         for base in kDataSourceLocations {
@@ -73,6 +81,38 @@ class DataSourceManager: NSObject {
        
         
         print("ok!")
+    }*/
+    
+    func checkupdateFromServer() {
+        var cnt:Int = 0
+        for base in kDataSourceLocations {
+            
+            let group = DispatchGroup.init()
+            var package_info = [String:Any]()
+            for sub in self.subPathArr{
+                let url = base + sub
+                print("Start : \(url)")
+                group.enter()
+                Alamofire.request(url).responseJSON(completionHandler: { (response) in
+                    if let value = response.result.value{
+                        package_info[sub] = value;
+                    }
+                    print("End : \(url)")
+                    group.leave()
+                })
+            }
+            
+            group.notify(queue: DispatchQueue.global(), execute: {[weak self] in
+                guard let strongSelf = self else{return}
+                strongSelf.compareJsonInfoFromLocal(base, info: package_info)
+                cnt = cnt + 1
+                if cnt == kDataSourceLocations.count {
+                    print("检测更新完成！")
+                    strongSelf.startDownload()
+                }
+            })
+            
+        }
     }
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
@@ -136,12 +176,13 @@ class DataSourceManager: NSObject {
         }
       
         //开始下载
-        startDownload()
+        //startDownload()
     }
         
     }
     
     func getPlistWith(key:String, filePath:String,isAdd:Bool = true) {
+        objc_sync_enter(self)
         let fileurl = filePath
         let plist = kDownload_queue_path
         let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String : [String]]
@@ -174,20 +215,20 @@ class DataSourceManager: NSObject {
                 }
                 
             }
-    
         }
 
         NSKeyedArchiver.archiveRootObject(added, toFile: plist)
+        objc_sync_exit(self)
     }
 
     func startDownload() {
         let plist = kDownload_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
 
-        let semaphore = DispatchSemaphore.init(value: 1)
+        let semaphore = DispatchSemaphore.init(value: 2)
         //下载单个文件
         func downloadFileFrom(path:URL?) {
-            print("download : \(path)")
+            print("开始下载 : \(path!)")
             guard let path = path else { return }
             let downloadDestination : DownloadRequest.DownloadFileDestination = {_,_ in
                 let url = LibraryPath.appending("/TDLibrary/tmp").appending("/\(path.lastPathComponent)")
@@ -200,13 +241,13 @@ class DataSourceManager: NSObject {
                 .downloadProgress(queue: DispatchQueue.main) {(progress) in
                     let progress = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
                     DataSourceManager.default.setValue(progress, forKey: "ds_downloadprogress")
-                    print(DataSourceManager.default.ds_downloadprogress)
+                    //print(DataSourceManager.default.ds_downloadprogress)
                 }
                 .response {[weak self] (response) in
-                    print("download single file ok.")
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
                     
+                    print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
                     strongSelf.getPlistWith(key:"\(base!)",filePath: "\(des!)", isAdd: false)
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
@@ -225,6 +266,8 @@ class DataSourceManager: NSObject {
                         
                         ///全部下载完成
                         strongSelf.delegate?.downloadTotalFilesCompleted()
+                        
+                        semaphore.signal()
                     }
                     
                     semaphore.signal()
@@ -232,31 +275,40 @@ class DataSourceManager: NSObject {
             
         }
         
+
         if let downloadfiles = downloadfiles {//多个数据源地址未测试
             for (key,value) in downloadfiles {
-                if let ret = DataSourceModel.search(with: "location_url='\(key)'", orderBy: nil).first as? DataSourceModel{
-                    ret.update_status = 1
-                    if ret.saveToDB() {
-                        DataSourceManager.default.setValue(1, forKey: "ds_serverupdatestatus")
+                semaphore.wait()
+                
+                //_opreationqueue.addOperation {
+                    if let ret = DataSourceModel.search(with: "location_url='\(key)'", orderBy: nil).first as? DataSourceModel{
+                        ret.update_status = 1
+                        if ret.saveToDB() {
+                            DataSourceManager.default.setValue(1, forKey: "ds_serverupdatestatus")
+                        }
                     }
-                }
-                
-                ds_serverlocationurl = key
-                ds_isdownloading = true
-                ds_totalDownloadCnt = value.count
-                DataSourceManager.default.setValue(ds_totalDownloadCnt, forKey: "ds_totalDownloadCnt")
-                ds_currentDownloadCnt = 0
-                DataSourceManager.default.setValue(ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
-                
-                for url in value{
-                    semaphore.wait()
-                    let u = URL (string: url)
-                    downloadFileFrom(path: u)
-
-                }
+                    
+                    print("begin server : \(key)")
+                    
+                    self.ds_serverlocationurl = key
+                    DataSourceManager.default.setValue(self.ds_serverlocationurl, forKey: "ds_serverlocationurl")
+                    self.ds_isdownloading = true
+                    self.ds_totalDownloadCnt = value.count
+                    DataSourceManager.default.setValue(self.ds_totalDownloadCnt, forKey: "ds_totalDownloadCnt")
+                    self.ds_currentDownloadCnt = 0
+                    DataSourceManager.default.setValue(self.ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
+                    
+                    for url in value{
+                        semaphore.wait()
+                        let u = URL (string: url)
+                        downloadFileFrom(path: u)
+                        
+                    }//
+                //}
+ 
+            }//d
             
-            }
-   
+            //_opreationqueue.isSuspended = false
         }
 
     }

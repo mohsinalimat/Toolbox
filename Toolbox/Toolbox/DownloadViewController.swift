@@ -69,19 +69,12 @@ class DownloadViewController: BaseViewControllerWithTable {
         case "zip_total_filescnt","zip_current_filescnt":
             download_cell.statueLable.text = "解压文件: \(unzip.zip_current_filescnt) / \(unzip.zip_total_filescnt)"
             break
-      
-            /*
-        case "ds_serverupdatestatus":
-            if let change  = change[NSKeyValueChangeKey.newKey] as? Int{
-                if change == 1{
-                    print("++++++++++++++")
-                    is_loading = true
-                    download_cell.statueLable.text = "下载文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)"
-                }else if change == 2{
-                    is_loading = false
-                    download_cell.statueLable.text = "解压文件: \(dsm.ds_currentDownloadCnt) / \(dsm.ds_totalDownloadCnt)";
-                }
-            };break*/
+        case "ds_serverlocationurl"://数据源改变，刷新列表
+            if let change = change[NSKeyValueChangeKey.newKey] as? String{
+                
+                
+            };
+            break
             
         default:break
         }
@@ -98,7 +91,7 @@ class DownloadViewController: BaseViewControllerWithTable {
         tableview?.showsVerticalScrollIndicator = false
         needtitleView = false
 
-        dataArray = DataSourceModel.search(with: nil, orderBy: nil) as! [DataSourceModel]
+        dataArray = DataSourceModel.search(with: nil, orderBy: "location_url asc") as! [DataSourceModel]
         tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
         
         //checkupdatebtn
@@ -146,7 +139,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     //MARK:-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+            return getCellForNodata(tableView, info: "No DataSource.")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
@@ -175,16 +168,7 @@ class DownloadViewController: BaseViewControllerWithTable {
         let vc = DownloadDetailViewController()
         self.navigationController?.pushViewController(vc, animated: false)
         
-//        let rect = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 100), height: 60 * 8)
-//        vc.view.frame = rect
-//        vc.modalPresentationStyle = UIModalPresentationStyle.formSheet
-//        vc.preferredContentSize = rect.size
-        
-//        let nav = BaseNavigationController(rootViewController:vc)
-//        nav.modalPresentationStyle = .formSheet
-//        nav.preferredContentSize = rect.size
-//        self.present(vc, animated: false)
-        
+  
     }
     
     

@@ -390,7 +390,7 @@ extension UNZIPFile  {
                 FILESManager.default.fileExistsAt(path: newpath)
                 
                 SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total)in
-                    print("Tmp:\(entrynumber) - \(total)")
+                    //print("Tmp:\(entrynumber) - \(total)")
                     DispatchQueue.main.async {
                         let progress =  Float(entrynumber) / Float(total)
                         //kUnzipprogress.progress = kUnzipProgressStatus
