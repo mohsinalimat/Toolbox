@@ -163,8 +163,12 @@
 @property(nonatomic,copy)NSString * package_info;
 @property(nonatomic,copy)NSString * sync_manifest;
 @property(nonatomic,copy)NSString * server_baseline;
-@property(nonatomic,assign)NSInteger  update_status;//更新状态
+@property(nonatomic,assign)NSInteger  update_status;//当前数据源更新状态
 @property(nonatomic,copy)NSString * misc;
+
+@property(nonatomic,assign)float ds_file_percent;//下载、解压进度
+@property(nonatomic,assign)NSInteger total_files;//总文件数
+@property(nonatomic,assign)NSInteger current_files;//已处理文件数
 @end
 
 

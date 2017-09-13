@@ -20,6 +20,8 @@ class DownloadViewController: BaseViewControllerWithTable {
     var cell_status:UILabel!
     var is_loading :Bool = true
     
+    var _timer:Timer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,9 +36,25 @@ class DownloadViewController: BaseViewControllerWithTable {
         unzip.addObserver(self, forKeyPath: "zip_unzip_progress", options: .new, context: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
+        
+        _timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        RunLoop.main.add(_timer, forMode: RunLoopMode.commonModes);
+        
     }
 
+    func timerAction()  {
+       let arr = DataSourceModel.search(with: nil, orderBy: "location_url asc") as! [DataSourceModel]
+        dataArray.removeAll()
+        dataArray = dataArray + arr
+        
+        tableview?.reloadData()
+    }
+    
+    
+    
     deinit {
+        _timer.invalidate()
+        
         dsm.removeObserver(self, forKeyPath: "ds_downloadprogress")
         dsm.removeObserver(self, forKeyPath: "ds_currentDownloadCnt")
         dsm.removeObserver(self, forKeyPath: "ds_totalDownloadCnt")
@@ -45,6 +63,7 @@ class DownloadViewController: BaseViewControllerWithTable {
         unzip.removeObserver(self, forKeyPath: "zip_current_filescnt")
         unzip.removeObserver(self, forKeyPath: "zip_unzip_progress")
         NotificationCenter.default.removeObserver(self)
+        print("deinit DownloadViewController")
     }
     
     func unzipAllComplete(_ noti:Notification) {
@@ -53,6 +72,9 @@ class DownloadViewController: BaseViewControllerWithTable {
     
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        return
+        
         guard let keyPath = keyPath ,let change = change ,let download_cell = current_download_cell  else {
             return
         }
@@ -93,7 +115,7 @@ class DownloadViewController: BaseViewControllerWithTable {
 
         dataArray = DataSourceModel.search(with: nil, orderBy: "location_url asc") as! [DataSourceModel]
         tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
-        
+
         //checkupdatebtn
         let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 30))
         checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
@@ -150,11 +172,11 @@ class DownloadViewController: BaseViewControllerWithTable {
         //progressView = cell.progressview
         //cell_status = cell.statueLable
         //current_download_cell = cell
-        if let m_url = m.location_url ,let s_url = dsm.ds_serverlocationurl {
+        /*if let m_url = m.location_url ,let s_url = dsm.ds_serverlocationurl {
             if m_url == s_url{
                 current_download_cell = cell
             }
-        }
+        }*/
         
         return cell
     }

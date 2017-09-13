@@ -36,8 +36,8 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
        
-        //检测更新
-        UNZIPFile.default.installBook()
+        //...检测更新
+        //UNZIPFile.default.installBook()
         
         /*
          if UNZIPFile.hasBookNeedUpdate() {
@@ -152,10 +152,13 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     
     //检测服务器是否更新
     func checkdsUpdate(_ noti:Notification) {
-        if !DataSourceManager.default.ds_isdownloading {
-            let ds = DataSourceManager.default
-            ds.delegate = self
-            ds.checkupdateFromServer()
+        DispatchQueue.global().async {
+            if !DataSourceManager.default.ds_isdownloading {
+                let ds = DataSourceManager.default
+                ds.delegate = self
+                ds.checkupdateFromServer()
+            }
+
         }
     }
     

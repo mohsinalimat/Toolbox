@@ -33,16 +33,32 @@ class DownloadCell: UITableViewCell {
         dsLocationLable.text = model.location_url
         
         switch model.update_status {
+        /*
         case 1:
-            statueLable.text = "下载文件: \(DataSourceManager.default.ds_currentDownloadCnt) / \(DataSourceManager.default.ds_totalDownloadCnt)"
+            statueLable.text = "已是最新"
+            statueIconBtn.setBackgroundImage(UIImage (named: "green_checkmark"), for: .normal)
+            break*/
+        case 1:
+            statueLable.text = "等待中"
             statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
             break
         case 2:
-            statueLable.text = "已是最新"
-            statueIconBtn.setBackgroundImage(UIImage (named: "green_checkmark"), for: .normal)
+            statueLable.text = "下载文件: \(model.current_files) / \(model.total_files)"
+            statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
             break
+        case 3:
+            statueLable.text = "准备解压"
+            statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
+            break
+        case 4:
+            statueLable.text = "解压文件: \(model.current_files) / \(model.total_files)"
+            statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
+            break
+            
         default:break
         }
+        
+        progressview.progress = model.ds_file_percent
         
     }
     
