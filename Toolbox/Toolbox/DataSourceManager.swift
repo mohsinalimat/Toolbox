@@ -11,10 +11,14 @@ import Alamofire
 
 protocol DownloadCompletedDelegate : NSObjectProtocol {
     
-    func downloadTotalFilesCompleted()
+    func downloadTotalFilesCompleted(_ withurl:String)
     
 }
 
+enum DataQueueType {
+    case download //下载
+    case unzip //解压
+}
 
 class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
@@ -30,6 +34,8 @@ class DataSourceManager: NSObject {
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
     let kDownload_queue_path:String
+    let kUnzip_queue_path:String
+    
     weak var delegate: DownloadCompletedDelegate?
     private var is_thelast:Bool = false
     let _opreationqueue:OperationQueue
@@ -40,6 +46,7 @@ class DataSourceManager: NSObject {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
         FILESManager.default.fileExistsAt(path: kPlistinfo_path)
         kDownload_queue_path = kPlistinfo_path.appending("/downloadqueuelist.plist")
+        kUnzip_queue_path = kPlistinfo_path.appending("/unzipqueue.plist")
         
         _opreationqueue = OperationQueue.init()
         _opreationqueue.maxConcurrentOperationCount = 1
@@ -145,7 +152,7 @@ class DataSourceManager: NSObject {
                         let zip:String! = sdic["file_loc"]
                         let fileurl = url + "\(zip!)"
                         
-                        updateDownloadQueueWith(key:url,filePath: fileurl)
+                        updateDownloadQueueWith(key:url,filePath: fileurl,datatype:.download)
                         //更新状态
                         if m.update_status != 1 {
                             m.update_status = 1
@@ -181,18 +188,31 @@ class DataSourceManager: NSObject {
             for sdic in server_syncArr{
                 let zip:String! = sdic["file_loc"]
                 let fileurl = url + "\(zip!)"
-                updateDownloadQueueWith(key:url,filePath: fileurl)
+                updateDownloadQueueWith(key:url,filePath: fileurl,datatype:.download)
             }
         }
     }
         
     }
     
-    //更新下载列表
-    func updateDownloadQueueWith(key:String, filePath:String,isAdd:Bool = true) {
+
+    /// 更新下载列表
+    ///
+    /// - parameter key:      数据源url
+    /// - parameter filePath: 文件路径filepath
+    /// - parameter isAdd:    添加/删除操作
+    /// - parameter datatype: 数据类型
+    func updateDownloadQueueWith(key:String, filePath:String,isAdd:Bool = true,datatype:DataQueueType) {
         objc_sync_enter(self)
         let fileurl = filePath
-        let plist = kDownload_queue_path
+        var plist:String
+        
+        switch datatype {
+        case .download: plist = kDownload_queue_path; break
+        case .unzip:plist = kUnzip_queue_path;break
+        default:break
+        }
+        
         let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String : [String]]
         var added = [String:[String]]();
         
@@ -257,17 +277,14 @@ class DataSourceManager: NSObject {
                 .response(queue:_dispatch_queue) {[weak self] (response) in
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
+                    let zip = des?.lastPathComponent
                     
                     print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
-                    strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false)
+                    strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
+                    strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
+                    
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
-                    //DataSourceManager.default.setValue(strongSelf.ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
-                    
-                    //strongSelf._update_ds_status(url: "\(base!)", key: "current_files", value: strongSelf.ds_currentDownloadCnt)
-                    //strongSelf._update_ds_status(url: "\(base!)", key: "ds_file_percent", value: 0)
-                    
-                    
                     if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
                         ret.ds_file_percent = 0.0
                         ret.current_files = strongSelf.ds_currentDownloadCnt
@@ -275,17 +292,18 @@ class DataSourceManager: NSObject {
                         if strongSelf.ds_totalDownloadCnt == strongSelf.ds_currentDownloadCnt{
                             print("全部下载完成!")
                             ret.update_status = 3
+                            ret.current_files = 0
+                            ret.total_files = 0
                             
-                            DataSourceManager.default.ds_isdownloading = false
+                            DataSourceManager.default.ds_isdownloading = false//...
                             
                             ///一个数据源下载完成
-                            //strongSelf.delegate?.downloadTotalFilesCompleted()
-                            
+                            strongSelf.delegate?.downloadTotalFilesCompleted(base!.absoluteString)
                             semaphore.signal()
                         }
                         
                         if ret.saveToDB() {
-                            DataSourceManager.default.setValue(2, forKey: "ds_serverupdatestatus")
+                            //DataSourceManager.default.setValue(2, forKey: "ds_serverupdatestatus")
                         }
 
                     }
@@ -299,16 +317,7 @@ class DataSourceManager: NSObject {
         if let downloadfiles = downloadfiles {//多个数据源地址未测试
             for (key,value) in downloadfiles {
                 semaphore.wait()
-                
-                //_opreationqueue.addOperation {
-                /*
-                    if let ret = DataSourceModel.search(with: "location_url='\(key)'", orderBy: nil).first as? DataSourceModel{
-                        ret.update_status = 1
-                        if ret.saveToDB() {
-                            DataSourceManager.default.setValue(1, forKey: "ds_serverupdatestatus")
-                        }
-                    }*/
-                
+
                     _update_ds_status(url: key, key: "update_status", value: 2)
                     _update_ds_status(url: key, key: "total_files", value: value.count)
                 
@@ -328,7 +337,6 @@ class DataSourceManager: NSObject {
                         downloadFileFrom(path: u)
                         
                     }//
-                //}
  
             }//d
         
@@ -360,7 +368,7 @@ class DataSourceManager: NSObject {
             }
             
             if ret.saveToDB() {
-                print("数据表更新成功！\(key) : \(value)")
+                //print("数据表更新成功！\(key) : \(value)")
             }
         }
         
@@ -372,7 +380,7 @@ class DataSourceManager: NSObject {
  1-初始，等待更新
  2-开始下载，正在下载
  3-下载完成，准备解压
- 4-开始解压，准备解压
+ 4-开始解压，解压
  5-解压完成，准备更新数据库
  6-开始更新，导入数据到数据库，资源到目标路径（统一处理更新操作）
  7-更新完成,流程结束。

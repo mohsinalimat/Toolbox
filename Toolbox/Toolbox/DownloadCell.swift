@@ -54,6 +54,14 @@ class DownloadCell: UITableViewCell {
             statueLable.text = "解压文件: \(model.current_files) / \(model.total_files)"
             statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
             break
+        case 5:
+            statueLable.text = "解压完成,准备更新"
+            statueIconBtn.setBackgroundImage(UIImage (named: "inprogress_badge"), for: .normal)
+            break
+        case 6:
+            statueLable.text = "已是最新"
+            statueIconBtn.setBackgroundImage(UIImage (named: "green_checkmark"), for: .normal)
+            break
             
         default:break
         }

@@ -20,7 +20,7 @@ class BaseTabbarController: UITabBarController {
     }
 
     func initTabar() {
-        tabBar.barTintColor = kBartintColor
+        tabBar.barTintColor = UIColor.white //kBartintColor
         
         let itemtitleArr = [
             "Airplane Selector",

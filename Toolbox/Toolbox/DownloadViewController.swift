@@ -54,6 +54,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     
     deinit {
         _timer.invalidate()
+        _timer = nil
         
         dsm.removeObserver(self, forKeyPath: "ds_downloadprogress")
         dsm.removeObserver(self, forKeyPath: "ds_currentDownloadCnt")

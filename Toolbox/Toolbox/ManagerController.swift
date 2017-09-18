@@ -23,6 +23,8 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     let managerCellIdentifier = "ManagerCellReuseIdentifier"
     let managerDetailCellReuseIdentifier = "ManagerDetailCellReuseIdentifier"
     
+    var ds_isbusying:Bool = false
+    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,21 +51,23 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         
     }
     
-    //MARK:-
-    func downloadTotalFilesCompleted() {
-        //UNZIPFile.default.installBook();return
-        UNZIPFile.default.unzipWithCompleted {
-            print("download completed!")
-            let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
-            let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
-                ////
-                UNZIPFile.default.update()
-            })
-
-            let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
-            ac.addAction(action_1)
-            ac.addAction(action_2)
-            self.present(ac, animated: false, completion: nil)
+    //MARK:- DownloadCompletedDelegate
+    func downloadTotalFilesCompleted(_ withurl: String) {
+        UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
+            DispatchQueue.main.async {
+                print("download completed!")
+                let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+                let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
+                    ////
+                    self.ds_isbusying = false
+                    UNZIPFile.default.update(url:withurl)
+                })
+                
+                let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
+                ac.addAction(action_1)
+                ac.addAction(action_2)
+                self.present(ac, animated: false, completion: nil)
+            }
         }
     }
     
@@ -153,7 +157,9 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     //检测服务器是否更新
     func checkdsUpdate(_ noti:Notification) {
         DispatchQueue.global().async {
-            if !DataSourceManager.default.ds_isdownloading {
+            if !DataSourceManager.default.ds_isdownloading && !self.ds_isbusying{
+                self.ds_isbusying = true
+                
                 let ds = DataSourceManager.default
                 ds.delegate = self
                 ds.checkupdateFromServer()
