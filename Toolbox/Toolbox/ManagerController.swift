@@ -55,7 +55,7 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     func downloadTotalFilesCompleted(_ withurl: String) {
         UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
             DispatchQueue.main.async {
-                print("download completed!")
+                print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
                 let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
                 let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
                     ////

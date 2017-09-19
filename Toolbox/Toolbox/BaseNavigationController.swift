@@ -20,7 +20,7 @@ class BaseNavigationController: UINavigationController {
         navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white,NSFontAttributeName:UIFont.boldSystemFont(ofSize: 18)]
 
 //        UINavigationBar.appearance().tintColor = UIColor.white
-        
+        navigationBar.setBackgroundImage(UIImage (named: "navigationbar_bg"), for: .default)
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent;
     }
 

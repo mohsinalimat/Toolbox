@@ -133,11 +133,8 @@ class DataSourceManager: NSObject {
         
         if !ret.isEmpty && ret.count > 0{
             let m = ret.first as! DataSourceModel
-            
             guard let syncjsonStr = m.sync_manifest else{return}
-            
-            //比较同步信息
-            do{
+            do{//比较同步信息
                 guard let data = syncjsonStr.data(using: String.Encoding.utf8) else{return}
                 guard let local_arr = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String:String]] else {return}
                 
@@ -197,7 +194,6 @@ class DataSourceManager: NSObject {
     
 
     /// 更新下载列表
-    ///
     /// - parameter key:      数据源url
     /// - parameter filePath: 文件路径filepath
     /// - parameter isAdd:    添加/删除操作
@@ -208,14 +204,12 @@ class DataSourceManager: NSObject {
         var plist:String
         
         switch datatype {
-        case .download: plist = kDownload_queue_path; break
-        case .unzip:plist = kUnzip_queue_path;break
-        default:break
+            case .download: plist = kDownload_queue_path; break
+            case .unzip:plist = kUnzip_queue_path;break
         }
         
         let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String : [String]]
         var added = [String:[String]]();
-        
         if let old = old {
             for (key,value) in old{
                 added[key] = value
@@ -229,7 +223,6 @@ class DataSourceManager: NSObject {
             }else{
                 added[key] = [fileurl]
             }
-
         }else{
             let arr = added[key]
             if var arr = arr{
@@ -252,10 +245,9 @@ class DataSourceManager: NSObject {
     func startDownload() {
         let plist = kDownload_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
-
         let semaphore = DispatchSemaphore.init(value: 2)
         //下载单个文件
-        func downloadFileFrom(path:URL?) {
+        func _downloadFileFrom(path:URL?) {
             print("开始下载 : \(path!)")
             guard let path = path else { return }
             let downloadDestination : DownloadRequest.DownloadFileDestination = {_,_ in
@@ -268,7 +260,6 @@ class DataSourceManager: NSObject {
             Alamofire.download( path, to: downloadDestination)
                 .downloadProgress(queue: _dispatch_queue) {(progress) in
                     let progress = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
-                    //DataSourceManager.default.setValue(progress, forKey: "ds_downloadprogress")
                     if progress <= 1.0 {
                         self._update_ds_status(url: self.ds_serverlocationurl!, key: "ds_file_percent", value: progress)
                     }
@@ -283,12 +274,10 @@ class DataSourceManager: NSObject {
                     guard let strongSelf = self else{return}
                     strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
                     strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
-                    
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
                     if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
                         ret.ds_file_percent = 0.0
                         ret.current_files = strongSelf.ds_currentDownloadCnt
-                        
                         if strongSelf.ds_totalDownloadCnt == strongSelf.ds_currentDownloadCnt{
                             print("全部下载完成!")
                             ret.update_status = 3
@@ -303,7 +292,7 @@ class DataSourceManager: NSObject {
                         }
                         
                         if ret.saveToDB() {
-                            //DataSourceManager.default.setValue(2, forKey: "ds_serverupdatestatus")
+                            
                         }
 
                     }
@@ -314,30 +303,26 @@ class DataSourceManager: NSObject {
         }
         
 
-        if let downloadfiles = downloadfiles {//多个数据源地址未测试
+        if let downloadfiles = downloadfiles {//多个数据源地址
             for (key,value) in downloadfiles {
                 semaphore.wait()
-
-                    _update_ds_status(url: key, key: "update_status", value: 2)
-                    _update_ds_status(url: key, key: "total_files", value: value.count)
+                _update_ds_status(url: key, key: "update_status", value: 2)
+                _update_ds_status(url: key, key: "total_files", value: value.count)
+                print("begin server : \(key)")
                 
-                    print("begin server : \(key)")
-                    
-                    self.ds_serverlocationurl = key
-                    DataSourceManager.default.setValue(self.ds_serverlocationurl, forKey: "ds_serverlocationurl")
-                    self.ds_isdownloading = true
-                    self.ds_totalDownloadCnt = value.count
-                    DataSourceManager.default.setValue(self.ds_totalDownloadCnt, forKey: "ds_totalDownloadCnt")
-                    self.ds_currentDownloadCnt = 0
-                    DataSourceManager.default.setValue(self.ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
-                    
-                    for url in value{
-                        semaphore.wait()
-                        let u = URL (string: url)
-                        downloadFileFrom(path: u)
-                        
-                    }//
- 
+                self.ds_serverlocationurl = key
+                DataSourceManager.default.setValue(self.ds_serverlocationurl, forKey: "ds_serverlocationurl")
+                self.ds_isdownloading = true
+                self.ds_totalDownloadCnt = value.count
+                DataSourceManager.default.setValue(self.ds_totalDownloadCnt, forKey: "ds_totalDownloadCnt")
+                self.ds_currentDownloadCnt = 0
+                DataSourceManager.default.setValue(self.ds_currentDownloadCnt, forKey: "ds_currentDownloadCnt")
+                
+                for url in value{
+                    semaphore.wait()
+                    let u = URL (string: url)
+                    _downloadFileFrom(path: u)
+                }
             }//d
         
         }
@@ -373,6 +358,18 @@ class DataSourceManager: NSObject {
         }
         
     }
+    
+    
+    func unzipQueueIsEmpty() -> Bool {
+        let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: kUnzip_queue_path) as? [String:[String]]
+        guard let filesDic = downloadfiles else{
+            return true
+        }
+        
+        return filesDic.isEmpty
+    }
+    
+    
     
 }
 

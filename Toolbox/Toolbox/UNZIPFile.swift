@@ -467,7 +467,6 @@ extension UNZIPFile  {
     //unzip queue获取数据
     func unzipFileFromTmp_2(url:String? = nil)  {
         let path = ROOTPATH.appending("/tmp")
-
         let plist = DataSourceManager.default.kUnzip_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
         guard let url = url ,let filesDic = downloadfiles ,let zipArr = filesDic[url] else{
@@ -475,18 +474,16 @@ extension UNZIPFile  {
         }
         
         guard zipArr.count > 0 else{return}
-        
         //单个数据源情况
         DataSourceManager.default._update_ds_status(url: url, key: "update_status", value: 4)
         DataSourceManager.default._update_ds_status(url: url, key: "total_files", value: zipArr.count)
+        var has_unzipCnts:Int = 0
         
         for item in zipArr {
             if item.hasSuffix(".zip") {//解压tmp目录
                 let srcpath = path.appending("/\(item)")
                 let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
-                
                 guard FILESManager.default.fileExistsAt(path: srcpath,createWhenNotExist: false) else {return}//zip不存在
-                
                 FILESManager.default.fileExistsAt(path: newpath)
                 
                 SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total)in
@@ -495,14 +492,12 @@ extension UNZIPFile  {
                         DataSourceManager.default._update_ds_status(url: url, key: "ds_file_percent", value: progress)
                     }
                     },completionHandler:{/*[weak self]*/(path, success, error) in
-                        self.zip_current_filescnt = self.zip_current_filescnt + 1
-                        
+                        has_unzipCnts = has_unzipCnts + 1
                         if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil).first as? DataSourceModel{
                             ret.ds_file_percent = 0.0
-                            ret.current_files = self.zip_current_filescnt
-                            
-                            if self.zip_current_filescnt == zipArr.count{
-                                print("++++++++++++++++++++ 全部解压完成!")
+                            ret.current_files = has_unzipCnts
+                            if has_unzipCnts == zipArr.count{
+                                print("++++++++++++++++++++:\(url), 全部解压完成!")
                                 ret.update_status = 5 //解压完成，准备更新数据库
                                 ret.current_files = 0
                                 ret.ds_file_percent = 0
@@ -517,8 +512,8 @@ extension UNZIPFile  {
                         
                         //遍历资源目录
                         self._unzipSourceFile(filePath: newpath)
-                        ///???????????????????
-                        DataSourceManager.default.updateDownloadQueueWith(key:"\(url)",filePath: "\(srcpath)", isAdd: false,datatype:.unzip)
+                        let u = URL.init(string: srcpath)
+                        DataSourceManager.default.updateDownloadQueueWith(key:"\(url)",filePath: "\((u?.lastPathComponent)!)", isAdd: false,datatype:.unzip)
                         FILESManager.default.deleteFileAt(path: srcpath)
                 })
             }
@@ -555,7 +550,7 @@ extension UNZIPFile  {
         
     }
     
-    func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
+    /*func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
         _unzip_ds_url = withurl
         
 //        let zipqueue = unzipOperationQueue()
@@ -583,8 +578,34 @@ extension UNZIPFile  {
         })
         
         self.queue.isSuspended = false
-    }
+    }*/
     
+    func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
+        let zipqueue = unzipOperationQueue()
+        
+        //从tmp更新
+        zipqueue.addOperation({
+            self.unzipFileFromTmp_2(url: withurl)
+        })
+
+        zipqueue.addOperation({
+            print("解压完成！！")
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
+            }
+        })
+        
+        zipqueue.addOperation({
+            zipqueue.isSuspended = true
+            if DataSourceManager.default.unzipQueueIsEmpty() {
+                handler()
+            }
+            
+        })
+        
+        zipqueue.isSuspended = false
+    }
+
     
     //MARK:-
     func checkUpdate() {
