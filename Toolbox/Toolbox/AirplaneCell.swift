@@ -48,13 +48,17 @@ class AirplaneCell: UITableViewCell {
         cellBtn.isSelected = false
         backgroundColor = UIColor.white
         registryNameLable.textColor = UIColor.black
+        majormodelLable.textColor = UIColor.darkGray
+        
         imgview.image = UIImage (named: "plane_lt_blue")
         layer.borderWidth = 0.5
     }
     
     func cellSelectedInit(){
-        self.backgroundColor = cellSelectBgColor
-        registryNameLable.textColor = UIColor.white
+        //self.backgroundColor = cellSelectBgColor
+        registryNameLable.textColor = kAirplaneTableCellSelectedColor
+        majormodelLable.textColor = kAirplaneTableCellSelectedColor
+        
         imgview.image = UIImage (named: "plane_drk_gry")
         cellBtn.isSelected = true
         layer.borderWidth = 0

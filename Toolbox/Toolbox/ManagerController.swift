@@ -39,7 +39,7 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         super.viewWillAppear(animated)
        
         //...检测更新
-        //UNZIPFile.default.installBook()
+        UNZIPFile.default.installBook()
         
         /*
          if UNZIPFile.hasBookNeedUpdate() {
@@ -89,6 +89,7 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
         
         navigationItem.leftBarButtonItem = self.editButtonItem
+        
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

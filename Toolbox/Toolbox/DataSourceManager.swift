@@ -266,6 +266,8 @@ class DataSourceManager: NSObject {
                     //print(DataSourceManager.default.ds_downloadprogress)
                 }
                 .response(queue:_dispatch_queue) {[weak self] (response) in
+                    //...判断响应状态，检测网络
+                    
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
                     let zip = des?.lastPathComponent

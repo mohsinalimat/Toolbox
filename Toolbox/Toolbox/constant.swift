@@ -22,6 +22,10 @@ func UIColorFromHex(rgbValue: UInt) -> UIColor {
 }
 
 let kTableviewHeadViewBgColor = UIColorFromHex(rgbValue: UInt(kColorHex))
+let kAirplaneTableCellDefaultColor = UIColorFromHex(rgbValue: UInt(0x333333))
+let kAirplaneTableCellSelectedColor = UIColorFromHex(rgbValue: UInt(0x2765c8))
+let kAirplaneTableSubCellbgColor = UIColorFromHex(rgbValue: UInt(0xf1f1f2))
+
 let kTableviewBackgroundColor = UIColor.init(colorLiteralRed: 231/255.0, green: 231/255.0, blue: 231/255.0, alpha: 1)
 let kCellDefaultBgColor = UIColor (red: 236/255.0, green: 236/255.0, blue: 236/255.0, alpha: 1)
 let kCellSelectedBgColor = UIColor.white

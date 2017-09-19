@@ -38,7 +38,8 @@ class AirplaneSubCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         
-        backgroundColor = UIColor(red: 167/255.0, green: 191/255.0, blue: 206/255.0, alpha: 1)
+        //backgroundColor = UIColor(red: 167/255.0, green: 191/255.0, blue: 206/255.0, alpha: 1)
+        backgroundColor = kAirplaneTableSubCellbgColor
         
     }
 
