@@ -43,7 +43,7 @@ class ManagerDetailCell: UITableViewCell {
         orderDateLable.text = model.publish_date
         updateDateLable.text = model.publish_date
         
-        packagenameLable.text = model.book_uuid + ".ZIP"
+        packagenameLable.text = model.book_uuid + ".zip"
         
         
     }

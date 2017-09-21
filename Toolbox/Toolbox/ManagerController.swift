@@ -75,11 +75,11 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
-        btn.setImage(UIImage (named: "update_button"), for: .normal)
-        btn.setImage(UIImage (named: "update_button"), for: .highlighted)
+        btn.setImage(UIImage (named: "green_update_button"), for: .normal)//23.23 green_update_button,inprogress_update_button
+        btn.setImage(UIImage (named: "green_update_button"), for: .highlighted)
         btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
-        btn.tag = 100
         
+
         let ritem = UIBarButtonItem (customView: btn)
         itemArr?.append(ritem)
         navigationItem.rightBarButtonItems = itemArr
@@ -178,6 +178,8 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     
     func allbookupdatecomplete(_ noti:Notification)  {
         ///手册更新完毕，刷新列表
+        //...更新DS状态
+        
         HUD.show(successInfo: "更新完成")
         loadData()
     }

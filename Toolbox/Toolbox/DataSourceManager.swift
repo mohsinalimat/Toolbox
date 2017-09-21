@@ -22,14 +22,14 @@ enum DataQueueType {
 
 class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
-    let subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
+    private let _subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
     
     var ds_totalDownloadCnt:Int = 0;
     var ds_currentDownloadCnt:Int = 0;
     var ds_downloadprogress:Float = 0
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
-    var ds_isdownloading:Bool = false
+    var ds_isdownloading:Bool = false //正在下载
 
     let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     let kPlistinfo_path = LibraryPath.appending("/Application data")
@@ -97,10 +97,9 @@ class DataSourceManager: NSObject {
     func checkupdateFromServer() {
         var cnt:Int = 0
         for base in kDataSourceLocations {
-            
             let group = DispatchGroup.init()
             var package_info = [String:Any]()
-            for sub in self.subPathArr{
+            for sub in self._subPathArr{
                 let url = base + sub
                 print("Start : \(url)")
                 group.enter()
@@ -327,6 +326,7 @@ class DataSourceManager: NSObject {
                 }
             }//d
         
+            print("")
         }
 
     }

@@ -736,7 +736,7 @@ extension UNZIPFile  {
                         self.queue.isSuspended = true
                     })
                 }else{
-                    print("没有文档需要更新！")
+                    print("DOCUMENT 没有文档需要更新！")
                 }
                 
             }
