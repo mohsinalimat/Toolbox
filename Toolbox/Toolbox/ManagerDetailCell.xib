@@ -20,7 +20,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="sD7-vE-zwc"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -33,25 +33,25 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01Nov2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cn9-aS-hSN">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ordered:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R6b-uB-9xe">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01Nov2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0I-Cs-0JS">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updated:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1z-RT-Urs">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="63" id="5JX-cj-aEQ"/>
+                                    <constraint firstAttribute="width" constant="70" id="5JX-cj-aEQ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -59,45 +59,44 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="7FA-02-U0j"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Effectivity:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="55Z-fp-cO9">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Package Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ohq-mU-Do2">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CCAA330CCAAIPC20170101.ZIP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cf5-MF-zUV">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01Nov2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Trd-BU-KSE">
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.16862745100000001" green="0.4823529412" blue="0.70980392160000005" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="ohq-mU-Do2" firstAttribute="leading" secondItem="oAC-rE-54T" secondAttribute="leading" constant="80" id="5Ei-8B-Ozz"/>
                             <constraint firstItem="Trd-BU-KSE" firstAttribute="centerY" secondItem="R6b-uB-9xe" secondAttribute="centerY" id="Ah4-QQ-XU5"/>
                             <constraint firstItem="ohq-mU-Do2" firstAttribute="leading" secondItem="LFH-0S-M1U" secondAttribute="leading" id="Hws-Rh-sW2"/>
-                            <constraint firstItem="55Z-fp-cO9" firstAttribute="top" secondItem="vbf-B1-P8w" secondAttribute="bottom" constant="3" id="NZP-Rp-fqS"/>
+                            <constraint firstItem="55Z-fp-cO9" firstAttribute="top" secondItem="vbf-B1-P8w" secondAttribute="bottom" constant="5" id="NZP-Rp-fqS"/>
                             <constraint firstItem="cf5-MF-zUV" firstAttribute="leading" secondItem="ohq-mU-Do2" secondAttribute="trailing" constant="8" id="P0L-X8-GVO"/>
                             <constraint firstItem="Trd-BU-KSE" firstAttribute="leading" secondItem="w1z-RT-Urs" secondAttribute="trailing" constant="3" id="PPN-9y-yFD"/>
                             <constraint firstItem="R6b-uB-9xe" firstAttribute="centerY" secondItem="cn9-aS-hSN" secondAttribute="centerY" id="QYo-za-XSb"/>
-                            <constraint firstItem="f0I-Cs-0JS" firstAttribute="leading" secondItem="R6b-uB-9xe" secondAttribute="trailing" constant="3" id="R4f-xr-pu7"/>
+                            <constraint firstItem="f0I-Cs-0JS" firstAttribute="leading" secondItem="R6b-uB-9xe" secondAttribute="trailing" constant="5" id="R4f-xr-pu7"/>
                             <constraint firstAttribute="bottom" secondItem="ohq-mU-Do2" secondAttribute="bottom" constant="1" id="RRF-9c-bMM"/>
                             <constraint firstItem="SIK-nA-ed9" firstAttribute="leading" secondItem="oAC-rE-54T" secondAttribute="leading" constant="20" id="SXL-eM-pEi"/>
                             <constraint firstAttribute="trailing" secondItem="w1z-RT-Urs" secondAttribute="trailing" constant="260" id="TIE-hR-KaE"/>
-                            <constraint firstItem="cn9-aS-hSN" firstAttribute="leading" secondItem="LFH-0S-M1U" secondAttribute="trailing" constant="3" id="adb-sf-LtL"/>
+                            <constraint firstItem="cn9-aS-hSN" firstAttribute="leading" secondItem="LFH-0S-M1U" secondAttribute="trailing" constant="5" id="adb-sf-LtL"/>
                             <constraint firstItem="ohq-mU-Do2" firstAttribute="leading" secondItem="vbf-B1-P8w" secondAttribute="leading" id="bcm-sc-gyU"/>
                             <constraint firstItem="SIK-nA-ed9" firstAttribute="leading" secondItem="oAC-rE-54T" secondAttribute="leading" constant="20" id="dDb-W2-BOy"/>
                             <constraint firstItem="R6b-uB-9xe" firstAttribute="centerX" secondItem="oAC-rE-54T" secondAttribute="centerX" constant="-5" id="dOu-Uz-SVN"/>
@@ -116,12 +115,13 @@
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="oAC-rE-54T" secondAttribute="trailing" id="S4m-0c-lZU"/>
                     <constraint firstItem="oAC-rE-54T" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="nEW-kr-RAM"/>
-                    <constraint firstAttribute="bottom" secondItem="oAC-rE-54T" secondAttribute="bottom" constant="5" id="rGZ-Y9-tDh"/>
+                    <constraint firstAttribute="bottom" secondItem="oAC-rE-54T" secondAttribute="bottom" constant="1" id="rGZ-Y9-tDh"/>
                     <constraint firstItem="oAC-rE-54T" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="x2v-tc-kKz"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" red="0.65490196079999996" green="0.74901960779999999" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
+                <outlet property="bgview" destination="oAC-rE-54T" id="ikL-lA-FX0"/>
                 <outlet property="modifydateLable" destination="cn9-aS-hSN" id="tAO-yj-rar"/>
                 <outlet property="orderDateLable" destination="f0I-Cs-0JS" id="5Ji-h4-SY1"/>
                 <outlet property="packagenameLable" destination="cf5-MF-zUV" id="RP7-eX-HeA"/>
@@ -131,6 +131,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="openCell_hl_arro" width="21" height="13"/>
+        <image name="openCell_hl_arro" width="20" height="12"/>
     </resources>
 </document>

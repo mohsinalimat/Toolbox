@@ -23,8 +23,7 @@ class BaseViewController: UIViewController {
     
     func rightItemButtonAction(_ button:UIBarButtonItem)
     {
-        print("set btn");
-        let rect = CGRect (x: 0, y: 0, width: 480, height: 480)
+        let rect = CGRect (x: 0, y: 0, width: 480, height: 320)
         let vc :SetterViewController = SetterViewController.init(nibName: "SetterViewController", bundle: nil)
         
         let nav:BaseNavigationController = BaseNavigationController(rootViewController:vc)

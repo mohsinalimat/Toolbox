@@ -59,7 +59,7 @@ class BaseTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
-            v.backgroundColor = kTableviewHeadViewBgColor
+            v.backgroundColor = kTableview_headView_bgColor
             return v
             }()
     }

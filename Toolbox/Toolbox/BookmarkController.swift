@@ -38,7 +38,7 @@ class BookmarkController: BaseViewControllerWithTable {
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No bookmark.")
+            return getCellForNodata(tableView, info: "NO BOOKMARK")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "BookmarksCellReuseIdentifier", for: indexPath) as! BookmarksCell

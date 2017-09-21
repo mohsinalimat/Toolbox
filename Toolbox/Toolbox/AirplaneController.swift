@@ -22,6 +22,8 @@ class AirplaneController:BaseViewControllerWithTable {
     var currentFieldKey:String! = "Registry"
     var currentFieldName:String! = "airplaneRegistry"
     
+    var openedCellIndex:Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dataArray = dataArray as! [AirplaneModel]
@@ -257,24 +259,43 @@ class AirplaneController:BaseViewControllerWithTable {
             
             if self.selectedDataArray.index(of: model.airplaneId ) != nil || ((kSelectedAirplane?.airplaneId == model.airplaneId) && (dataArray[indexPath.row + 1] is Int)) {
                 cell.cellSelectedInit()
+            }else{
+                cell._init()
             }
             
             
-            cell.clickCellBtnAction = {
+            cell.clickCellBtnAction = {[weak self]
                 isSelected in
+                guard let strongSelf = self else {
+                    return
+                }
                 if isSelected{
-                    self.dataArray.insert(0, at: indexPath.row + 1)
+                    /////
+                    /*if strongSelf.selectedDataArray.count != 0{
+                        strongSelf.selectedDataArray.removeAll()//每次只有一个展开
+                        strongSelf.dataArray.remove(at: strongSelf.openedCellIndex + 1)
+                    }
+
+                    if strongSelf.openedCellIndex >= indexPath.row{
+                        strongSelf.dataArray.insert(0, at: indexPath.row + 1)
+                    }else{
+                        strongSelf.dataArray.insert(0, at: indexPath.row)
+                    }
+                    
+                    strongSelf.openedCellIndex = indexPath.row
+                    */
+                    
+                    strongSelf.dataArray.insert(0, at: indexPath.row + 1)
                     //保存唯一标示airplaneId
-                    self.selectedDataArray.append(model.airplaneId)
-//                    self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
+                    strongSelf.selectedDataArray.append(model.airplaneId)
+                    //self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 }
                 else{
-                    self.dataArray.remove(at: indexPath.row + 1)
-                    self.selectedDataArray.remove(at: self.selectedDataArray.index(of: model.airplaneId)!)
-                    
+                    strongSelf.dataArray.remove(at: indexPath.row + 1)
+                    strongSelf.selectedDataArray.remove(at: strongSelf.selectedDataArray.index(of: model.airplaneId)!)
                 }
                 
-                self.tableview?.reloadData()
+                strongSelf.tableview?.reloadData()
             }
             
             return cell

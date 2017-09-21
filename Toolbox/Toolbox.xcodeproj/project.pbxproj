@@ -54,6 +54,7 @@
 		A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */; };
 		A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B71D061F0B36570054CA04 /* BookmarksCell.swift */; };
 		A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1B71D071F0B36570054CA04 /* BookmarksCell.xib */; };
+		A1B7A5FA1F7200B9008412AD /* themeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B7A5F91F7200B9008412AD /* themeColor.swift */; };
 		A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */ = {isa = PBXBuildFile; fileRef = A1B7FB171F0F8912009D6CA9 /* apList.json */; };
 		A1B928DC1F4E71F600E45EBE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B928DB1F4E71F600E45EBE /* WebKit.framework */; };
 		A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */; };
@@ -184,6 +185,7 @@
 		A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceManager.swift; sourceTree = "<group>"; };
 		A1B71D061F0B36570054CA04 /* BookmarksCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksCell.swift; sourceTree = "<group>"; };
 		A1B71D071F0B36570054CA04 /* BookmarksCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksCell.xib; sourceTree = "<group>"; };
+		A1B7A5F91F7200B9008412AD /* themeColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = themeColor.swift; sourceTree = "<group>"; };
 		A1B7FB171F0F8912009D6CA9 /* apList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = apList.json; sourceTree = "<group>"; };
 		A1B928DB1F4E71F600E45EBE /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		A1BBCF491F2ACBFF007374B7 /* bookmarkBtnIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmarkBtnIcon.png; path = "1-icon/bookmarkBtnIcon.png"; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 				A1ED124D1F56B35C00FCD259 /* hud */,
 				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
+				A1B7A5F91F7200B9008412AD /* themeColor.swift */,
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 				A1ED124E1F56B53900FCD259 /* NetHelper.swift */,
 				A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */,
@@ -783,6 +786,7 @@
 				A1B71D081F0B36570054CA04 /* BookmarksCell.swift in Sources */,
 				A1CAEA5E1F5E6C4500CE751B /* DownloadViewController.swift in Sources */,
 				A1C1BD5F1F00A0AA002FC0E0 /* ViewController.swift in Sources */,
+				A1B7A5FA1F7200B9008412AD /* themeColor.swift in Sources */,
 				A1C1BD931F00A718002FC0E0 /* constant.swift in Sources */,
 				A17792671F2F3771009782F6 /* HUD.swift in Sources */,
 				A1C1BD8E1F00A5E0002FC0E0 /* BaseViewController.swift in Sources */,

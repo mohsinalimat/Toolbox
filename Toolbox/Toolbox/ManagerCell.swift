@@ -34,16 +34,7 @@ class ManagerCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
-        bgView.backgroundColor = UIColor.white
-        layer.borderWidth = 0.5
-        openButton.isSelected = false
-        
-        stitleLable.textColor = UIColor.black
-        sownerLable.textColor = UIColor.black
-        smodelLable.textColor = UIColor.black
-        sdocLable.textColor = UIColor.black
-        srevLable.textColor = UIColor.black
-        sdateLable.textColor = UIColor.black
+        _init()
     }
     
     func fillCell(model:PublicationsModel,title:String = "airplaneRegistry") {
@@ -64,33 +55,38 @@ class ManagerCell: UITableViewCell {
         
     }
 
-    
+    func _init() {
+        bgView.backgroundColor = UIColor.white
+        layer.borderWidth = 0.5
+        openButton.isSelected = false
+        
+        let textColor = UIColor.black
+        stitleLable.textColor = textColor
+        sownerLable.textColor = textColor
+        smodelLable.textColor = textColor
+        sdocLable.textColor = textColor
+        srevLable.textColor = textColor
+        sdateLable.textColor = textColor
+ 
+    }
     
     func cellIsSelected(_ selected : Bool) {
         if selected {
-            bgView.backgroundColor = UIColor (red: 43/255.0, green: 123/255.0, blue: 181/255.0, alpha: 0.7)
+            //bgView.backgroundColor = kAirplaneCell_head_selected_color //UIColor (red: 43/255.0, green: 123/255.0, blue: 181/255.0, alpha: 0.7)
             layer.borderWidth = 0
             openButton.isSelected = true
             
-            stitleLable.textColor = UIColor.white
-            sownerLable.textColor = UIColor.white
-            smodelLable.textColor = UIColor.white
-            sdocLable.textColor = UIColor.white
-            srevLable.textColor = UIColor.white
-            sdateLable.textColor = UIColor.white
+            let textColor = kAirplaneCell_head_selected_color
+            stitleLable.textColor = textColor
+            sownerLable.textColor = textColor
+            smodelLable.textColor = textColor
+            sdocLable.textColor = textColor
+            srevLable.textColor = textColor
+            sdateLable.textColor = textColor
         }
         else
         {
-            bgView.backgroundColor = UIColor.white
-            layer.borderWidth = 0.5
-            openButton.isSelected = false
-            
-            stitleLable.textColor = UIColor.black
-            sownerLable.textColor = UIColor.black
-            smodelLable.textColor = UIColor.black
-            sdocLable.textColor = UIColor.black
-            srevLable.textColor = UIColor.black
-            sdateLable.textColor = UIColor.black
+            _init()
         }
     }
 

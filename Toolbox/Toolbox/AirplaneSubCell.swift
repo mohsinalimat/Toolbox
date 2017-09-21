@@ -30,17 +30,17 @@ class AirplaneSubCell: UITableViewCell {
         ];
 
     var keyArray = ["Tail","Registry","MSN","Variable","CEC","Line"]
-    
-
-    
-    
+ 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        backgroundColor = kAirplaneSubCell_bg_color
         
-        //backgroundColor = UIColor(red: 167/255.0, green: 191/255.0, blue: 206/255.0, alpha: 1)
-        backgroundColor = kAirplaneTableSubCellbgColor
-        
+        let valueLableArr:[UILabel] = [valueLable_1,valueLable_2,valueLable_3,valueLable_4,valueLable_5]
+        for index in 0..<5 {
+            let valueL = valueLableArr[index]
+            valueL.textColor = kAirplaneSubCell_text_color
+        }
     }
 
     override func prepareForReuse() {

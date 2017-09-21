@@ -31,8 +31,7 @@ class AirplaneCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         layer.borderColor = UIColor (red: 212/255.0, green: 212/255.0, blue: 212/255.0, alpha: 0.8).cgColor
-        layer.borderWidth = 0.5
-        
+        _init()
     }
 
     
@@ -47,19 +46,26 @@ class AirplaneCell: UITableViewCell {
     override func prepareForReuse() {
         cellBtn.isSelected = false
         backgroundColor = UIColor.white
-        registryNameLable.textColor = UIColor.black
-        majormodelLable.textColor = UIColor.darkGray
-        
-        imgview.image = UIImage (named: "plane_lt_blue")
+
+        _init()
+
+    }
+    
+    func _init() {
+        registryNameLable.textColor = kAirplaneCell_head_normal_color
+        majormodelLable.textColor = kAirplaneCell_subhead_normal_color
+        imgview.image = UIImage (named: "plane_drk_gry")
+        cellBtn.isSelected = false
         layer.borderWidth = 0.5
     }
     
+    
     func cellSelectedInit(){
         //self.backgroundColor = cellSelectBgColor
-        registryNameLable.textColor = kAirplaneTableCellSelectedColor
-        majormodelLable.textColor = kAirplaneTableCellSelectedColor
+        registryNameLable.textColor = kAirplaneCell_head_selected_color
+        majormodelLable.textColor = kAirplaneCell_head_selected_color
         
-        imgview.image = UIImage (named: "plane_drk_gry")
+        imgview.image = UIImage (named: "plane_lt_blue")
         cellBtn.isSelected = true
         layer.borderWidth = 0
     }

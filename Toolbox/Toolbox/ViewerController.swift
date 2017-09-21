@@ -82,7 +82,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     //提示无内容
     func getTapNodata() {
         let lab = UILabel.init(frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 70))
-        lab.text = "No airplane selected. please select an airplane first."
+        lab.text = "NO TOC SELECTED"
         lab.textAlignment = .center
         lab.font = UIFont.boldSystemFont(ofSize: 15)
         lab.tag = 100
@@ -97,9 +97,10 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))//14 * 16
         btn.setImage(UIImage (named: "bookmarkOff"), for: .normal)
-        btn.setImage(UIImage (named: "bookmarkOn"), for: .selected)
+        btn.setImage(UIImage (named: "bookmark_on"), for: .selected)
         btn.addTarget(self, action: #selector(buttonClickedAction(_:)), for: .touchUpInside)
         btn.tag = 100
+        
         let ritem = UIBarButtonItem (customView: btn)
         itemArr?.append(ritem)
         navigationItem.rightBarButtonItems = itemArr

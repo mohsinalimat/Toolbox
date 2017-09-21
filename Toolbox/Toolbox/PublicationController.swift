@@ -90,7 +90,7 @@ class PublicationController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+            return getCellForNodata(tableView, info: "NO AIRPLANE SELECTED")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell

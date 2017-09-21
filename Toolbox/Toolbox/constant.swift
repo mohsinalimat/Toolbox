@@ -11,20 +11,6 @@ import UIKit
 
 let kBartintColor =  UIColor (red: 54/255.0, green:  54/255.0, blue:  54/255.0, alpha: 1)
 //let kTableviewHeadViewBgColor = UIColor(red: 84/255.0, green:  150/255.0, blue:  194/255.0, alpha: 1)
-let kColorHex = 0x8bb9fc
-func UIColorFromHex(rgbValue: UInt) -> UIColor {
-    return UIColor(
-        red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-        green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-        blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-        alpha: CGFloat(1.0)
-    )
-}
-
-let kTableviewHeadViewBgColor = UIColorFromHex(rgbValue: UInt(kColorHex))
-let kAirplaneTableCellDefaultColor = UIColorFromHex(rgbValue: UInt(0x333333))
-let kAirplaneTableCellSelectedColor = UIColorFromHex(rgbValue: UInt(0x2765c8))
-let kAirplaneTableSubCellbgColor = UIColorFromHex(rgbValue: UInt(0xf1f1f2))
 
 let kTableviewBackgroundColor = UIColor.init(colorLiteralRed: 231/255.0, green: 231/255.0, blue: 231/255.0, alpha: 1)
 let kCellDefaultBgColor = UIColor (red: 236/255.0, green: 236/255.0, blue: 236/255.0, alpha: 1)

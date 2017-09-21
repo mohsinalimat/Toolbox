@@ -329,7 +329,7 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No publication on the deveice.")
+            return getCellForNodata(tableView, info: "NO PUBLICATIONS ON DEVICE")
         }
         
         let value = dataArray[indexPath.row]

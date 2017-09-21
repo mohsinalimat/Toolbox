@@ -41,7 +41,7 @@ class PublicationCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        initStatus()
+        _init()
     }
 
     func isSelected(_ selected : Bool) {
@@ -53,29 +53,18 @@ class PublicationCell: UITableViewCell {
          }
          else
          {
-         initStatus()
+             _init()
          }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
-        /*
-        if selected {
-            headLable.backgroundColor = UIColor (red: 25/255.0, green: 60/255.0, blue: 101/255.0, alpha: 1)
-            contentBg.backgroundColor = UIColor.white
-            contentTitleLable.textColor = UIColor (red: 42/255.0, green: 78/255.0, blue: 115/255.0, alpha: 1)
-            contentSubTitleLable.textColor = UIColor (red: 42/255.0, green: 78/255.0, blue: 115/255.0, alpha: 1)
-        }
-        else
-        {
-            initStatus()
-        }
-       */
+
         super.setSelected(selected, animated: animated)
     }
     
     
     //初始状态
-    private func initStatus(){
+    private func _init(){
         headLable.backgroundColor = UIColor (red: 47/255.0, green: 125/255.0, blue: 178/255.0, alpha: 1)
         contentBg.backgroundColor = kCellDefaultBgColor
         contentTitleLable.textColor = UIColor.black

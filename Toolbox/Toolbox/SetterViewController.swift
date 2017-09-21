@@ -24,7 +24,7 @@ class SetterViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        title = "Setter"
+        title = "关于"
         
 //        print(Bundle.main.infoDictionary?["CFBundleShortVersionString"])
     }
@@ -76,7 +76,9 @@ class SetterViewController: UITableViewController {
             
         }
         cell?.detailTextLabel?.text = detailStr
-        
+        cell?.textLabel?.font = UIFont.systemFont(ofSize: 15)
+        cell?.detailTextLabel?.font = UIFont.systemFont(ofSize: 15)
+        cell?.selectionStyle = .none
         
         return cell!
     }

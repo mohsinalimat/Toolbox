@@ -47,7 +47,7 @@ class HistoryController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No history data.")
+            return getCellForNodata(tableView, info: "NO DATA")
         }
         
         let m = dataArray[indexPath.row] as! BookmarkModel
@@ -105,7 +105,7 @@ class HistoryController: BaseViewControllerWithTable {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
-            v.backgroundColor = kTableviewHeadViewBgColor
+            v.backgroundColor = kTableview_headView_bgColor
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)

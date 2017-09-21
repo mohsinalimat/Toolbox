@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="424" height="70"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <frame key="frameInset" width="424" height="70"/>
+                <frame key="frameInset" width="424" height="69"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KyH-ld-9MB">
@@ -39,7 +39,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(A320-A320)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9ad-kV-fb8">
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="0.074509803921568626" green="0.18823529411764706" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -61,12 +61,12 @@
                 <outlet property="majormodelLable" destination="9ad-kV-fb8" id="SRh-Cj-lR7"/>
                 <outlet property="registryNameLable" destination="Ggs-EY-WqT" id="ScB-hM-7ES"/>
             </connections>
-            <point key="canvasLocation" x="-85" y="46.5"/>
+            <point key="canvasLocation" x="-359" y="50"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="cheveron-cellOpen_dark" width="21" height="13"/>
         <image name="cheveron-normal_gry" width="21" height="13"/>
-        <image name="plane_lt_blue" width="27" height="25"/>
+        <image name="plane_lt_blue" width="20" height="20"/>
     </resources>
 </document>

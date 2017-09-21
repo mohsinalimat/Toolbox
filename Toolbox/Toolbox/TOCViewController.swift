@@ -58,7 +58,7 @@ class TOCViewController: BaseViewControllerWithTable {
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No airplane selected. please select an airplane first.")
+            return getCellForNodata(tableView, info: "NO PUBLICATION SELECTED")
         }
         
         if indexPath.row == 0 {

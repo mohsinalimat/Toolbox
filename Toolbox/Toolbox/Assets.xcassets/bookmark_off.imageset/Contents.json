@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "plane_lt_blue.png",
+      "filename" : "bookmark_off.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "cell_plane_selected.png",
+      "filename" : "bookmark_off@2x.png",
       "scale" : "2x"
     },
     {
