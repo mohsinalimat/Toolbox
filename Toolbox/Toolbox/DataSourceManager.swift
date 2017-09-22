@@ -9,10 +9,11 @@
 import UIKit
 import Alamofire
 
-protocol DownloadCompletedDelegate : NSObjectProtocol {
+protocol DSManagerDelegate : NSObjectProtocol {
+
+    func ds_downloadTotalFilesCompleted(_ withurl:String)
     
-    func downloadTotalFilesCompleted(_ withurl:String)
-    
+    func ds_hasCheckedUpdate()
 }
 
 enum DataQueueType {
@@ -30,17 +31,16 @@ class DataSourceManager: NSObject {
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false //正在下载
-
-    let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
-    let kPlistinfo_path = LibraryPath.appending("/Application data")
-    let kDownload_queue_path:String
+    var ds_startupdating:Bool = false //开始一次更新操作
+    
+    private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
+    private let kPlistinfo_path = LibraryPath.appending("/Application data")
+    private let kDownload_queue_path:String
     let kUnzip_queue_path:String
     
-    weak var delegate: DownloadCompletedDelegate?
-    private var is_thelast:Bool = false
+    weak var delegate: DSManagerDelegate?
     let _opreationqueue:OperationQueue
-    
-    let _dispatch_queue:DispatchQueue
+    private let _dispatch_queue:DispatchQueue
     
     override init() {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
@@ -52,8 +52,7 @@ class DataSourceManager: NSObject {
         _opreationqueue.maxConcurrentOperationCount = 1
         _opreationqueue.isSuspended = true
         _opreationqueue.qualityOfService = .utility
-        
-        
+  
         _dispatch_queue = DispatchQueue.init(label: "com.gener-tech.download")
     }
     
@@ -118,7 +117,7 @@ class DataSourceManager: NSObject {
                 cnt = cnt + 1
                 if cnt == kDataSourceLocations.count {
                     print("检测更新完成！")
-                    strongSelf.startDownload()
+                    //strongSelf.startDownload()
                 }
             })
             
@@ -129,7 +128,6 @@ class DataSourceManager: NSObject {
       guard info.keys.count == 3 else {return}
       if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil){
         guard let server_syncArr = info["sync_manifest.json"] as?[[String:String]] else {return}
-        
         if !ret.isEmpty && ret.count > 0{
             let m = ret.first as! DataSourceModel
             guard let syncjsonStr = m.sync_manifest else{return}
@@ -143,11 +141,10 @@ class DataSourceManager: NSObject {
                     for ldic in local_arr {
                        guard let doc_number_l = ldic["doc_number"] else{return}
                        guard let doc_version_l = ldic["revision_number"] else{return}
-                       if doc_number == doc_number_l && doc_version == doc_version_l {///....
+                       if doc_number == doc_number_l && doc_version > doc_version_l {///比较版本号
                         //添加到下载
                         let zip:String! = sdic["file_loc"]
                         let fileurl = url + "\(zip!)"
-                        
                         updateDownloadQueueWith(key:url,filePath: fileurl,datatype:.download)
                         //更新状态
                         if m.update_status != 1 {
@@ -241,9 +238,14 @@ class DataSourceManager: NSObject {
         objc_sync_exit(self)
     }
 
+    //MARK:
     func startDownload() {
         let plist = kDownload_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
+        guard  (downloadfiles != nil) && ((downloadfiles?.count)! > 0) else {//已是最新
+            self.delegate?.ds_hasCheckedUpdate();return
+        }
+        
         let semaphore = DispatchSemaphore.init(value: 2)
         //下载单个文件
         func _downloadFileFrom(path:URL?) {
@@ -270,7 +272,6 @@ class DataSourceManager: NSObject {
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
                     let zip = des?.lastPathComponent
-                    
                     print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
                     strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
@@ -284,11 +285,9 @@ class DataSourceManager: NSObject {
                             ret.update_status = 3
                             ret.current_files = 0
                             ret.total_files = 0
-                            
-                            DataSourceManager.default.ds_isdownloading = false//...
-                            
                             ///一个数据源下载完成
-                            strongSelf.delegate?.downloadTotalFilesCompleted(base!.absoluteString)
+                            strongSelf.delegate?.ds_downloadTotalFilesCompleted(base!.absoluteString)
+                            strongSelf.ds_isdownloading = false
                             semaphore.signal()
                         }
                         
@@ -303,7 +302,7 @@ class DataSourceManager: NSObject {
             
         }
         
-
+        DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
         if let downloadfiles = downloadfiles {//多个数据源地址
             for (key,value) in downloadfiles {
                 semaphore.wait()
@@ -325,8 +324,7 @@ class DataSourceManager: NSObject {
                     _downloadFileFrom(path: u)
                 }
             }//d
-        
-            print("")
+
         }
 
     }
@@ -362,6 +360,7 @@ class DataSourceManager: NSObject {
     }
     
     
+    //解压队列是否为空
     func unzipQueueIsEmpty() -> Bool {
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: kUnzip_queue_path) as? [String:[String]]
         guard let filesDic = downloadfiles else{

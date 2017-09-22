@@ -22,6 +22,7 @@
 		A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648331F04C21E002D088C /* Default-Landscape~ipad.png */; };
 		A10648421F04C21E002D088C /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648341F04C21E002D088C /* Default-Portrait@2x~ipad.png */; };
 		A10648431F04C21E002D088C /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A10648351F04C21E002D088C /* Default-Portrait~ipad.png */; };
+		A109A4371F74E9B400528B4F /* DS_Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A109A4361F74E9B400528B4F /* DS_Delegate.swift */; };
 		A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */; };
 		A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */; };
 		A11058231F5540B900B0D283 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A11058221F5540B700B0D283 /* Settings.bundle */; };
@@ -151,6 +152,7 @@
 		A10648331F04C21E002D088C /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		A10648341F04C21E002D088C /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		A10648351F04C21E002D088C /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		A109A4361F74E9B400528B4F /* DS_Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DS_Delegate.swift; sourceTree = "<group>"; };
 		A10A87341F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CoreDataModel+CoreDataClass.swift"; path = "../CoreDataModel+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A10A87351F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CoreDataModel+CoreDataProperties.swift"; path = "../CoreDataModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A11058221F5540B700B0D283 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				A136F11B1F1322DD00349572 /* Toolbox-Bridging-Header.h */,
 				A1ED124E1F56B53900FCD259 /* NetHelper.swift */,
 				A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */,
+				A109A4361F74E9B400528B4F /* DS_Delegate.swift */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -813,6 +816,7 @@
 				A1C1BDA01F00ACC9002FC0E0 /* BookmarkController.swift in Sources */,
 				A1C1BD5D1F00A0AA002FC0E0 /* AppDelegate.swift in Sources */,
 				A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */,
+				A109A4371F74E9B400528B4F /* DS_Delegate.swift in Sources */,
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
 				A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,

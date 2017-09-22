@@ -121,7 +121,7 @@ class DownloadViewController: BaseViewControllerWithTable {
         tableview?.register(UINib.init(nibName: "DownloadCell", bundle: nil), forCellReuseIdentifier: "DownloadCellReuseIdentifierId")
 
         //checkupdatebtn
-        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 30))
+        let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 40))
         checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
         checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
         checkupdatebtn.setTitle("检测更新", for: .normal)
@@ -154,10 +154,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     
     func checkUpdateBtn() {
         NotificationCenter.default.post(name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
-        
         self.dismiss(animated: false, completion: nil)
-        
-        //DataSourceManager.default.checkupdateFromServer()
     }
     
     

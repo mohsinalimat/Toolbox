@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
+class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
 
     var selectedDataArray = [String]()
     var selectButton : UIButton?
@@ -25,6 +25,8 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     
     var ds_isbusying:Bool = false
     
+    var _update_btn:UIButton?
+    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +40,13 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
        
+        if let btn = _update_btn {
+            btn.isSelected = DataSourceManager.default.ds_startupdating
+        }
+        
+        
         //...检测更新
-        UNZIPFile.default.installBook()
+        //UNZIPFile.default.installBook()
         
         /*
          if UNZIPFile.hasBookNeedUpdate() {
@@ -51,15 +58,14 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         
     }
     
-    //MARK:- DownloadCompletedDelegate
-    func downloadTotalFilesCompleted(_ withurl: String) {
+    //MARK:- DSManagerDelegate
+    func ds_downloadTotalFilesCompleted(_ withurl: String) {
         UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
             DispatchQueue.main.async {
                 print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
                 let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
                 let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
                     ////
-                    self.ds_isbusying = false
                     UNZIPFile.default.update(url:withurl)
                 })
                 
@@ -71,14 +77,23 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         }
     }
     
+    func ds_hasCheckedUpdate() {
+        self.ds_isbusying = false
+        DispatchQueue.main.async {
+            HUD.show(info: "已是最新")
+        }
+        print("NO NEED UPDATE")
+    }
+    
+    
     //MARK:- navigation Item
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
         btn.setImage(UIImage (named: "green_update_button"), for: .normal)//23.23 green_update_button,inprogress_update_button
-        btn.setImage(UIImage (named: "green_update_button"), for: .highlighted)
+        btn.setImage(UIImage (named: "inprogress_update_button"), for: .selected)
         btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
-        
+        _update_btn = btn
 
         let ritem = UIBarButtonItem (customView: btn)
         itemArr?.append(ritem)
@@ -129,38 +144,33 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         //UpdateBookViewController
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate(_:)), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
         
         let zips  = UNZIPFile.default
         zips.addObserver(self, forKeyPath: "update_total_filescnt", options: .new, context: nil)
         
+        DataSourceManager.default.addObserver(self, forKeyPath: "ds_startupdating", options: .new, context: nil)
+        
     }
     
-    /*
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "update_total_filescnt"{
-            let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
-            let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
-            
-            vc.view.frame = rect
-            vc.modalPresentationStyle = .formSheet
-            vc.preferredContentSize = rect.size
-            
-            if let num = change?[NSKeyValueChangeKey.newKey] {
-                vc.totalBookssnumber = num as! Int
+        DispatchQueue.main.async {
+            if keyPath == "ds_startupdating"{
+                if let btn = self._update_btn {
+                    btn.isSelected = DataSourceManager.default.ds_startupdating
+                }
             }
-            
-            self.present(vc, animated: false, completion: nil)
+
         }
         
-    }*/
+    }
     
     //检测服务器是否更新
-    func checkdsUpdate(_ noti:Notification) {
+    func checkdsUpdate() {
         DispatchQueue.global().async {
             if !DataSourceManager.default.ds_isdownloading && !self.ds_isbusying{
                 self.ds_isbusying = true
-                
                 let ds = DataSourceManager.default
                 ds.delegate = self
                 ds.checkupdateFromServer()
@@ -178,8 +188,8 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
     
     func allbookupdatecomplete(_ noti:Notification)  {
         ///手册更新完毕，刷新列表
-        //...更新DS状态
-        
+        self.ds_isbusying = false
+        DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
         HUD.show(successInfo: "更新完成")
         loadData()
     }
@@ -188,15 +198,13 @@ class ManagerController: BaseViewControllerWithTable ,DownloadCompletedDelegate{
         print("+++++++++++ startParsebook");//return
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
         let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
-        
         vc.view.frame = rect
         vc.modalPresentationStyle = .formSheet
         vc.preferredContentSize = rect.size
         
         if let num = noti.userInfo?["filesnumber"] {
             vc.totalBookssnumber = num as! Int
-        }
-        
+        }        
         self.present(vc, animated: false, completion: nil)
     }
     
