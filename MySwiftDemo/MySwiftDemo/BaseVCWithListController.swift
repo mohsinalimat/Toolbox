@@ -57,6 +57,10 @@ class BaseVCWithListController: BaseViewController ,UITableViewDelegate,UITableV
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! MyTableViewCell
         
         cell.title.text = dataArray[indexPath.row] as? String
+        cell.tintColor = UIColor.red
+        //cell.imageView?.image = UIImage (named: "")
+        
+        cell.selectedBackgroundView?.backgroundColor = UIColor.white
         
         return cell
     }
@@ -71,7 +75,7 @@ class BaseVCWithListController: BaseViewController ,UITableViewDelegate,UITableV
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 30
+        return 0
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -85,14 +89,20 @@ class BaseVCWithListController: BaseViewController ,UITableViewDelegate,UITableV
         
     }
     
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle(rawValue: 3)!
+    }
+    
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        return
         let offset = scrollView.contentOffset.y
         if offset > 64{
             self.navigationController?.navigationBar.setBackgroundImage(imageWithColor(UIColor.white.withAlphaComponent(1)), for: UIBarMetrics.default)
             self.navigationController?.navigationBar.isTranslucent = false
             self.navigationController?.navigationBar.shadowImage = nil
             
-            scrollView.frame =  CGRect(x: 0, y: -64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50 )
+            scrollView.frame =  CGRect(x: 0, y: -64, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 0 )
             
             navigationItem.title = itemTitle!
         }else
@@ -101,7 +111,7 @@ class BaseVCWithListController: BaseViewController ,UITableViewDelegate,UITableV
             self.navigationController?.navigationBar.isTranslucent = true
             self.navigationController?.navigationBar.shadowImage = UIImage.init()
             
-            scrollView.frame =  CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 50)
+            scrollView.frame =  CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 64)
             
             navigationItem.title = nil
         }
