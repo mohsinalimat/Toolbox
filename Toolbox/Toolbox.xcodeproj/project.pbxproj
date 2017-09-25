@@ -46,6 +46,8 @@
 		A17C81091F30589400EF8B9D /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81051F30589400EF8B9D /* success.png */; };
 		A17C810A1F30589400EF8B9D /* success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A17C81061F30589400EF8B9D /* success@2x.png */; };
 		A181511F1F500D2E00A74779 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = A181511E1F500D2E00A74779 /* ajax_handler.js */; };
+		A18288C21F78F875001786D3 /* trash_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A18288C01F78F875001786D3 /* trash_icon.png */; };
+		A18288C31F78F875001786D3 /* trash_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A18288C11F78F875001786D3 /* trash_icon@2x.png */; };
 		A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */; };
 		A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */; };
 		A1A19CA61F57DE08007BF3AD /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1A19CA51F57DE08007BF3AD /* test.txt */; };
@@ -179,6 +181,8 @@
 		A17C81051F30589400EF8B9D /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
 		A17C81061F30589400EF8B9D /* success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "success@2x.png"; sourceTree = "<group>"; };
 		A181511E1F500D2E00A74779 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
+		A18288C01F78F875001786D3 /* trash_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash_icon.png; sourceTree = "<group>"; };
+		A18288C11F78F875001786D3 /* trash_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash_icon@2x.png"; sourceTree = "<group>"; };
 		A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnzipInfoViewController.swift; sourceTree = "<group>"; };
 		A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnzipInfoViewController.xib; sourceTree = "<group>"; };
 		A1A19CA51F57DE08007BF3AD /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
@@ -348,6 +352,8 @@
 				A1BBCF4A1F2ACBFF007374B7 /* bookmarkOff.png */,
 				A1BBCF4B1F2ACBFF007374B7 /* bookmarkOff@2x.png */,
 				A1BBCF4C1F2ACBFF007374B7 /* bookmarkOffHighlighted.png */,
+				A18288C01F78F875001786D3 /* trash_icon.png */,
+				A18288C11F78F875001786D3 /* trash_icon@2x.png */,
 				A1BBCF4D1F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png */,
 				A1BBCF4F1F2ACBFF007374B7 /* bookmarkOn@2x.png */,
 				A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */,
@@ -673,6 +679,7 @@
 				A1BBCF611F2ACFDF007374B7 /* hashout.png in Resources */,
 				A1BBCF641F2ACFDF007374B7 /* header_band@2x.png in Resources */,
 				A1BBCF601F2ACFDF007374B7 /* hash_row.png in Resources */,
+				A18288C21F78F875001786D3 /* trash_icon.png in Resources */,
 				A106483A1F04C21E002D088C /* AppIcon-B2C50x50@2x~ipad.png in Resources */,
 				A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */,
 				A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */,
@@ -680,6 +687,7 @@
 				A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */,
 				A181511F1F500D2E00A74779 /* ajax_handler.js in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
+				A18288C31F78F875001786D3 /* trash_icon@2x.png in Resources */,
 				A16C1A5C1F3D9BE900D961C9 /* UpdateBookViewController.xib in Resources */,
 				A1BBCF581F2ACBFF007374B7 /* bookmarkOn@2x.png in Resources */,
 				A10648391F04C21E002D088C /* AppIcon-B2C40x40~ipad.png in Resources */,

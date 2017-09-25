@@ -117,7 +117,7 @@ class DataSourceManager: NSObject {
                 cnt = cnt + 1
                 if cnt == kDataSourceLocations.count {
                     print("检测更新完成！")
-                    //strongSelf.startDownload()
+                    strongSelf.startDownload()
                 }
             })
             

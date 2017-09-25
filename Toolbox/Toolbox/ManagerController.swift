@@ -11,7 +11,10 @@ import UIKit
 class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
 
     var selectedDataArray = [String]()
+    var selectedInEditModelArr = [String]()//编辑模式下选中
+    
     var selectButton : UIButton?
+    var deleteButton:UIButton?
     
     var popButtonWidth = 200
     var popViewselectedIndex:Int?
@@ -109,18 +112,47 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        
-        return
-        
         if !editing {
             self.editButtonItem.title = "Edit"
             tableview?.isEditing = false
+            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49)
+            selectedInEditModelArr.removeAll()
+            view.viewWithTag(201)?.removeFromSuperview()
         }else{
             self.editButtonItem.title = "Cancle"
             tableview?.isEditing = true
+            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49 - 60)
+            
+            let deleteBtnBg = UIView(frame: CGRect (x: 0, y: (tableview?.frame.maxY)!, width: kCurrentScreenWidth, height: 60))
+            deleteBtnBg.tag = 201
+            view.addSubview(deleteBtnBg)
+            let deleteBtn = UIButton (frame: CGRect (x: (deleteBtnBg.frame.width - 350) / 2.0, y: (deleteBtnBg.frame.height - 40) / 2.0, width: 350, height: 40))
+            deleteBtn.setBackgroundImage(UIImage (named: "deletePub"), for: .normal)
+            
+            deleteBtn.setImage(UIImage (named: "trash_icon"), for: .normal)
+            deleteBtn.setTitle("Delete", for: .normal)
+            deleteBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+            deleteBtn.isEnabled = false
+            deleteBtn.addTarget(self, action: #selector(deleteBtnClick(_ :)), for: .touchUpInside)
+            deleteBtnBg.addSubview(deleteBtn)
+            deleteButton = deleteBtn
+            loadData()
         }
     }
     
+    func  deleteBtnClick (_ btn:UIButton)  {
+        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+        let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { (action) in
+            ////
+
+        })
+        
+        let ac = UIAlertController.init(title: "提示", message: "删除后会清除所有相关数据,确定要删除?", preferredStyle: .alert)
+        ac.addAction(action_1)
+        ac.addAction(action_2)
+        self.present(ac, animated: false, completion: nil)
+
+    }
     
     func downloadBtnClicked(_ btn:UIButton){
         let vc = DownloadViewController.init()
@@ -336,8 +368,7 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
     
     
     //MARK:
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
         if dataArray.count == 0 {
             return getCellForNodata(tableView, info: "NO PUBLICATIONS ON DEVICE")
         }
@@ -359,12 +390,11 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
             cell.selectionStyle = .none
             
             cell.fillCell(model: model)
-            
-//            if self.selectedDataArray.index(of: model.book_uuid ) != nil {
-//                cell.cellSelectedInit()
-//            }
+
             
             cell.cellIsSelected(self.selectedDataArray.index(of: model.book_uuid ) != nil)
+            
+            cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid))
             
             return cell
         }
@@ -389,35 +419,45 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
-        guard dataArray[indexPath.row] as? Int != 0 else {
+       guard dataArray[indexPath.row] as? Int != 0 else { return }
+
+       let value = dataArray[indexPath.row] as! PublicationsModel
+        if self.isEditing {
+            let s = value.book_uuid
+            if let s = s{
+                if self.selectedInEditModelArr.contains(s){
+                    self.selectedInEditModelArr.remove(at: self.selectedInEditModelArr.index(of: s)!)
+                }
+                else{
+                    self.selectedInEditModelArr.append(s)
+                }
+
+            }
+            self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
+            self.deleteButton?.setTitle("Delete" + (selectedInEditModelArr.count > 0 ? " (\(selectedInEditModelArr.count))":""), for: .normal)
+            self.tableview?.reloadData()
             return
         }
-
-     let value = dataArray[indexPath.row] as! PublicationsModel
         
        if self.selectedDataArray.index(of: value.book_uuid) != nil {
             selectedDataArray.remove(at: selectedDataArray.index(of: value.book_uuid)!)
             self.dataArray.remove(at: indexPath.row + 1)
-        }
-        
-        else
+        }else
        {
          selectedDataArray.append(value.book_uuid)
          self.dataArray.insert(0, at: indexPath.row + 1)
         }
-       
         
         self.tableview?.reloadData()
-        
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    
-    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle(rawValue: 3)!
+    }
     
     
     override func didReceiveMemoryWarning() {
