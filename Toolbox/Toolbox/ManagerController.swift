@@ -204,7 +204,7 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
             if !DataSourceManager.default.ds_isdownloading && !self.ds_isbusying{
                 self.ds_isbusying = true
                 let ds = DataSourceManager.default
-                ds.delegate = self
+                //ds.delegate = self
                 ds.checkupdateFromServer()
             }
 

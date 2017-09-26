@@ -38,7 +38,9 @@ class DataSourceManager: NSObject {
     private let kDownload_queue_path:String
     let kUnzip_queue_path:String
     
-    weak var delegate: DSManagerDelegate?
+    //weak var delegate: DSManagerDelegate?
+    let delegate: DS_Delegate?
+    
     let _opreationqueue:OperationQueue
     private let _dispatch_queue:DispatchQueue
     
@@ -47,6 +49,8 @@ class DataSourceManager: NSObject {
         FILESManager.default.fileExistsAt(path: kPlistinfo_path)
         kDownload_queue_path = kPlistinfo_path.appending("/downloadqueuelist.plist")
         kUnzip_queue_path = kPlistinfo_path.appending("/unzipqueue.plist")
+        
+        delegate = DS_Delegate()
         
         _opreationqueue = OperationQueue.init()
         _opreationqueue.maxConcurrentOperationCount = 1
