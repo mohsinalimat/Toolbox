@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
+class ManagerController: BaseViewControllerWithTable{
 
     var selectedDataArray = [String]()
     var selectedInEditModelArr = [String]()//编辑模式下选中
@@ -62,31 +62,14 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
     }
     
     //MARK:- DSManagerDelegate
-    func ds_downloadTotalFilesCompleted(_ withurl: String) {
-        UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
-            DispatchQueue.main.async {
-                print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
-                let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
-                let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
-                    ////
-                    UNZIPFile.default.update(url:withurl)
-                })
-                
-                let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
-                ac.addAction(action_1)
-                ac.addAction(action_2)
-                self.present(ac, animated: false, completion: nil)
-            }
-        }
-    }
-    
+    /*
     func ds_hasCheckedUpdate() {
         self.ds_isbusying = false
         DispatchQueue.main.async {
             HUD.show(info: "已是最新")
         }
         print("NO NEED UPDATE")
-    }
+    }*/
     
     
     //MARK:- navigation Item
@@ -105,12 +88,14 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
-        
         navigationItem.leftBarButtonItem = self.editButtonItem
-        
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
+        guard dataArray.count > 0 else {
+            return
+        }
+        
         super.setEditing(editing, animated: animated)
         if !editing {
             self.editButtonItem.title = "Edit"
@@ -201,10 +186,10 @@ class ManagerController: BaseViewControllerWithTable ,DSManagerDelegate{
     //检测服务器是否更新
     func checkdsUpdate() {
         DispatchQueue.global().async {
-            if !DataSourceManager.default.ds_isdownloading && !self.ds_isbusying{
-                self.ds_isbusying = true
+            if DataSourceManager.default.ds_startupdating /*&& !self.ds_isbusying*/{
+                //self.ds_isbusying = true
                 let ds = DataSourceManager.default
-                //ds.delegate = self
+                ds.ds_checkupdatemanual = true
                 ds.checkupdateFromServer()
             }
 

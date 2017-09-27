@@ -482,9 +482,11 @@ extension UNZIPFile  {
         for item in zipArr {
             if item.hasSuffix(".zip") {//解压tmp目录
                 let srcpath = path.appending("/\(item)")
-                let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
+                let time = "\(Date().timeIntervalSince1970)"
+                let newpath = ROOTPATH + "/\(time)"
                 guard FILESManager.default.fileExistsAt(path: srcpath,createWhenNotExist: false) else {return}//zip不存在
                 FILESManager.default.fileExistsAt(path: newpath)
+                updateUnzipStatusData(time)
                 
                 SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total)in
                     let progress =  Float(entrynumber) / Float(total)
@@ -515,6 +517,7 @@ extension UNZIPFile  {
                         let u = URL.init(string: srcpath)
                         DataSourceManager.default.updateDownloadQueueWith(key:"\(url)",filePath: "\((u?.lastPathComponent)!)", isAdd: false,datatype:.unzip)
                         FILESManager.default.deleteFileAt(path: srcpath)
+                        self.updateUnzipStatusData(time, isadd: false)
                 })
             }
         }
@@ -582,6 +585,7 @@ extension UNZIPFile  {
     
     func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
         let zipqueue = unzipOperationQueue()
+        UIApplication.shared.isIdleTimerDisabled = true
         
         //从tmp更新
         zipqueue.addOperation({
@@ -597,7 +601,7 @@ extension UNZIPFile  {
         
         zipqueue.addOperation({
             zipqueue.isSuspended = true
-            if DataSourceManager.default.unzipQueueIsEmpty() {
+            if DataSourceManager.default.unzipQueueIsEmpty().0 {
                 handler()
             }
             
@@ -758,7 +762,7 @@ extension UNZIPFile  {
     
     func update(url:String? = nil) {
         UIApplication.shared.isIdleTimerDisabled = true
-        
+
         self.queue.addOperation {
             self._sendNotificationBeforeUpdate()
         }
@@ -795,6 +799,15 @@ extension UNZIPFile  {
             var zips = [String]()
             for item in items {
                 if Double(item as String) != nil {
+                    if let last = UserDefaults.standard.object(forKey: "unzipfileinprocessing") as?[String]{
+                        if last.contains(item){
+                            let p = ROOTPATH.appending("/\(item)")
+                            FILESManager.default.deleteFileAt(path: p)
+                            continue;
+                        }
+
+                    }
+                    
                     zips.append(item)
                 }
             }
@@ -806,6 +819,27 @@ extension UNZIPFile  {
             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil, userInfo: ["filesnumber":pubs.count])
         }
         
+    }
+    
+    //保存正在解压中的文件，用于中断处理
+    func updateUnzipStatusData(_ file:String,isadd:Bool = true,flush:Bool = false) {
+        let key = "unzipfileinprocessing"
+        if flush {
+            UserDefaults.standard.removeObject(forKey: key);return
+        }
+
+        if var arr = UserDefaults.standard.object(forKey: key) as?[String]{
+            if isadd{
+                arr.append(file)
+            }else{
+                arr.remove(at: arr.index(of: file)!)
+            }
+            
+            UserDefaults.standard.set(arr, forKey: key)
+        }else{
+            UserDefaults.standard.set([file], forKey: key)
+        }
+        UserDefaults.standard.synchronize()
     }
     
     //解析
@@ -822,58 +856,57 @@ extension UNZIPFile  {
             return zips
         }(files)
         
+        updateUnzipStatusData("", isadd: false, flush: true)
+        
         guard pubs.count > 0 else{return}
-        for item in pubs {            
-                if Double(item as String) != nil {//item.hasPrefix("150")
-                    let path1 = ROOTPATH.appending("/\(item)")
-                    let f2 = getFilesAt(path: path1)
-                    for item in f2{//cca
-                        let path_cca = ROOTPATH.appending("/\(item)")
-                        let path2 = path1.appending("/\(item)")
-                        guard let bookname  = getFilesAt(path: path2).first else{return}
-                        let srcpath = path2.appending("/\(bookname)")
-                        let despath = path_cca.appending("/\(bookname)")
-                        
-                        UserDefaults.standard.setValue(item + "/\(bookname)", forKey: "book_path")
-                        UserDefaults.standard.synchronize()
-                        if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
-                            let cca_files = getFilesAt(path: path_cca)
-                            if !cca_files.contains(bookname) {
-                                do{
-                                    try fm.moveItem(atPath: srcpath, toPath: despath)
-                                    //FILESManager.default.deleteFileAt(path: path1)
-                                }catch{
-                                    print(error)
-                                }
-                            }else{
-                                print("已存在：\(bookname)")
-                                UserDefaults.standard.removeObject(forKey: "book_path")
-                                FILESManager.default.deleteFileAt(path: path1)
-                                
-                                DispatchQueue.main.async {
-                                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                                }
-                                continue
-                                //.....RESERVE
-                            }
-                        }else{
-                            do{
-                                try fm.moveItem(atPath: srcpath, toPath: despath)
-                            }catch{
-                                print(error)
-                            }
+        for item in pubs {
+            let path1 = ROOTPATH.appending("/\(item)")//150r4r4425435.64562
+            let f2 = getFilesAt(path: path1)
+            for item in f2{//cca
+                let path_cca = ROOTPATH.appending("/\(item)")
+                let path2 = path1.appending("/\(item)")
+                guard let bookname  = getFilesAt(path: path2).first else{return}
+                let srcpath = path2.appending("/\(bookname)")
+                let despath = path_cca.appending("/\(bookname)")
+                
+                UserDefaults.standard.setValue(item + "/\(bookname)", forKey: "book_path")
+                UserDefaults.standard.synchronize()
+                if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
+                    let cca_files = getFilesAt(path: path_cca)
+                    if !cca_files.contains(bookname) {
+                        do{
+                            try fm.moveItem(atPath: srcpath, toPath: despath)
+                            //FILESManager.default.deleteFileAt(path: path1)
+                        }catch{
+                            print(error)
                         }
+                    }else{
+                        print("已存在：\(bookname)")
+                        UserDefaults.standard.removeObject(forKey: "book_path")
                         FILESManager.default.deleteFileAt(path: path1)
                         
-                        /////解析
-                        let bookpath = getBookPath(withRelPath: despath)
-                        _parseBook(bookpath: bookpath, bookname: bookname)
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                        }
+                        continue
+                        //.....RESERVE
+                    }
+                }else{
+                    do{
+                        try fm.moveItem(atPath: srcpath, toPath: despath)
+                    }catch{
+                        print(error)
                     }
                 }
-            
+                FILESManager.default.deleteFileAt(path: path1)
+                
+                /////解析
+                let bookpath = getBookPath(withRelPath: despath)
+                _parseBook(bookpath: bookpath, bookname: bookname)
+            }
        
         }
-            })
+      })
     }
     
     //解析BOOK

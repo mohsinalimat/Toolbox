@@ -68,7 +68,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     }
     
     func unzipAllComplete(_ noti:Notification) {
-        if DataSourceManager.default.unzipQueueIsEmpty() {
+        if DataSourceManager.default.unzipQueueIsEmpty().0 {
             self.dismiss(animated: false, completion: nil)
         }
         

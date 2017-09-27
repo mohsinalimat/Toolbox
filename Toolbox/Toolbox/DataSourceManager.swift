@@ -32,6 +32,7 @@ class DataSourceManager: NSObject {
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false //正在下载
     var ds_startupdating:Bool = false //开始一次更新操作
+    var ds_checkupdatemanual:Bool = false //手动点击更新
     
     private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     private let kPlistinfo_path = LibraryPath.appending("/Application data")
@@ -246,7 +247,7 @@ class DataSourceManager: NSObject {
     func startDownload() {
         let plist = kDownload_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
-        guard  (downloadfiles != nil) && ((downloadfiles?.count)! > 0) else {//已是最新
+        guard  (downloadfiles != nil) && ((downloadfiles?.count)! > 0) else {//下载队列为空
             self.delegate?.ds_hasCheckedUpdate();return
         }
         
@@ -365,13 +366,13 @@ class DataSourceManager: NSObject {
     
     
     //解压队列是否为空
-    func unzipQueueIsEmpty() -> Bool {
+    func unzipQueueIsEmpty() -> (Bool,[String:[String]]) {
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: kUnzip_queue_path) as? [String:[String]]
         guard let filesDic = downloadfiles else{
-            return true
+            return (true,[:])
         }
         
-        return filesDic.isEmpty
+        return (filesDic.isEmpty,filesDic)
     }
     
     

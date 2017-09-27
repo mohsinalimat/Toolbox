@@ -22,11 +22,14 @@ let kDOCTYPEColor:[String:UIColor] = ["AIPC":UIColor(red: 255/255.0, green:  227
 let kCurrentScreenWidth = UIScreen.main.bounds.width
 let kCurrentScreenHight = UIScreen.main.bounds.height
 
+var APP_IS_BACKGROUND:Bool = false //app是否处于后台
+
 //MARK: -
 let RootControllerChangeWithIndex:((Int) -> Void) = {index in
     let root = UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController
     root.selectedIndex = index
 }
+let ktabbarVCIndex:Int = (UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController).selectedIndex
 
 let Loading = {HUD.show()}
 let Loadingwith:((String)->()) = {str in
