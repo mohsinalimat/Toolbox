@@ -57,10 +57,6 @@ class BaseTabbarController: UITabBarController {
             let vc = cls.init()
             
             vc.tabBarItem = UITabBarItem (title: itemtitleArr[i], image: UIImage (named: itemimg[i]), tag: 0)
-            
-            if i == 6 {
-                vc.tabBarItem.badgeValue = "有更新"
-            }
             let navigationvc = BaseNavigationController(rootViewController:vc)
             viewControllerArr.append(navigationvc)
         }

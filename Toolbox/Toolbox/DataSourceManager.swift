@@ -31,7 +31,24 @@ class DataSourceManager: NSObject {
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false //正在下载
-    var ds_startupdating:Bool = false //开始一次更新操作
+    var ds_startupdating:Bool = false { //开始一次更新操作
+        didSet{
+            guard let vc = (UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController).viewControllers?.last else{
+                return;
+            }
+            DispatchQueue.main.async {
+                if DataSourceManager.default.ds_startupdating {
+                    if ktabbarVCIndex != 6{
+                        RootControllerChangeWithIndex(6)
+                    }
+                    vc.tabBarItem.badgeValue = ""
+                }else{
+                    vc.tabBarItem.badgeValue = nil
+                }
+            }
+        }
+    }
+    
     var ds_checkupdatemanual:Bool = false //手动点击更新
     
     private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")

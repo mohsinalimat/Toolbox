@@ -186,7 +186,7 @@ class ManagerController: BaseViewControllerWithTable{
     //检测服务器是否更新
     func checkdsUpdate() {
         DispatchQueue.global().async {
-            if DataSourceManager.default.ds_startupdating /*&& !self.ds_isbusying*/{
+            if !DataSourceManager.default.ds_startupdating /*&& !self.ds_isbusying*/{
                 //self.ds_isbusying = true
                 let ds = DataSourceManager.default
                 ds.ds_checkupdatemanual = true
