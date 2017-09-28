@@ -720,7 +720,7 @@ extension UNZIPFile  {
                 if let path = UserDefaults.standard.string(forKey: "book_path") {
                     let bookpath = getBookPath(withRelPath: ROOTPATH.appending("/\(path)"))
                     let arr  = path.components(separatedBy: "/")
-                    let name = arr.last
+                    let name = arr.last//...？？？？
                     
                     //从3.更新
                     self.queue.addOperation({
@@ -772,7 +772,7 @@ extension UNZIPFile  {
         }
         
         self.queue.addOperation({
-            if let url = url, let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil).first as? DataSourceModel{
+            /*if let url = url, let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil).first as? DataSourceModel{
                 ret.ds_file_percent = 0.0
                 print("++++++++++++++++++++ 全部更新完成!")
                 ret.update_status = 6 //全部更新完成
@@ -780,6 +780,18 @@ extension UNZIPFile  {
                 if ret.saveToDB() {
                     
                 }
+                
+            }*/
+            if  let ret = DataSourceModel.search(with: "update_status='\(5)'", orderBy: nil) as? [DataSourceModel]{
+                for m in ret{
+                    m.ds_file_percent = 0.0
+                    m.update_status = 6
+                    
+                    if m.saveToDB() {
+                        
+                    }
+                }
+                print("++++++++++++++++++++ 全部更新完成!")
                 
             }
 

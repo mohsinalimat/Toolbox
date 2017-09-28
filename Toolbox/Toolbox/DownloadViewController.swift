@@ -188,6 +188,8 @@ class DownloadViewController: BaseViewControllerWithTable {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        return
+        
         let vc = DownloadDetailViewController()
         self.navigationController?.pushViewController(vc, animated: false)
         
