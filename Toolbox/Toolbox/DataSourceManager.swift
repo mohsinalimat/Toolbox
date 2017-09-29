@@ -13,6 +13,8 @@ protocol DSManagerDelegate : NSObjectProtocol {
 
     func ds_downloadTotalFilesCompleted(_ withurl:String)
     
+    func ds_checkoutFromDocument()
+    
     func ds_hasCheckedUpdate()
 }
 
@@ -145,6 +147,10 @@ class DataSourceManager: NSObject {
             })
             
         }
+        
+        //...
+        checkoutFromDocument()
+        
     }
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
@@ -382,6 +388,21 @@ class DataSourceManager: NSObject {
         
     }
     
+    func checkoutFromDocument() {
+        UNZIPFile.default.unzipFileFromDocument()
+        print("delegate start")
+        
+        guard !unzipQueueIsEmpty().0 else {
+            return
+        }
+        
+        let m = DataSourceModel()
+        m.location_url = ds_from_itunes
+        m.update_status = 2        
+        m.saveToDB()
+        
+        self.delegate?.ds_hasCheckedUpdate()
+    }
     
     //解压队列是否为空
     func unzipQueueIsEmpty() -> (Bool,[String:[String]]) {

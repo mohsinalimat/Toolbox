@@ -371,7 +371,37 @@ extension UNZIPFile  {
                             }, completionHandler: { (path, success, error) in
                                 print("DOCMENT解压完成：\(path)")
                                 //////////删除源文件
-                                //                                FILESManager.default.deleteFileAt(path: path)
+                                FILESManager.default.deleteFileAt(path: path)
+                                
+                                ////添加到解压队列
+                                do{
+                                    let p = baseinfodatapath.appending("/sync_manifest.json")
+                                    let jsonStr = try String (contentsOfFile: p)
+                                    guard let data = jsonStr.data(using: String.Encoding.utf8) else {return}
+                                    
+                                    do {
+                                        guard let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String:String]] else{return}
+                                        
+                                        for dic in arr{
+                                            let file = dic["file_loc"]!;
+                                            
+                                            //...比较ID，版本号。判断是否已存在
+                                            if true{
+                                                //如果已存在，删除更新文件
+                                            }else{
+                                                //不存在，添加到解压队列等待下次更新
+                                            }
+                                            
+                                            
+                                            DataSourceManager.default.updatedsQueueWith(key: "itunes import", filePath: file, datatype: .unzip)
+                                        }
+                                        
+                                        print("add ok")
+                                    }
+                                }catch{
+                                    print(error)
+                                }
+                                
                         })
                     }
                 }
@@ -787,7 +817,9 @@ extension UNZIPFile  {
                     m.ds_file_percent = 0.0
                     m.update_status = 6
                     
-                    if m.saveToDB() {
+                    if m.location_url == "itunes import"{
+                        m.deleteToDB()
+                    }else if m.saveToDB() {
                         
                     }
                 }

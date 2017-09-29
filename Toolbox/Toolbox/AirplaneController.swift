@@ -267,7 +267,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "NO AIRPLANE.")
+            return getCellForNodata(tableView, info: "NO AIRPLANE")
         }
         
         let value = dataArray[indexPath.row]

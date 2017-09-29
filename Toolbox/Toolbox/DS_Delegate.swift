@@ -45,6 +45,12 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     }
     
 
+    func ds_checkoutFromDocument() {
+        
+    }
+    
+    
+    
     //MARK:
     func _showAlert(_ withurl: String) {
         print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")

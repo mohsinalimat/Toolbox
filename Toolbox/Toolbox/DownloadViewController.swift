@@ -68,6 +68,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     }
     
     func unzipAllComplete(_ noti:Notification) {
+        //防止要显示更新列表，多数据源情况下，一个数据源安装完成其他的还在进行中，视图dismiss。
         if DataSourceManager.default.unzipQueueIsEmpty().0 {
             self.dismiss(animated: false, completion: nil)
         }
@@ -162,7 +163,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     //MARK:-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No DataSource.")
+            return getCellForNodata(tableView, info: "No DataSource")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
