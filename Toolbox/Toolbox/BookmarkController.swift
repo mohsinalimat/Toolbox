@@ -105,7 +105,8 @@ class BookmarkController: BaseViewControllerWithTable {
                 print("delete success")
             }
             dataArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.top)
+            //tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.top)
+            tableview?.reloadData()
         }
     }
     

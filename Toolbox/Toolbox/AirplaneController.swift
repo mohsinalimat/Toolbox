@@ -10,17 +10,18 @@ import UIKit
 import Alamofire
 import WebKit
 
-class AirplaneController:BaseViewControllerWithTable {
+class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     var selectedDataArray = [String]()//当前已选择展开的model标记
     var selectButton : UIButton?
     
     let popButtonWidth = 135
-    var popViewselectedIndex:Int? //标记pop当前选择的索引
+    var popViewselectedIndex:Int = 1 //标记pop当前选择的索引
     let popViewkeyArr = ["Tail","Registry","MSN","Variable","CEC","Line"]
 
     let popViewHeadTitle = "Sort Airplanes By"
     var currentFieldKey:String! = "Registry"
     var currentFieldName:String! = "airplaneRegistry"
+    var searchKey:String = ""
     
     var openedCellIndex:Int = 0
     
@@ -105,7 +106,6 @@ class AirplaneController:BaseViewControllerWithTable {
     //////
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         loadData()
         if let hasSelectedAir = kSelectedAirplane{
             for (index,value)  in dataArray.enumerated() {
@@ -127,12 +127,20 @@ class AirplaneController:BaseViewControllerWithTable {
         selectedDataArray.removeAll()
         
         HUD.show(withStatus: "Loading...")
-        //字段为空的放在最后
-        let arr = AirplaneModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
-        dataArray = dataArray  + arr!
-        
-        let arr2 = AirplaneModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
-        dataArray = dataArray + arr2!
+        //字段为空的放在最后 "airplaneRegistry like '%\(s)%'"
+ 
+        if searchKey != ""{
+            let arr = AirplaneModel.search(with: "\(opt)!=\"\" and airplaneRegistry like '%\(searchKey)%'", orderBy: "\(opt) asc")
+            dataArray = dataArray  + arr!
+        }
+        else{
+            let arr = AirplaneModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
+            dataArray = dataArray  + arr!
+            
+            let arr2 = AirplaneModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
+            dataArray = dataArray + arr2!
+        }
+
  
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
              HUD.dismiss()    
@@ -170,6 +178,8 @@ class AirplaneController:BaseViewControllerWithTable {
             searchBtn.font = UIFont.systemFont(ofSize: 18)
             searchBtn.textColor = UIColor.darkGray
             searchBtn.clearButtonMode  = UITextFieldViewMode.whileEditing
+            searchBtn.delegate = self
+            searchBtn.returnKeyType = .search
             
             searchBtn.leftViewMode = .always
             let leftview = UIView (frame: CGRect (x: 0, y: 0, width: 25, height: 30))
@@ -232,12 +242,32 @@ class AirplaneController:BaseViewControllerWithTable {
         self.present(nav, animated: true)
     }
     
+    //MARK: 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        dataArray.removeAll()
+        selectedDataArray.removeAll()
+        headNumShouldChange = true
+        
+        HUD.show(withStatus: "Loading...")
+        if let s = textField.text,let arr = AirplaneModel.search(with: "airplaneRegistry like '%\(s)%'", orderBy: "airplaneRegistry asc") {
+            searchKey = s
+            dataArray = dataArray + arr
+        }
+        
+        tableview?.reloadData()
+        textField.resignFirstResponder()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            HUD.dismiss()
+        }
+        
+        return true
+    }
+    
     
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No airplane data.")
+            return getCellForNodata(tableView, info: "NO AIRPLANE.")
         }
         
         let value = dataArray[indexPath.row]
