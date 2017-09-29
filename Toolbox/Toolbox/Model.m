@@ -137,7 +137,9 @@
              return;
          }
          
-         [self saveModelNotCheck:dic];
+         //[self saveModelNotCheck:dic];
+         id _m  = [self modelWith:dic];
+         [[DBTool default].helper insertToDB:_m];
     }
 
     -(void)saveModelNotCheck:(NSDictionary*)dic{

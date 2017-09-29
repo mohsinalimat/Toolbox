@@ -50,6 +50,7 @@ class DataSourceManager: NSObject {
     }
     
     var ds_checkupdatemanual:Bool = false //手动点击更新
+    private let ds_from_itunes = "itunes import"
     
     private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     private let kPlistinfo_path = LibraryPath.appending("/Application data")
@@ -167,7 +168,7 @@ class DataSourceManager: NSObject {
                         //添加到下载
                         let zip:String! = sdic["file_loc"]
                         let fileurl = url + "\(zip!)"
-                        updateDownloadQueueWith(key:url,filePath: fileurl,datatype:.download)
+                        updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
                         //更新状态
                         if m.update_status != 1 {
                             m.update_status = 1
@@ -203,7 +204,7 @@ class DataSourceManager: NSObject {
             for sdic in server_syncArr{
                 let zip:String! = sdic["file_loc"]
                 let fileurl = url + "\(zip!)"
-                updateDownloadQueueWith(key:url,filePath: fileurl,datatype:.download)
+                updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
             }
         }
     }
@@ -216,7 +217,7 @@ class DataSourceManager: NSObject {
     /// - parameter filePath: 文件路径filepath
     /// - parameter isAdd:    添加/删除操作
     /// - parameter datatype: 数据类型
-    func updateDownloadQueueWith(key:String, filePath:String,isAdd:Bool = true,datatype:DataQueueType) {
+    func updatedsQueueWith(key:String, filePath:String,isAdd:Bool = true,datatype:DataQueueType) {
         objc_sync_enter(self)
         let fileurl = filePath
         var plist:String
@@ -296,8 +297,8 @@ class DataSourceManager: NSObject {
                     let zip = des?.lastPathComponent
                     print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
-                    strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
-                    strongSelf.updateDownloadQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
+                    strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
+                    strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
                     if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
                         ret.ds_file_percent = 0.0

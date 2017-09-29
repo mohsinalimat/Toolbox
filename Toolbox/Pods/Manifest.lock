@@ -10,6 +10,7 @@ PODS:
   - SSZipArchive (2.0.2)
   - SVProgressHUD (2.1.2)
   - SwiftyJSON (3.1.4)
+  - zipzap (8.1.1)
 
 DEPENDENCIES:
   - Alamofire (~> 4.4)
@@ -19,6 +20,7 @@ DEPENDENCIES:
   - SSZipArchive (~> 2.0.2)
   - SVProgressHUD (~> 2.1.2)
   - SwiftyJSON
+  - zipzap (~> 8.1.1)
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
@@ -29,7 +31,8 @@ SPEC CHECKSUMS:
   SSZipArchive: 5fdf578dbbb60000b23439f80fa04e81d00740ee
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  zipzap: 940162d9c9c60472c2eab341385e4214da0fdf1c
 
-PODFILE CHECKSUM: eb938cd35bb2922da9a3f357b79f6756831e4c3c
+PODFILE CHECKSUM: 13de255b59ff42d09fe8b8570c6979d7660a465d
 
 COCOAPODS: 1.0.1

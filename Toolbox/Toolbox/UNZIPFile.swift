@@ -515,7 +515,7 @@ extension UNZIPFile  {
                         //遍历资源目录
                         self._unzipSourceFile(filePath: newpath)
                         let u = URL.init(string: srcpath)
-                        DataSourceManager.default.updateDownloadQueueWith(key:"\(url)",filePath: "\((u?.lastPathComponent)!)", isAdd: false,datatype:.unzip)
+                        DataSourceManager.default.updatedsQueueWith(key:"\(url)",filePath: "\((u?.lastPathComponent)!)", isAdd: false,datatype:.unzip)
                         FILESManager.default.deleteFileAt(path: srcpath)
                         self.updateUnzipStatusData(time, isadd: false)
                 })
