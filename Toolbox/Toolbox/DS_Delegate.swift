@@ -49,10 +49,10 @@ class DS_Delegate: NSObject, DSManagerDelegate {
 
     func ds_checkoutFromDocument() {
         if !DataSourceManager.default.unzipQueueIsEmpty().0{
-            DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
             let files = DataSourceManager.default.unzipQueueIsEmpty().1
             for url in files.keys {
                 if !url.hasPrefix("http"){
+                    DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
                     ds_downloadTotalFilesCompleted(url);return
                 }
             }

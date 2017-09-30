@@ -77,11 +77,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         if !location.hasSuffix("/") {
                             location = location.appending("/")
                         }
-                        kDataSourceLocations.append(location)
+                        if !kDataSourceLocations.contains(location){
+                            kDataSourceLocations.append(location)
+                        }
                     }
                 }
             }
         }
+    
+        let arr = DataSourceModel.search(with: nil, orderBy: nil) as?[DataSourceModel]
+        if let arr = arr{
+            for m in arr{
+                let url = m.location_url
+                if !kDataSourceLocations.contains(url!){
+                    m.deleteToDB()
+                }
+            }
+        }
+    
     
         //checkupdate
         DataSourceManager.default.ds_checkupdate()

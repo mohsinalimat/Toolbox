@@ -125,7 +125,9 @@ class DataSourceManager: NSObject {
         UNZIPFile.default.unzipFileFromDocument{[weak self] in
             print("Document unzip ok,next unzip queue...")
             guard let strongSelf = self else{return}
-            guard !strongSelf.unzipQueueIsEmpty().0 else {return}
+            guard !strongSelf.unzipQueueIsEmpty().0 else {
+                strongSelf.delegate?.ds_hasCheckedUpdate();return
+            }
             
             let m = DataSourceModel()
             m.location_url = strongSelf.ds_from_itunes
@@ -161,7 +163,7 @@ class DataSourceManager: NSObject {
                         //更新状态
                         if m.update_status != 1 {
                             m.update_status = 1
-                            m.saveToDB()
+                            m.updateToDB()
                          }
                         }
                     }

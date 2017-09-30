@@ -68,37 +68,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
 
     func Test() {
         
-        DataSourceManager.default.checkupdateFromServer()
-        
-        /*
-        if let baseurl = kDataSourceLocations.first{
-            let url = baseurl + kpackage_info
-//            
-//            let destation : DownloadRequest.DownloadFileDestination = {_,_ in
-//                let des = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-//                let desurl = des?.appendingPathComponent(kpackageInfo)
-//                
-//                return (desurl!,[.removePreviousFile, .createIntermediateDirectories])
-//            
-//            }
-//            
-//            let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-//            Alamofire.download(url, to: destation).response(completionHandler: { (response) in
-//                print(response)
-//            })
-            
-        }*/
-        
-
-        
-        
-        /*
-        print(Date())
-        XMLParseKit.default.parserStart(withBookPath: ROOTPATH.appending("/CCA/CCAA330CCAAIPC20170101/aipc"), bookName: "CCAA330CCAAIPC20170101", completeHandler: {
-            print(Date())
-            print("all ok")
-        })*/
-        
     }
     
     

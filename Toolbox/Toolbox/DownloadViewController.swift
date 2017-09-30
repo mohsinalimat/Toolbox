@@ -97,10 +97,6 @@ class DownloadViewController: BaseViewControllerWithTable {
             download_cell.statueLable.text = "解压文件: \(unzip.zip_current_filescnt) / \(unzip.zip_total_filescnt)"
             break
         case "ds_serverlocationurl"://数据源改变，刷新列表
-            if let change = change[NSKeyValueChangeKey.newKey] as? String{
-                
-                
-            };
             break
             
         default:break
@@ -163,7 +159,7 @@ class DownloadViewController: BaseViewControllerWithTable {
     //MARK:-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "No DataSource")
+            return getCellForNodata(tableView, info: "NO DATASOURCE")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadCellReuseIdentifierId", for: indexPath) as! DownloadCell
