@@ -83,10 +83,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     
-        //检测更新
-        //if kDataSourceLocations.count == 0{
-            DataSourceManager.default.checkupdateFromServer()
-        //}
+        //checkupdate
+        DataSourceManager.default.ds_checkupdate()
     
     }
     

@@ -33,7 +33,7 @@ class HistoryController: BaseViewControllerWithTable {
     
     //MARK:
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -41,13 +41,13 @@ class HistoryController: BaseViewControllerWithTable {
             return 1
         }
         
-        return section == 0 ? 1 :  dataArray.count
+        return   dataArray.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if dataArray.count == 0 {
-            return getCellForNodata(tableView, info: "NO DATA")
+            return getCellForNodata(tableView, info: "NO HISTORY")
         }
         
         let m = dataArray[indexPath.row] as! BookmarkModel
@@ -109,7 +109,8 @@ class HistoryController: BaseViewControllerWithTable {
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
-            title.text = "\t\t\(section == 0 ? "Opened Publications" :"Recent History")"
+            //title.text = "\t\t\(section == 0 ? "Opened Publications" :"Recent History")"
+            title.text = "Recent History"
             
             v.addSubview(title)
             return v

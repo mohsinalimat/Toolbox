@@ -192,7 +192,7 @@ class ManagerController: BaseViewControllerWithTable{
                 //self.ds_isbusying = true
                 let ds = DataSourceManager.default
                 ds.ds_checkupdatemanual = true
-                ds.checkupdateFromServer()
+                ds.ds_checkupdate()
             }
 
         }
@@ -307,7 +307,7 @@ class ManagerController: BaseViewControllerWithTable{
         //view.addSubview(topview)
 
         tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 0)
-        sectionHeadtitle =  "Publications on Devices"
+        sectionHeadtitle =  "Publications on Device"
         tableViewRegisterCell()
         
     }

@@ -344,7 +344,7 @@ extension UNZIPFile  {
     
     //MARK:- 解压操作
     //--1
-    func unzipFileFromDocument() {
+    func unzipFileFromDocument(_ completionHandler:((Void) -> Void)? = nil) {
         autoreleasepool { () -> () in
             let despath = LibraryPath.appending("/TDLibrary/tmp")
             let baseinfodatapath = LibraryPath.appending("/Application data")
@@ -397,6 +397,10 @@ extension UNZIPFile  {
                                         }
                                         
                                         print("add ok")
+                                        
+                                        if let handler = completionHandler{
+                                            handler()
+                                        }
                                     }
                                 }catch{
                                     print(error)
@@ -404,6 +408,13 @@ extension UNZIPFile  {
                                 
                         })
                     }
+                }
+                
+                if zipArr.count == 0{
+                    if let handler = completionHandler{
+                        handler()
+                    }
+
                 }
             }catch{
                 print(error)
@@ -802,16 +813,6 @@ extension UNZIPFile  {
         }
         
         self.queue.addOperation({
-            /*if let url = url, let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil).first as? DataSourceModel{
-                ret.ds_file_percent = 0.0
-                print("++++++++++++++++++++ 全部更新完成!")
-                ret.update_status = 6 //全部更新完成
-
-                if ret.saveToDB() {
-                    
-                }
-                
-            }*/
             if  let ret = DataSourceModel.search(with: "update_status='\(5)'", orderBy: nil) as? [DataSourceModel]{
                 for m in ret{
                     m.ds_file_percent = 0.0
@@ -901,7 +902,6 @@ extension UNZIPFile  {
         }(files)
         
         updateUnzipStatusData("", isadd: false, flush: true)
-        
         guard pubs.count > 0 else{return}
         for item in pubs {
             let path1 = ROOTPATH.appending("/\(item)")//150r4r4425435.64562
