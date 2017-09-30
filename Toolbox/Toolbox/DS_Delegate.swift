@@ -30,7 +30,9 @@ class DS_Delegate: NSObject, DSManagerDelegate {
             DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
             let files = DataSourceManager.default.unzipQueueIsEmpty().1
             for url in files.keys {
-                ds_downloadTotalFilesCompleted(url)
+                if url.hasPrefix("http"){
+                    ds_downloadTotalFilesCompleted(url)
+                }                
             }
         }else{
             print("NO NEED UPDATE")
@@ -46,7 +48,15 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     
 
     func ds_checkoutFromDocument() {
-        
+        if !DataSourceManager.default.unzipQueueIsEmpty().0{
+            DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
+            let files = DataSourceManager.default.unzipQueueIsEmpty().1
+            for url in files.keys {
+                if !url.hasPrefix("http"){
+                    ds_downloadTotalFilesCompleted(url);return
+                }
+            }
+        }
     }
     
     

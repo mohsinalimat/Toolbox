@@ -55,24 +55,22 @@ class DataSourceManager: NSObject {
     private let ds_from_itunes = "itunes import"
     
     private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
-    private let kPlistinfo_path = LibraryPath.appending("/Application data")
-    private let kDownload_queue_path:String
+    private let ds_plist_basepath = LibraryPath.appending("/Application data")
+    private let ds_download_queue_path:String
     let kUnzip_queue_path:String
+    let ds_unzip_queue_itunes:String
     
-    //weak var delegate: DSManagerDelegate?
     let delegate: DS_Delegate?
-    
     let _opreationqueue:OperationQueue
     private let _dispatch_queue:DispatchQueue
-    
     override init() {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
-        FILESManager.default.fileExistsAt(path: kPlistinfo_path)
-        kDownload_queue_path = kPlistinfo_path.appending("/downloadqueuelist.plist")
-        kUnzip_queue_path = kPlistinfo_path.appending("/unzipqueue.plist")
+        FILESManager.default.fileExistsAt(path: ds_plist_basepath)
+        ds_download_queue_path = ds_plist_basepath.appending("/downloadqueuelist.plist")
+        kUnzip_queue_path = ds_plist_basepath.appending("/unzipqueue.plist")
+        ds_unzip_queue_itunes = ds_plist_basepath.appending("/unzipqueueforitunes.plist")
         
         delegate = DS_Delegate()
-        
         _opreationqueue = OperationQueue.init()
         _opreationqueue.maxConcurrentOperationCount = 1
         _opreationqueue.isSuspended = true
@@ -84,41 +82,14 @@ class DataSourceManager: NSObject {
     
     
     //MARK:-
-    /*
-    func checkupdateFromServer() {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        for base in kDataSourceLocations {
-            semaphore.wait()
-            let group = DispatchGroup.init()
-            var package_info = [String:Any]()
-
-            for sub in subPathArr{
-                let url = base + sub
-                print("Start : \(url)")
-                group.enter()
-                Alamofire.request(url).responseJSON(completionHandler: { (response) in
-                    //print(response.result.value!)
-                    if let value = response.result.value{
-                        package_info[sub] = value;
-                    }
-                    print("End : \(url)")
-                    group.leave()
-                })
-                
-            }
-            group.notify(queue: DispatchQueue.global(), execute: { 
-                print("all ok")
-                self.compareJsonInfoFromLocal(base, info: package_info)
-                
-                semaphore.signal()
-            })
-        }
-       
+    func ds_checkupdate() {
+        _checkupdateFromServer()
         
-        print("ok!")
-    }*/
+        _checkUpdateFromDocument()
+    }
     
-    func checkupdateFromServer() {
+    
+    func _checkupdateFromServer() {
         var cnt:Int = 0
         for base in kDataSourceLocations {
             let group = DispatchGroup.init()
@@ -148,11 +119,23 @@ class DataSourceManager: NSObject {
             
         }
         
-        //...
-        checkoutFromDocument()
-        
     }
     
+    func _checkUpdateFromDocument() {
+        UNZIPFile.default.unzipFileFromDocument{[weak self] in
+            print("Document unzip ok,next unzip queue...")
+            guard let strongSelf = self else{return}
+            guard !strongSelf.unzipQueueIsEmpty().0 else {return}
+            
+            let m = DataSourceModel()
+            m.location_url = strongSelf.ds_from_itunes
+            m.update_status = 2
+            m.saveToDB()
+            strongSelf.delegate?.ds_checkoutFromDocument()
+        }
+        
+    }
+
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
       guard info.keys.count == 3 else {return}
       if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil){
@@ -226,14 +209,21 @@ class DataSourceManager: NSObject {
     func updatedsQueueWith(key:String, filePath:String,isAdd:Bool = true,datatype:DataQueueType) {
         objc_sync_enter(self)
         let fileurl = filePath
-        var plist:String
+        var path:String
         
         switch datatype {
-            case .download: plist = kDownload_queue_path; break
-            case .unzip:plist = kUnzip_queue_path;break
+            case .download: path = ds_download_queue_path; break
+            case .unzip:
+                if /*key.hasPrefix("http")*/ true {
+                    path = kUnzip_queue_path;
+                }else{
+                    path = ds_unzip_queue_itunes
+                }
+
+            break
         }
         
-        let old = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String : [String]]
+        let old = NSKeyedUnarchiver.unarchiveObject(withFile: path) as? [String : [String]]
         var added = [String:[String]]();
         if let old = old {
             for (key,value) in old{
@@ -263,13 +253,13 @@ class DataSourceManager: NSObject {
             }
         }
 
-        NSKeyedArchiver.archiveRootObject(added, toFile: plist)
+        NSKeyedArchiver.archiveRootObject(added, toFile: path)
         objc_sync_exit(self)
     }
 
     //MARK:
     func startDownload() {
-        let plist = kDownload_queue_path
+        let plist = ds_download_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
         guard  (downloadfiles != nil) && ((downloadfiles?.count)! > 0) else {//下载队列为空
             self.delegate?.ds_hasCheckedUpdate();return
@@ -388,32 +378,20 @@ class DataSourceManager: NSObject {
         
     }
     
-    func checkoutFromDocument() {
-        UNZIPFile.default.unzipFileFromDocument()
-        print("delegate start")
-        
-        guard !unzipQueueIsEmpty().0 else {
-            return
-        }
-        
-        let m = DataSourceModel()
-        m.location_url = ds_from_itunes
-        m.update_status = 2        
-        m.saveToDB()
-        
-        self.delegate?.ds_hasCheckedUpdate()
-    }
-    
+    //MARK:
     //解压队列是否为空
     func unzipQueueIsEmpty() -> (Bool,[String:[String]]) {
-        let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: kUnzip_queue_path) as? [String:[String]]
-        guard let filesDic = downloadfiles else{
+        return dataQueueIsEmpty(kUnzip_queue_path)
+    }
+
+    func dataQueueIsEmpty(_ atPath:String) -> (Bool,[String:[String]]) {
+        let files = NSKeyedUnarchiver.unarchiveObject(withFile: atPath) as? [String:[String]]
+        guard let filesDic = files else{
             return (true,[:])
         }
-        
         return (filesDic.isEmpty,filesDic)
     }
-    
+   
     
     
 }
