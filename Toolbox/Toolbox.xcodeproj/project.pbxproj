@@ -119,6 +119,7 @@
 		A1E9BF931F5E808C005251C8 /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9BF911F5E808C005251C8 /* DownloadCell.swift */; };
 		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
+		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -260,6 +261,7 @@
 		A1E9BF911F5E808C005251C8 /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
+		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		F082408167EDD359A7B14175 /* Pods_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -359,6 +361,7 @@
 				A1BBCF501F2ACBFF007374B7 /* bookmarkOnHighlighted.png */,
 				A1BBCF511F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png */,
 				A1C1BDAD1F0101E9002FC0E0 /* buttonBg.png */,
+				AD2318461F814277002FA89B /* buttonBg2.png */,
 				A1C06BD11F0A35AC00A29620 /* deleteBookmarkButton.png */,
 				A1C06BD21F0A35AC00A29620 /* deleteBookmarkButton@2x.png */,
 				A1C06BD31F0A35AC00A29620 /* deletePub.png */,
@@ -685,6 +688,7 @@
 				A1BBCF531F2ACBFF007374B7 /* bookmarkOff.png in Resources */,
 				A1BBCF5A1F2ACBFF007374B7 /* bookmarkOnHighlighted@2x.png in Resources */,
 				A1BBCF621F2ACFDF007374B7 /* hashout@2x.png in Resources */,
+				AD2318471F814277002FA89B /* buttonBg2.png in Resources */,
 				A181511F1F500D2E00A74779 /* ajax_handler.js in Resources */,
 				A15580231F05E89E008C1787 /* PublicationCell.xib in Resources */,
 				A18288C31F78F875001786D3 /* trash_icon@2x.png in Resources */,

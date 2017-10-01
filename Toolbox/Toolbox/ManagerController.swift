@@ -11,7 +11,7 @@ import UIKit
 class ManagerController: BaseViewControllerWithTable{
 
     var selectedDataArray = [String]()
-    var selectedInEditModelArr = [String]()//编辑模式下选中
+    var selectedInEditModelArr = [String]()//编辑模式下选中的数据
     
     var selectButton : UIButton?
     var deleteButton:UIButton?
@@ -29,6 +29,9 @@ class ManagerController: BaseViewControllerWithTable{
     var ds_isbusying:Bool = false
     
     var _update_btn:UIButton?
+    var rightItems_old:[UIBarButtonItem]?
+    var rightItemSelectAll:UIBarButtonItem?
+    var rightItemBtn:UIButton?
     
     //MARK:
     override func viewDidLoad() {
@@ -86,27 +89,70 @@ class ManagerController: BaseViewControllerWithTable{
         let ritem = UIBarButtonItem (customView: btn)
         itemArr?.append(ritem)
         navigationItem.rightBarButtonItems = itemArr
-
+        rightItems_old = itemArr;
+        
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
-        navigationItem.leftBarButtonItem = self.editButtonItem
+        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 70) //self.editButtonItem
     }
     
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        guard dataArray.count > 0 else {
-            return
-        }
+    func navigationItemWith(index:Int,width:CGFloat) -> UIBarButtonItem {
+        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: width, height: 30))
+        let title_1 = ["Edit","Select All"]
+        let title_2 = ["Cancle","Unselect All"]
         
-        super.setEditing(editing, animated: animated)
-        if !editing {
-            self.editButtonItem.title = "Edit"
+        btn.setTitle(title_1[index], for: .normal)
+        btn.setTitle(title_2[index], for: .selected)
+        btn.tag = 100 + index
+        
+        btn.addTarget(self, action: #selector(navigationItemBtnAction(_ :)), for: .touchUpInside)
+        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .normal)
+        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .selected)
+        btn.adjustsImageWhenHighlighted = false
+        if index == 1 {rightItemBtn = btn}
+        
+        let item = UIBarButtonItem.init(customView: btn)
+        return item
+    }
+    
+    func navigationItemBtnAction(_ btn:UIButton) {
+        btn.isSelected = !btn.isSelected
+        switch btn.tag {
+        case 100:setEdited(btn);break
+        case 101:
+            selectedInEditModelArr.removeAll()
+            if btn.isSelected {//全选
+                for m in dataArray {
+                    let s = (m as! PublicationsModel).book_uuid
+                    selectedInEditModelArr.append(s!)
+                }
+            }
+            self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
+            tableview?.reloadData();break
+        default:break
+        }
+    }
+    
+    
+    func setEdited(_ btn:UIButton) {
+        guard dataArray.count > 0 else {return}
+        if !btn.isSelected {
+            navigationItem.rightBarButtonItems = rightItems_old
             tableview?.isEditing = false
             tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49)
             selectedInEditModelArr.removeAll()
             view.viewWithTag(201)?.removeFromSuperview()
+            rightItemBtn?.isSelected = false
+            selectedInEditModelArr.removeAll()
         }else{
-            self.editButtonItem.title = "Cancle"
+            //self.editButtonItem.title = "Cancle"
+            if rightItemSelectAll == nil{
+                rightItemSelectAll = navigationItemWith(index: 1, width: 100);
+            }
+            navigationItem.rightBarButtonItems = [rightItemSelectAll!]
+            
             tableview?.isEditing = true
             tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49 - 60)
             
@@ -115,7 +161,6 @@ class ManagerController: BaseViewControllerWithTable{
             view.addSubview(deleteBtnBg)
             let deleteBtn = UIButton (frame: CGRect (x: (deleteBtnBg.frame.width - 350) / 2.0, y: (deleteBtnBg.frame.height - 40) / 2.0, width: 350, height: 40))
             deleteBtn.setBackgroundImage(UIImage (named: "deletePub"), for: .normal)
-            
             deleteBtn.setImage(UIImage (named: "trash_icon"), for: .normal)
             deleteBtn.setTitle("Delete", for: .normal)
             deleteBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
@@ -146,7 +191,6 @@ class ManagerController: BaseViewControllerWithTable{
         let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
         vc.view.frame = rect////////开始创建view
 
-        ///
         let nav = BaseNavigationController(rootViewController:vc)
         nav.modalPresentationStyle = UIModalPresentationStyle.formSheet
         nav.preferredContentSize = rect.size
@@ -409,7 +453,7 @@ class ManagerController: BaseViewControllerWithTable{
        guard dataArray[indexPath.row] as? Int != 0 else { return }
 
        let value = dataArray[indexPath.row] as! PublicationsModel
-        if self.isEditing {
+        if tableView.isEditing {
             let s = value.book_uuid
             if let s = s{
                 if self.selectedInEditModelArr.contains(s){
@@ -418,7 +462,12 @@ class ManagerController: BaseViewControllerWithTable{
                 else{
                     self.selectedInEditModelArr.append(s)
                 }
-
+                if selectedInEditModelArr.count == dataArray.count{
+                    rightItemBtn?.isSelected = true
+                }
+                if selectedInEditModelArr.count == 0{
+                    rightItemBtn?.isSelected = false
+                }
             }
             self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
             self.deleteButton?.setTitle("Delete" + (selectedInEditModelArr.count > 0 ? " (\(selectedInEditModelArr.count))":""), for: .normal)
