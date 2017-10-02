@@ -11,11 +11,11 @@ import Alamofire
 
 protocol DSManagerDelegate : NSObjectProtocol {
 
-    func ds_downloadTotalFilesCompleted(_ withurl:String)
+    func ds_startUnzipFile(_ withurl:String)
     
     func ds_checkoutFromDocument()
     
-    func ds_hasCheckedUpdate()
+    func ds_hasCheckedUpdate(_ shouldHud:Bool)
 }
 
 enum DataQueueType {
@@ -90,6 +90,12 @@ class DataSourceManager: NSObject {
     
     
     func _checkupdateFromServer() {
+        guard Tools.isReachable() else {
+            print("cannot connect network...")
+            HUD.show(info: "无法连接网络！")
+            return
+        }
+        
         var cnt:Int = 0
         for base in kDataSourceLocations {
             let group = DispatchGroup.init()
@@ -102,6 +108,10 @@ class DataSourceManager: NSObject {
                     if let value = response.result.value{
                         package_info[sub] = value;
                     }
+                    if response.result.isFailure{
+                        print("Request Error:\(String(describing: response.result.error?.localizedDescription))")
+                    }
+                    
                     print("End : \(url)")
                     group.leave()
                 })
@@ -126,7 +136,7 @@ class DataSourceManager: NSObject {
             print("Document unzip ok,next unzip queue...")
             guard let strongSelf = self else{return}
             guard !strongSelf.unzipQueueIsEmpty().0 else {
-                strongSelf.delegate?.ds_hasCheckedUpdate();return
+                strongSelf.delegate?.ds_hasCheckedUpdate(false);return
             }
             
             let m = DataSourceModel()
@@ -307,7 +317,7 @@ class DataSourceManager: NSObject {
                             ret.current_files = 0
                             ret.total_files = 0
                             ///一个数据源下载完成
-                            strongSelf.delegate?.ds_downloadTotalFilesCompleted(base!.absoluteString)
+                            strongSelf.delegate?.ds_startUnzipFile(base!.absoluteString)
                             strongSelf.ds_isdownloading = false
                             semaphore.signal()
                         }

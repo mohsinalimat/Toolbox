@@ -5,5 +5,5 @@
 #import "Model.h"
 
 #import "FMDB.h"
-
+#import "Reachability.h"
 #import <FMDB/FMDB.h>

@@ -33,9 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //MARK:-
     private func init_system(){
         HUD.config()
-        
         _setterConfig()
- 
+        
     }
     
     
@@ -95,7 +94,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     
-    
+        //net check
+        Tools.startNetMonitor()
+        if Tools.isReachable() {
+            print("connected network!")
+        }
+
         //checkupdate
         DataSourceManager.default.ds_checkupdate()
     

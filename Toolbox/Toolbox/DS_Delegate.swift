@@ -11,7 +11,7 @@ import UIKit
 class DS_Delegate: NSObject, DSManagerDelegate {
     
     //MARK:- DSManagerDelegate
-    func ds_downloadTotalFilesCompleted(_ withurl: String) {
+    func ds_startUnzipFile(_ withurl: String) {
         UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
             if !APP_IS_BACKGROUND{//全解压完成，可以更新
                 DispatchQueue.main.async {[weak self] in
@@ -25,18 +25,18 @@ class DS_Delegate: NSObject, DSManagerDelegate {
         }
     }
     
-    func ds_hasCheckedUpdate() {
+    func ds_hasCheckedUpdate(_ shouldHud:Bool = true) {
         if !DataSourceManager.default.unzipQueueIsEmpty().0{
             DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
             let files = DataSourceManager.default.unzipQueueIsEmpty().1
             for url in files.keys {
                 if url.hasPrefix("http"){
-                    ds_downloadTotalFilesCompleted(url)
+                    ds_startUnzipFile(url)
                 }                
             }
         }else{
             print("NO NEED UPDATE")
-            if !APP_IS_BACKGROUND && DataSourceManager.default.ds_checkupdatemanual{
+            if !APP_IS_BACKGROUND && DataSourceManager.default.ds_checkupdatemanual && shouldHud {
                 DispatchQueue.main.async {
                     HUD.show(info: "已是最新")
                     DataSourceManager.default.ds_checkupdatemanual = false
@@ -53,7 +53,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
             for url in files.keys {
                 if !url.hasPrefix("http"){
                     DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
-                    ds_downloadTotalFilesCompleted(url);return
+                    ds_startUnzipFile(url);return
                 }
             }
         }

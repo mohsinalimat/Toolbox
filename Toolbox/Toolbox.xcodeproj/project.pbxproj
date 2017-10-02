@@ -120,6 +120,8 @@
 		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
+		ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E251F8224A500FB4230 /* Reachability.m */; };
+		ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E271F82274E00FB4230 /* Tools.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -262,6 +264,9 @@
 		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
+		ADFE0E241F8224A500FB4230 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		ADFE0E251F8224A500FB4230 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		ADFE0E271F82274E00FB4230 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		F082408167EDD359A7B14175 /* Pods_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -461,6 +466,7 @@
 		A1C1BD911F00A6E0002FC0E0 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				ADFE0E231F8224A500FB4230 /* Reachability */,
 				A1ED124D1F56B35C00FCD259 /* hud */,
 				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
@@ -469,6 +475,7 @@
 				A1ED124E1F56B53900FCD259 /* NetHelper.swift */,
 				A1B4CFCA1F58EC91001AB279 /* DataSourceManager.swift */,
 				A109A4361F74E9B400528B4F /* DS_Delegate.swift */,
+				ADFE0E271F82274E00FB4230 /* Tools.swift */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -541,6 +548,15 @@
 				A17C81061F30589400EF8B9D /* success@2x.png */,
 			);
 			name = hud;
+			sourceTree = "<group>";
+		};
+		ADFE0E231F8224A500FB4230 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				ADFE0E241F8224A500FB4230 /* Reachability.h */,
+				ADFE0E251F8224A500FB4230 /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		B495764C74D6D6E244280D7C /* Frameworks */ = {
@@ -832,11 +848,13 @@
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
 				A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
+				ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */,
 				A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
+				ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */,
 				A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */,
 				A136F1211F1372BC00349572 /* UNZIPFile.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,

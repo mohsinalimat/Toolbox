@@ -94,7 +94,7 @@ class ManagerController: BaseViewControllerWithTable{
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
-        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 70) //self.editButtonItem
+        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80) //self.editButtonItem
     }
     
     func navigationItemWith(index:Int,width:CGFloat) -> UIBarButtonItem {
