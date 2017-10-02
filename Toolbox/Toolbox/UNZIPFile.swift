@@ -346,28 +346,32 @@ extension UNZIPFile  {
     //--1
     func unzipFileFromDocument(_ completionHandler:((Void) -> Void)? = nil) {
         autoreleasepool { () -> () in
-            let despath = LibraryPath.appending("/TDLibrary/tmp")
+            let tmppath = LibraryPath.appending("/TDLibrary/tmp")
             let baseinfodatapath = LibraryPath.appending("/Application data")
+            let installpath = LibraryPath.appending("/installingbook")
             
             //路径检测
-            FILESManager.default.fileExistsAt(path: despath)
+            FILESManager.default.fileExistsAt(path: tmppath)
             FILESManager.default.fileExistsAt(path: baseinfodatapath)
             do{
                 let fileArr = try fm.contentsOfDirectory(atPath: DocumentPath)
                 let zipArr = getZipFiles(items: fileArr)
+                guard zipArr.count > 0 else{return}
+                FILESManager.default.fileExistsAt(path: installpath)
+                
                 for p in zipArr {
                     if p.hasSuffix(".zip") {
                         let srczip = DocumentPath + "/\(p)"
                         print("开始解压：\(srczip)")
-                        SSZipArchive.unzipFile(atPath: srczip, toDestination: despath, progressHandler: { (entry, zipinfo, entrynumber, total) in
+                        SSZipArchive.unzipFile(atPath: srczip, toDestination: installpath, progressHandler: { (entry, zipinfo, entrynumber, total) in
                             print("Doc:\(entrynumber) - \(total)")
-                            if !entry.hasSuffix(".zip") {
+                            /*if !entry.hasSuffix(".zip") {
                                 do{
                                     try self.fm.moveItem(atPath: despath + "/\(entry)", toPath: baseinfodatapath +  "/\(entry)")
                                 }catch{
                                     print(error)
                                 }
-                            }
+                            }*/
                             }, completionHandler: { (path, success, error) in
                                 print("DOCMENT解压完成：\(path)")
                                 //////////删除源文件
@@ -375,7 +379,7 @@ extension UNZIPFile  {
                                 
                                 ////添加到解压队列
                                 do{
-                                    let p = baseinfodatapath.appending("/sync_manifest.json")
+                                    let p = installpath.appending("/sync_manifest.json")
                                     let jsonStr = try String (contentsOfFile: p)
                                     guard let data = jsonStr.data(using: String.Encoding.utf8) else {return}
                                     
@@ -387,17 +391,27 @@ extension UNZIPFile  {
                                             
                                             //...比较ID，版本号。判断是否已存在
                                             if true{
-                                                //如果已存在，删除更新文件
+                                                //如果已存在，删除压缩文件
                                             }else{
-                                                //不存在，添加到解压队列等待下次更新
+                                                //不存在，添加到解压队列等待更新
                                             }
                                             
-                                            
+                                            //move zip
+                                            let zip = installpath.appending("/\(file)")
+                                            FILESManager.moveFileAt(path: zip, to: tmppath +  "/\(file)")
                                             DataSourceManager.default.updatedsQueueWith(key: "itunes import", filePath: file, datatype: .unzip)
                                         }
                                         
-                                        print("add ok")
+                                        //move json
+                                        let files = self.getFilesAt(path: installpath)
+                                        for f in  files {
+                                            if f.hasSuffix(".json"){
+                                               FILESManager.moveFileAt(path: installpath.appending("/\(f)"), to: baseinfodatapath +  "/\(f)")
+                                            }
+                                        }
                                         
+                                        print("add ok")
+                                        FILESManager.default.deleteFileAt(path: installpath)
                                         if let handler = completionHandler{
                                             handler()
                                         }
@@ -411,10 +425,10 @@ extension UNZIPFile  {
                 }
                 
                 if zipArr.count == 0{
+                    print("Document not zip.")
                     if let handler = completionHandler{
                         handler()
                     }
-
                 }
             }catch{
                 print(error)

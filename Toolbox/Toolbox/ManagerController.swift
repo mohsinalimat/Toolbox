@@ -45,43 +45,23 @@ class ManagerController: BaseViewControllerWithTable{
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       
         if let btn = _update_btn {
-            //...初始无数据源时状态标识？
+            //初始无数据源时更新按钮提示『红叉』
+            if let arr = DataSourceModel.search(with: nil, orderBy: nil) as?[DataSourceModel]{
+                if arr.count == 0 {
+                    btn.setImage(UIImage (named: "red_X_update_button"), for: .normal)
+                }
+            }
             
             btn.isSelected = DataSourceManager.default.ds_startupdating
         }
-        
-        
-        //...检测更新
-        //UNZIPFile.default.installBook()
-        
-        /*
-         if UNZIPFile.hasBookNeedUpdate() {
-         UNZIPFile.default.installBook()
-         
-         ////
-         //showUnzipViewController()
-         }*/
-        
     }
-    
-    //MARK:- DSManagerDelegate
-    /*
-    func ds_hasCheckedUpdate() {
-        self.ds_isbusying = false
-        DispatchQueue.main.async {
-            HUD.show(info: "已是最新")
-        }
-        print("NO NEED UPDATE")
-    }*/
-    
-    
+
     //MARK:- navigation Item
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
-        btn.setImage(UIImage (named: "green_update_button"), for: .normal)//23.23 green_update_button,inprogress_update_button
+        btn.setImage(UIImage (named: "green_update_button"), for: .normal)//23.23
         btn.setImage(UIImage (named: "inprogress_update_button"), for: .selected)
         btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
         _update_btn = btn
@@ -94,7 +74,7 @@ class ManagerController: BaseViewControllerWithTable{
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
-        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80) //self.editButtonItem
+        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80)
     }
     
     func navigationItemWith(index:Int,width:CGFloat) -> UIBarButtonItem {
@@ -222,6 +202,10 @@ class ManagerController: BaseViewControllerWithTable{
             if keyPath == "ds_startupdating"{
                 if let btn = self._update_btn {
                     btn.isSelected = DataSourceManager.default.ds_startupdating
+                    if btn.image(for: .normal) == UIImage (named: "red_X_update_button") {
+                        btn.setImage(UIImage (named: "green_update_button"), for: .normal)
+                    }
+                    
                 }
             }
 
@@ -308,7 +292,6 @@ class ManagerController: BaseViewControllerWithTable{
         
         let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray + arr2!
-        
         tableview?.reloadData()
     }
     
@@ -498,7 +481,6 @@ class ManagerController: BaseViewControllerWithTable{
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
         print("收到内存告警!!!")
         // Dispose of any resources that can be recreated.
     }

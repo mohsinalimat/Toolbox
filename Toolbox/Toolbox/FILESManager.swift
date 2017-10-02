@@ -13,6 +13,8 @@ class FILESManager: NSObject {
     static let `default` :FILESManager = FILESManager()
     let fm = FileManager.default
 
+    
+    //MARK:
     @discardableResult
     func fileExistsAt(path:String,createWhenNotExist:Bool? = true) -> Bool {
         let exist = fm.fileExists(atPath: path)
@@ -30,7 +32,6 @@ class FILESManager: NSObject {
         return exist
     }
 
-    
     func deleteFileAt(path:String) {
         if FileManager.default.isDeletableFile(atPath: path) {
             do {
@@ -42,6 +43,16 @@ class FILESManager: NSObject {
             print("文件删除失败:\(path)")
         }
     }
+    
+    class func moveFileAt(path:String,to:String) {
+        do{
+            try FileManager.default.moveItem(atPath: path, toPath: to)
+        }catch{
+            print("move file occur error : \(error.localizedDescription)")
+        }
+    }
+    
+    
     
     
 }
