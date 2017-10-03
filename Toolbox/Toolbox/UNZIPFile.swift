@@ -377,48 +377,65 @@ extension UNZIPFile  {
                                 //////////删除源文件
                                 FILESManager.default.deleteFileAt(path: path)
                                 
-                                ////添加到解压队列
-                                do{
-                                    let p = installpath.appending("/sync_manifest.json")
-                                    let jsonStr = try String (contentsOfFile: p)
-                                    guard let data = jsonStr.data(using: String.Encoding.utf8) else {return}
-                                    
-                                    do {
-                                        guard let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String:String]] else{return}
+                            do{
+                                let p = installpath.appending("/sync_manifest.json")
+                                let jsonStr = try String (contentsOfFile: p)
+                                guard let data = jsonStr.data(using: String.Encoding.utf8) else {return}
+                                do {
+                                    guard let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String:String]] else{return}
+                                    for dic in arr{
+                                        let file = dic["file_loc"]!;
+                                        let uid = dic["book_uuid"]
+                                        let old = PublicationVersionModel.searchSingle(withWhere: "book_uuid='\(uid!)'", orderBy: nil) as? PublicationVersionModel
                                         
-                                        for dic in arr{
-                                            let file = dic["file_loc"]!;
+                                        //比较ID，版本号。判断是否已存在
+                                        if let old = old{
+                                            //如果已存在,比较版本号
+                                            guard let v_new = dic["revision_number"] else{return}
+                                            guard let v_old = old.revision_number else{return}
                                             
-                                            //...比较ID，版本号。判断是否已存在
-                                            if true{
-                                                //如果已存在，删除压缩文件
-                                            }else{
-                                                //不存在，添加到解压队列等待更新
+                                            
+                                            if UInt16.init(v_new)! > UInt16.init(v_old)! {
+                                                var dic = dic
+                                                dic["data_source"] = "itunes import"
+                                            //删除原记录，保存新的记录
+                                              PublicationVersionModel.delete(with: "book_uuid='\(uid!)'")
+                                              PublicationVersionModel.saveToDb(with: dic)
+                                                
+                                                //move zip
+                                                let zip = installpath.appending("/\(file)")
+                                                FILESManager.moveFileAt(path: zip, to: tmppath +  "/\(file)")
+                                                DataSourceManager.default.updatedsQueueWith(key: "itunes import", filePath: file, datatype: .unzip)
                                             }
-                                            
+                                        }else{
+                                            //不存在，添加到解压队列等待更新
+                                            var dic = dic
+                                            dic["data_source"] = "itunes import"
+                                            PublicationVersionModel.saveToDb(with: dic)
                                             //move zip
                                             let zip = installpath.appending("/\(file)")
                                             FILESManager.moveFileAt(path: zip, to: tmppath +  "/\(file)")
                                             DataSourceManager.default.updatedsQueueWith(key: "itunes import", filePath: file, datatype: .unzip)
                                         }
-                                        
-                                        //move json
-                                        let files = self.getFilesAt(path: installpath)
-                                        for f in  files {
-                                            if f.hasSuffix(".json"){
-                                               FILESManager.moveFileAt(path: installpath.appending("/\(f)"), to: baseinfodatapath +  "/\(f)")
-                                            }
-                                        }
-                                        
-                                        print("add ok")
-                                        FILESManager.default.deleteFileAt(path: installpath)
-                                        if let handler = completionHandler{
-                                            handler()
+                                    }
+                                    
+                                    //move json,unuseful
+                                    let files = self.getFilesAt(path: installpath)
+                                    for f in  files {
+                                        if f.hasSuffix(".json"){
+                                           FILESManager.moveFileAt(path: installpath.appending("/\(f)"), to: baseinfodatapath +  "/\(f)")
                                         }
                                     }
-                                }catch{
-                                    print(error)
+                                    
+                                    print("doc parse ok...")
+                                    FILESManager.default.deleteFileAt(path: installpath)
+                                    if let handler = completionHandler{
+                                        handler()
+                                    }
                                 }
+                            }catch{
+                                print(error)
+                            }
                                 
                         })
                     }
@@ -940,14 +957,19 @@ extension UNZIPFile  {
                         }
                     }else{
                         print("已存在：\(bookname)")
-                        UserDefaults.standard.removeObject(forKey: "book_path")
-                        FILESManager.default.deleteFileAt(path: path1)
+                        /*UserDefaults.standard.removeObject(forKey: "book_path")
+                        FILESManager.default.deleteFileAt(path: path1)*/
+                        
+                        //删除原来的版本
+                        print("start delete \(despath) - \(Date())")
+                        FILESManager.default.deleteFileAt(path: despath)
+                        print("end delete \(despath) - \(Date())")
+                        
+                        FILESManager.moveFileAt(path: srcpath, to: despath)
                         
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
                         }
-                        continue
-                        //.....RESERVE
                     }
                 }else{
                     do{

@@ -148,7 +148,7 @@ class DataSourceManager: NSObject {
         
     }
 
-    func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
+    /*func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
       guard info.keys.count == 3 else {return}
       if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil){
         guard let server_syncArr = info["sync_manifest.json"] as?[[String:String]] else {return}
@@ -158,7 +158,6 @@ class DataSourceManager: NSObject {
             do{//比较同步信息
                 guard let data = syncjsonStr.data(using: String.Encoding.utf8) else{return}
                 guard let local_arr = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String:String]] else {return}
-                
                 for sdic in server_syncArr{
                     guard let doc_number = sdic["doc_number"] else{return}
                     guard let doc_version = sdic["revision_number"] else{return}
@@ -209,6 +208,82 @@ class DataSourceManager: NSObject {
             }
         }
     }
+        
+    }*/
+    
+    func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
+        guard info.keys.count == 3 else {return}
+        guard let server_syncArr = info["sync_manifest.json"] as? [[String:String]] else {return}
+        if let m = DataSourceModel.searchSingle(withWhere: "location_url='\(url)'", orderBy: nil) as? DataSourceModel
+        {
+                for dic in server_syncArr{
+                    let file = dic["file_loc"]!;
+                    guard let uid = dic["book_uuid"] else{return}
+                    let old = PublicationVersionModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationVersionModel
+                    //比较ID，版本号。判断是否已存在
+                    if let old = old{
+                        //如果已存在,比较版本号
+                        guard let v_new = dic["revision_number"] else{return}
+                        guard let v_old = old.revision_number else{return}
+                        if UInt16.init(v_new)! > UInt16.init(v_old)! {
+                            var dic = dic
+                            dic["data_source"] = url
+                            //删除原记录，保存新的记录
+                            PublicationVersionModel.delete(with: "book_uuid='\(uid)'")
+                            PublicationVersionModel.saveToDb(with: dic)
+                            
+                            //添加到下载
+                            let fileurl = url + "\(file)"
+                            updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                            //更新状态
+                            if m.update_status != 1 {
+                                m.update_status = 1
+                                m.updateToDB()
+                            }
+                        }
+                    }else{
+                        var dic = dic
+                        dic["data_source"] = url
+                        PublicationVersionModel.saveToDb(with: dic)
+                        //添加到下载
+                        let fileurl = url + "\(file)"
+                        updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                        //更新状态
+                        if m.update_status != 1 {
+                            m.update_status = 1
+                            m.updateToDB()
+                        }
+                    }
+            }
+        }else{//不同的数据源会不会有相同的数据？？？,有待验证
+                let m = DataSourceModel()
+                for(key,value) in info{
+                    do{
+                        let data =  try JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
+                        let jsonStr = String.init(data: data, encoding: String.Encoding.utf8)
+                        switch key {
+                        case ksync_manifest: m.sync_manifest = jsonStr;break
+                        case kpackage_info: m.package_info = jsonStr;break
+                        case ktdafactorymobilebaseline:m.server_baseline = jsonStr;break
+                        default: break
+                        }
+                    }catch{
+                        print("\(key): \(error.localizedDescription)")
+                    }
+                }
+                m.location_url = url
+                m.update_status = 1
+                m.saveToDB();
+                
+                //添加到下载
+                for dic in server_syncArr{
+                    let zip:String! = dic["file_loc"]
+                    let fileurl = url + "\(zip!)"
+                    updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                    PublicationVersionModel.saveToDb(with: dic)
+                }
+            }
+        
         
     }
     

@@ -254,6 +254,12 @@
 
 @end
 
+@implementation PublicationVersionModel
 
+-(NSString *)getPrimarykey{
+    return @"book_uuid";
+}
+
+@end
 
 
