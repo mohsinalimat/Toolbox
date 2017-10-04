@@ -480,6 +480,56 @@ class DataSourceManager: NSObject {
     }
    
     
+    //MARK: - delete book
+    class func deleteBooksWithId(_ uids:[String]) {
+        guard uids.count > 0 else {
+            return
+        }
+        
+        //未考虑删除人为中断的情况????
+        for uid in uids {
+            if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
+                guard let doc_owner = pub.document_owner else{return}
+                
+                print("start delete \(uid) - \(Date())")
+                
+                //delete Publication
+                pub.deleteToDB()
+                
+                //delete PublicationVersionModel
+                PublicationVersionModel.delete(with: "book_uuid='\(uid)'")
+
+                //SegmentModel
+                SegmentModel.delete(with: "book_id='\(uid)'")
+                
+                //APMMap,Airplane
+                let mapArr = APMMap.search(with: "bookid='\(uid)'", orderBy: nil)as! [APMMap]
+                for map in mapArr{
+                    let msn = map.msn
+                    let msnArr = APMMap.search(with: "msn='\(msn!)'", orderBy: nil) as![APMMap]
+                    if msnArr.count == 1{
+                        AirplaneModel.delete(with: "airplaneSerialNumber='\(msn!)'")
+                    }
+                    
+                    map.deleteToDB()
+                }
+                
+                
+                //bookmark
+                BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
+                
+                //delete files in Library
+                let path = ROOTPATH.appending("/\(doc_owner)/\(uid)")
+                FILESManager.default.deleteFileAt(path: path)
+                
+                print("end  delete \(uid) - \(Date())")
+            }
+            
+        }
+        
+    }
+    
+    
     
 }
 

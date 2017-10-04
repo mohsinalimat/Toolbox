@@ -151,7 +151,7 @@
 @property(nonatomic,assign)NSInteger data_type;//RESERVE...
 @end
 
-//MSN - BOOKS映射
+//MSN - BOOKS映射(一个飞机可对应多个手册，所以删除手册时飞机的删除要慎重)
 @interface APMMap : Model
 @property(nonatomic,copy)NSString * primary_id;
 @property(nonatomic,copy)NSString * bookid;

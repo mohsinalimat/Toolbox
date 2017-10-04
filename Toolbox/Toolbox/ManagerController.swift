@@ -31,7 +31,8 @@ class ManagerController: BaseViewControllerWithTable{
     var _update_btn:UIButton?
     var rightItems_old:[UIBarButtonItem]?
     var rightItemSelectAll:UIBarButtonItem?
-    var rightItemBtn:UIButton?
+    var rightItemBtn:UIButton?//== rightItemSelectAll
+    var editButton:UIButton?
     
     //MARK:
     override func viewDidLoad() {
@@ -91,16 +92,21 @@ class ManagerController: BaseViewControllerWithTable{
         btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .normal)
         btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .selected)
         btn.adjustsImageWhenHighlighted = false
-        if index == 1 {rightItemBtn = btn}
+        if index == 0{
+            editButton = btn
+        }else{
+            rightItemBtn = btn
+        }
         
         let item = UIBarButtonItem.init(customView: btn)
         return item
     }
     
     func navigationItemBtnAction(_ btn:UIButton) {
+        guard dataArray.count > 0 else {return}
         btn.isSelected = !btn.isSelected
         switch btn.tag {
-        case 100:setEdited(btn);break
+        case 100:setEdited(btn.isSelected);break
         case 101:
             selectedInEditModelArr.removeAll()
             if btn.isSelected {//全选
@@ -116,9 +122,11 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     
-    func setEdited(_ btn:UIButton) {
-        guard dataArray.count > 0 else {return}
-        if !btn.isSelected {
+    /// 是否处于编辑状态
+    ///
+    /// - Parameter isEdit: true/false
+    func setEdited(_ isEdit:Bool) {
+        if !isEdit {
             navigationItem.rightBarButtonItems = rightItems_old
             tableview?.isEditing = false
             tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49)
@@ -154,9 +162,24 @@ class ManagerController: BaseViewControllerWithTable{
     
     func  deleteBtnClick (_ btn:UIButton)  {
         let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
-        let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { (action) in
+        let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { [weak self](action) in
             ////
+            guard let strongSelf = self else{return}
+            DispatchQueue.main.async {
+                HUD.show(withStatus: "数据删除中,请等待!")
+            }
 
+            DataSourceManager.deleteBooksWithId(strongSelf.selectedInEditModelArr)
+            //全部删除完成
+            print("delete all ok.")
+            strongSelf.editButton?.isSelected = false
+            strongSelf.setEdited(false)
+            strongSelf.loadData()
+            DispatchQueue.main.async {
+                HUD.show(successInfo: "删除完成!")
+            }
+
+            //...其他提示操作
         })
         
         let ac = UIAlertController.init(title: "提示", message: "删除后会清除所有相关数据,确定要删除?", preferredStyle: .alert)
