@@ -523,6 +523,10 @@ class DataSourceManager: NSObject {
                 FILESManager.default.deleteFileAt(path: path)
                 
                 print("end  delete \(uid) - \(Date())")
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                }
             }
             
         }

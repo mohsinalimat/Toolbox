@@ -34,6 +34,8 @@ class ManagerController: BaseViewControllerWithTable{
     var rightItemBtn:UIButton?//== rightItemSelectAll
     var editButton:UIButton?
     
+    var startDelete:Bool = false
+    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -166,18 +168,13 @@ class ManagerController: BaseViewControllerWithTable{
             ////
             guard let strongSelf = self else{return}
             DispatchQueue.main.async {
-                HUD.show(withStatus: "数据删除中,请等待!")
+                strongSelf.setValue(true, forKey: "startDelete")
+                    /*
+                //HUD.show(withStatus: "数据删除中,请等待!")
+                //HUD.show(successInfo: "删除完成!")*/
             }
 
-            DataSourceManager.deleteBooksWithId(strongSelf.selectedInEditModelArr)
-            //全部删除完成
-            print("delete all ok.")
-            strongSelf.editButton?.isSelected = false
-            strongSelf.setEdited(false)
-            strongSelf.loadData()
-            DispatchQueue.main.async {
-                HUD.show(successInfo: "删除完成!")
-            }
+
 
             //...其他提示操作
         })
@@ -217,6 +214,9 @@ class ManagerController: BaseViewControllerWithTable{
         
         DataSourceManager.default.addObserver(self, forKeyPath: "ds_startupdating", options: .new, context: nil)
         
+        //delete
+        self.addObserver(self, forKeyPath: "startDelete", options: .new, context: nil)
+        
     }
     
     
@@ -230,6 +230,13 @@ class ManagerController: BaseViewControllerWithTable{
                     }
                     
                 }
+            }else if keyPath == "startDelete"{
+                print("will delete...")
+                self.showUpdateVC(self.selectedInEditModelArr.count, type: 1)
+                DispatchQueue.global().async {
+                    DataSourceManager.deleteBooksWithId(self.selectedInEditModelArr)    
+                }
+                
             }
 
         }
@@ -257,26 +264,43 @@ class ManagerController: BaseViewControllerWithTable{
     
     
     func allbookupdatecomplete(_ noti:Notification)  {
-        ///手册更新完毕，刷新列表
-        self.ds_isbusying = false
-        DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
-        HUD.show(successInfo: "更新完成")
-        loadData()
+        if let type = noti.userInfo?["type"] as? Int {
+            if type == 0 {
+                ///手册更新完毕，刷新列表
+                self.ds_isbusying = false
+                DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
+                HUD.show(successInfo: "更新完成")
+            }else{
+                //全部删除完成
+                print("delete all ok.")
+                editButton?.isSelected = false
+                setEdited(false)
+                HUD.show(successInfo: "删除完成")
+            }
+            
+            loadData()
+        }
     }
     
     func startParsebook(_ noti:Notification) {
         print("+++++++++++ startParsebook");//return
+        if let num = noti.userInfo?["filesnumber"] as?Int {
+            showUpdateVC(num)
+        }
+        
+    }
+    
+    func showUpdateVC(_ num:Int = 0,type:Int = 0) {
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
         let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
         vc.view.frame = rect
         vc.modalPresentationStyle = .formSheet
         vc.preferredContentSize = rect.size
-        
-        if let num = noti.userInfo?["filesnumber"] {
-            vc.totalBookssnumber = num as! Int
-        }        
+        vc.totalBookssnumber = num
+        vc.type = type
         self.present(vc, animated: false, completion: nil)
     }
+    
     
     func test_update(){
         let rect = CGRect (x: 0, y: 0, width: 500, height: 180)

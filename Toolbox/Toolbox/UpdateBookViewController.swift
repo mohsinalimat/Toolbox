@@ -18,34 +18,38 @@ class UpdateBookViewController: BaseViewController {
     var hasProgressnumber = 0
     var totalBookssnumber = 0
     
+    var type:Int = 0 //0-更新操作 ，1-删除
+    var titleInfo:String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.black
         
-        NotificationCenter.default.addObserver(self, selector: #selector(unzipfileFinish(_:)), name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updatefileFinish(_:)), name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil)
         
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         activity.startAnimating()
-        updateNumberLab.text = "更新文件:\(hasProgressnumber)/\(totalBookssnumber)"
+        titleInfo =  type == 0 ? "更新文件":"删除文件"
+        updateNumberLab.text = "\(titleInfo):\(hasProgressnumber)/\(totalBookssnumber)"
     }
     
     
-    func unzipfileFinish(_ noti:Notification) {
+    func updatefileFinish(_ noti:Notification) {
         hasProgressnumber = hasProgressnumber + 1
         
-        updateNumberLab.text = "更新文件:\(hasProgressnumber)/\(totalBookssnumber)"
+        updateNumberLab.text = "\(titleInfo):\(hasProgressnumber)/\(totalBookssnumber)"
         
         if  hasProgressnumber == totalBookssnumber {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
                 self.activity.stopAnimating()
                 
                 self.dismiss(animated: false, completion: nil)
-                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete")))
+                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"),object: nil,userInfo: ["type":self.type]))
                 
             })
         }
