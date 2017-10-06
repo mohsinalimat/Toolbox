@@ -15,19 +15,35 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
 
         // Do any additional setup after loading the view.
         
-        dataArray = ["Test"]
+        dataArray = ["1","1","1","1","1","1","1"]
+        
         title = "更新信息"
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let rect = view.frame
+        tableview?.frame = CGRect (x: 0, y: 100, width: rect.width, height: rect.height - 100)
+    }
+    
+    
     override func initSubview() {
         needtitleView = false
         navigationItem.rightBarButtonItems = nil
         
-        tableview?.frame = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 100), height: 60 * 8)
+        let top_v = UIView (frame: CGRect (x: 0, y: 0, width: view.frame.width, height: 100))
+        top_v.backgroundColor = UIColor (colorLiteralRed: 160/255.0, green: 160/255.0, blue: 160/255.0, alpha: 1)
+        
+        view.addSubview(top_v)
+        
+        tableview?.bounces = false
+        tableview?.register(UINib (nibName: "DownloadDetailCell", bundle: nil), forCellReuseIdentifier: "DownloadDetailCellReuseId")
+        tableview?.backgroundView = nil
         
         //close
-        let closebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 60, height: 40))
-//        closebtn.setTitle("返回", for: .normal)
+        let closebtn = UIButton (frame: CGRect (x: 10, y: 0, width: 60, height: 40))
+        //closebtn.setTitle("返回", for: .normal)
         closebtn.setImage(UIImage (named: "backhighlighted"), for: .normal)
         closebtn.setImage(UIImage (named: "backhighlighted"), for: .highlighted)
         closebtn.setTitleColor(UIColor.white, for: .normal)
@@ -45,29 +61,40 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         view.backgroundColor = UIColor.white
     }
     
-    
-    func closeBtn(){
-        
-       _ = self.navigationController?.popViewController(animated: false)
-//        self.dismiss(animated: false, completion: nil)
+    deinit{
+        print("DownloadDetailViewController")
     }
     
     
+    func closeBtn(){
+       self.dismiss(animated: false) { 
+            let vc = DownloadViewController.init()
+            let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
+            vc.view.frame = rect////////开始创建view
+            
+            let nav = BaseNavigationController(rootViewController:vc)
+            nav.modalPresentationStyle = UIModalPresentationStyle.formSheet
+            nav.preferredContentSize = rect.size
+            UIApplication.shared.keyWindow?.rootViewController?.present(nav, animated: false, completion: nil)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadDetailCellReuseId", for: indexPath) as! DownloadDetailCell
+        cell.fillCell()
+        cell.backgroundColor = UIColor.clear
+        
+        return cell
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -34,15 +34,12 @@ class ManagerController: BaseViewControllerWithTable{
     var rightItemBtn:UIButton?//== rightItemSelectAll
     var editButton:UIButton?
     
-    var startDelete:Bool = false
-    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
         initNavigationBarItem()
         addObservers()
-        
         loadData()
     }
 
@@ -84,11 +81,9 @@ class ManagerController: BaseViewControllerWithTable{
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: width, height: 30))
         let title_1 = ["Edit","Select All"]
         let title_2 = ["Cancle","Unselect All"]
-        
         btn.setTitle(title_1[index], for: .normal)
         btn.setTitle(title_2[index], for: .selected)
         btn.tag = 100 + index
-        
         btn.addTarget(self, action: #selector(navigationItemBtnAction(_ :)), for: .touchUpInside)
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .normal)
@@ -125,7 +120,6 @@ class ManagerController: BaseViewControllerWithTable{
     
     
     /// 是否处于编辑状态
-    ///
     /// - Parameter isEdit: true/false
     func setEdited(_ isEdit:Bool) {
         if !isEdit {
@@ -137,12 +131,10 @@ class ManagerController: BaseViewControllerWithTable{
             rightItemBtn?.isSelected = false
             selectedInEditModelArr.removeAll()
         }else{
-            //self.editButtonItem.title = "Cancle"
             if rightItemSelectAll == nil{
                 rightItemSelectAll = navigationItemWith(index: 1, width: 100);
             }
             navigationItem.rightBarButtonItems = [rightItemSelectAll!]
-            
             tableview?.isEditing = true
             tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49 - 60)
             
@@ -162,30 +154,6 @@ class ManagerController: BaseViewControllerWithTable{
         }
     }
     
-    func  deleteBtnClick (_ btn:UIButton)  {
-        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
-        let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { [weak self](action) in
-            ////
-            guard let strongSelf = self else{return}
-            DispatchQueue.main.async {
-                strongSelf.setValue(true, forKey: "startDelete")
-                    /*
-                //HUD.show(withStatus: "数据删除中,请等待!")
-                //HUD.show(successInfo: "删除完成!")*/
-            }
-
-
-
-            //...其他提示操作
-        })
-        
-        let ac = UIAlertController.init(title: "提示", message: "删除后会清除所有相关数据,确定要删除?", preferredStyle: .alert)
-        ac.addAction(action_1)
-        ac.addAction(action_2)
-        self.present(ac, animated: false, completion: nil)
-
-    }
-    
     func downloadBtnClicked(_ btn:UIButton){
         let vc = DownloadViewController.init()
         let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
@@ -198,27 +166,33 @@ class ManagerController: BaseViewControllerWithTable{
     }
 
     
-    //MARK:- Notification Mehods
-    func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(startUnzip(_:)), name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil)
+    func deleteBtnClick (_ btn:UIButton)  {
+        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+        let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { [weak self](action) in
+            guard let strongSelf = self else{return}
+            DispatchQueue.main.async {
+                strongSelf.showUpdateVC(strongSelf.selectedInEditModelArr.count, type: 1)
+                DispatchQueue.global().async {
+                    DataSourceManager.deleteBooksWithId(strongSelf.selectedInEditModelArr)
+                }
+            }
+        })
         
-        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
-        
-        //UpdateBookViewController
-        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
-        
-        let zips  = UNZIPFile.default
-        zips.addObserver(self, forKeyPath: "update_total_filescnt", options: .new, context: nil)
-        
-        DataSourceManager.default.addObserver(self, forKeyPath: "ds_startupdating", options: .new, context: nil)
-        
-        //delete
-        self.addObserver(self, forKeyPath: "startDelete", options: .new, context: nil)
-        
+        let ac = UIAlertController.init(title: "提示", message: "删除后会清除所有相关数据,确定要删除?", preferredStyle: .alert)
+        ac.addAction(action_1)
+        ac.addAction(action_2)
+        self.present(ac, animated: false, completion: nil)
     }
     
+    
+    //MARK:- Notification Mehods
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(startParsebook(_:)), name: NSNotification.Name (rawValue: "kNotification_start_update"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
+
+        DataSourceManager.default.addObserver(self, forKeyPath: "ds_startupdating", options: .new, context: nil)
+    }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         DispatchQueue.main.async {
@@ -228,19 +202,9 @@ class ManagerController: BaseViewControllerWithTable{
                     if btn.image(for: .normal) == UIImage (named: "red_X_update_button") {
                         btn.setImage(UIImage (named: "green_update_button"), for: .normal)
                     }
-                    
                 }
-            }else if keyPath == "startDelete"{
-                print("will delete...")
-                self.showUpdateVC(self.selectedInEditModelArr.count, type: 1)
-                DispatchQueue.global().async {
-                    DataSourceManager.deleteBooksWithId(self.selectedInEditModelArr)    
-                }
-                
             }
-
         }
-        
     }
     
     //检测服务器是否更新
@@ -255,13 +219,6 @@ class ManagerController: BaseViewControllerWithTable{
 
         }
     }
-    
-    func startUnzip(_ noti:Notification) {
-        print("通知-showUnzipViewController.")
-        showUnzipViewController()
-
-    }
-    
     
     func allbookupdatecomplete(_ noti:Notification)  {
         if let type = noti.userInfo?["type"] as? Int {
@@ -300,35 +257,8 @@ class ManagerController: BaseViewControllerWithTable{
         vc.type = type
         self.present(vc, animated: false, completion: nil)
     }
-    
-    
-    func test_update(){
-        let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
-        let vc :UpdateBookViewController = UpdateBookViewController.init(nibName: "UpdateBookViewController", bundle: nil)
-        vc.view.frame = rect
-        vc.modalPresentationStyle = .formSheet
-        vc.preferredContentSize = rect.size
-        vc.totalBookssnumber = 5
-        self.navigationController?.present(vc, animated: false, completion: nil)
-    }
-   
+
     //MARK:
-    func showUnzipViewController() {
-        let rect = CGRect (x: 0, y: 0, width: 500, height: 180)
-        let vc :UnzipInfoViewController = UnzipInfoViewController.init(nibName: "UnzipInfoViewController", bundle: nil)
-        /*
-        let nav:BaseNavigationController = BaseNavigationController(rootViewController:vc)
-        nav.navigationBar.barTintColor = UIColor.darkGray
-        nav.navigationBar.tintColor = UIColor.black */
- 
-        vc.view.frame = rect
-        vc.modalPresentationStyle = .formSheet
-        vc.preferredContentSize = rect.size
-        kUnzipprogress = vc.progress
-        self.navigationController?.present(vc, animated: false, completion: nil)
-    }
-    
-    
     func loadData(opt:String = "book_uuid") {
         dataArray.removeAll()
         selectedDataArray.removeAll()
@@ -375,24 +305,16 @@ class ManagerController: BaseViewControllerWithTable{
             
             searchBtn.leftView = leftview
             v.addSubview(searchBtn)
-            
             return v
         }()
         //view.addSubview(topview)
 
         tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 0)
         sectionHeadtitle =  "Publications on Device"
-        tableViewRegisterCell()
-        
-    }
-    
-    
-    func tableViewRegisterCell() {
         tableview?.register(UINib(nibName: "ManagerCell", bundle: nil), forCellReuseIdentifier: managerCellIdentifier)
         tableview?.register(UINib (nibName:"ManagerDetailCell", bundle: nil), forCellReuseIdentifier: managerDetailCellReuseIdentifier)
+        
     }
-    
-    
     
     //popView选择排序项
     func popButtonAction(_ button:UIButton)
@@ -481,7 +403,6 @@ class ManagerController: BaseViewControllerWithTable{
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        guard dataArray[indexPath.row] as? Int != 0 else { return }
-
        let value = dataArray[indexPath.row] as! PublicationsModel
         if tableView.isEditing {
             let s = value.book_uuid

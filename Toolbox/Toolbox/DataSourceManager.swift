@@ -143,7 +143,10 @@ class DataSourceManager: NSObject {
             m.location_url = strongSelf.ds_from_itunes
             m.update_status = 2
             m.saveToDB()
-            strongSelf.delegate?.ds_checkoutFromDocument()
+            
+            return
+                
+            //strongSelf.delegate?.ds_checkoutFromDocument()
         }
         
     }

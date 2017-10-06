@@ -92,7 +92,7 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         bgview.addSubview(title)
         
         let ig = UIImageView(image: UIImage(named:"backhighlighted"), highlightedImage: UIImage(named:"backhighlighted"))
-        ig.transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+        ig.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
         ig.translatesAutoresizingMaskIntoConstraints = false
         bgview.addSubview(ig)
      

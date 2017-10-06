@@ -120,6 +120,8 @@
 		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
+		ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */; };
+		ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */; };
 		ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E251F8224A500FB4230 /* Reachability.m */; };
 		ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E271F82274E00FB4230 /* Tools.swift */; };
 /* End PBXBuildFile section */
@@ -264,6 +266,8 @@
 		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
+		ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailCell.swift; sourceTree = "<group>"; };
+		ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailCell.xib; sourceTree = "<group>"; };
 		ADFE0E241F8224A500FB4230 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		ADFE0E251F8224A500FB4230 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		ADFE0E271F82274E00FB4230 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
@@ -522,6 +526,8 @@
 				A1B71D071F0B36570054CA04 /* BookmarksCell.xib */,
 				A1E9BF911F5E808C005251C8 /* DownloadCell.swift */,
 				A1E9BF921F5E808C005251C8 /* DownloadCell.xib */,
+				ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */,
+				ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -688,6 +694,7 @@
 				A1BBCF541F2ACBFF007374B7 /* bookmarkOff@2x.png in Resources */,
 				A1A19CA61F57DE08007BF3AD /* test.txt in Resources */,
 				A106483D1F04C21E002D088C /* AppIcon-B2C72x72~ipad.png in Resources */,
+				ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */,
 				A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */,
 				A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */,
 				A1BBCF591F2ACBFF007374B7 /* bookmarkOnHighlighted.png in Resources */,
@@ -853,6 +860,7 @@
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,
+				ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */,
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
 				ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */,
 				A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */,

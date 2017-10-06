@@ -356,7 +356,7 @@ extension UNZIPFile  {
             do{
                 let fileArr = try fm.contentsOfDirectory(atPath: DocumentPath)
                 let zipArr = getZipFiles(items: fileArr)
-                guard zipArr.count > 0 else{return}
+                //guard zipArr.count > 0 else{return}
                 FILESManager.default.fileExistsAt(path: installpath)
                 
                 for p in zipArr {
@@ -949,22 +949,14 @@ extension UNZIPFile  {
                 if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
                     let cca_files = getFilesAt(path: path_cca)
                     if !cca_files.contains(bookname) {
-                        do{
-                            try fm.moveItem(atPath: srcpath, toPath: despath)
-                            //FILESManager.default.deleteFileAt(path: path1)
-                        }catch{
-                            print(error)
-                        }
+                        FILESManager.moveFileAt(path: srcpath, to: despath)
                     }else{
                         print("已存在：\(bookname)")
                         /*UserDefaults.standard.removeObject(forKey: "book_path")
                         FILESManager.default.deleteFileAt(path: path1)*/
-                        
-                        //删除原来的版本
-                        print("start delete \(despath) - \(Date())")
-                        FILESManager.default.deleteFileAt(path: despath)
-                        print("end delete \(despath) - \(Date())")
-                        
+                        //删除原版本
+                        DataSourceManager.deleteBooksWithId([bookname])
+                        //新版本
                         FILESManager.moveFileAt(path: srcpath, to: despath)
                         
                         DispatchQueue.main.async {
