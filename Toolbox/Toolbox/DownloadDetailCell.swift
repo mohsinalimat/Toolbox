@@ -18,15 +18,19 @@ class DownloadDetailCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        layer.borderColor  = UIColor.init(colorLiteralRed: 100/255.0, green: 100/255.0, blue: 100/255.0, alpha: 0.3).cgColor
+        layer.borderColor  = UIColor.init(colorLiteralRed: 100/255.0, green: 100/255.0, blue: 100/255.0, alpha: 0.15).cgColor
 
-        layer.borderWidth = 0.3
+        layer.borderWidth = 0.25
         
     }
 
-    func fillCell() {
-       titleLab.text = "Status"
-        detailLab.text = "0"
+    func fillCell(_ dic:[String:Any]) {
+        for (key,value) in dic{
+            titleLab.text = key
+            detailLab.text = "\(value)"
+
+        }
+        
     }
     
     

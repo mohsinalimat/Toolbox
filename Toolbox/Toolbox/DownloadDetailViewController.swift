@@ -9,34 +9,84 @@
 import UIKit
 
 class DownloadDetailViewController: BaseViewControllerWithTable {
-
+    let _topview_height :CGFloat = 80.0;
+    var url:String?
+    
+    var _urlLable: UILabel!
+    var _statusLable:UILabel!
+    var _progressview:UIProgressView!
+    var _timer:Timer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        
-        dataArray = ["1","1","1","1","1","1","1"]
-        
         title = "更新信息"
+        _timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        
+        dataArray = [["Status":""],
+                     ["Time Left Until Update Required":"0"],
+                     ["Document Online":"0"],
+                     ["Document on Device":"0"],
+                     ["Document to be Added":"1"],
+                     ["Document to be Update":"0"],
+                     ["Document to be Deleted":"0"],
+                     ["Last Checked":"N/A"],
+                     ["Last Data Package":"AMU_Order_2017-05-01 00:00:00"]]
     }
 
+    func unzipAllComplete(_ noti:Notification) {
+        //防止要显示更新列表，多数据源情况下，一个数据源安装完成其他的还在进行中，视图dismiss。
+        if DataSourceManager.default.unzipQueueIsEmpty().0 {
+            _timer.invalidate()
+            self.dismiss(animated: false, completion: nil)
+        }
+    }
+    
+    func timerAction() {
+        updateStatus()
+    }
+
+    func updateStatus() {
+        let model = DataSourceModel.searchSingle(withWhere: "location_url='\(url!)'", orderBy: nil) as! DataSourceModel
+        
+        _urlLable.text = model.location_url;
+        
+        switch model.update_status {
+        case 1:_statusLable.text = "等待中";break
+        case 2:_statusLable.text = "下载文件: \(model.current_files) / \(model.total_files)";break
+        case 3:_statusLable.text = "准备解压";break
+        case 4:_statusLable.text = "解压文件: \(model.current_files) / \(model.total_files)";break
+        case 5:_statusLable.text = "解压完成,准备更新";break
+        case 6: _statusLable.text = "已是最新";break
+        default:break
+        }
+        
+        _progressview.progress = model.ds_file_percent
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         let rect = view.frame
-        tableview?.frame = CGRect (x: 0, y: 100, width: rect.width, height: rect.height - 100)
+        tableview?.frame = CGRect (x: 0, y: _topview_height, width: rect.width, height: rect.height - _topview_height)
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
+        
+        updateStatus()
     }
     
     
     override func initSubview() {
         needtitleView = false
         navigationItem.rightBarButtonItems = nil
-        
-        let top_v = UIView (frame: CGRect (x: 0, y: 0, width: view.frame.width, height: 100))
-        top_v.backgroundColor = UIColor (colorLiteralRed: 160/255.0, green: 160/255.0, blue: 160/255.0, alpha: 1)
-        
+
+        /*let _v = Bundle.main.loadNibNamed("DownloadDetailtop", owner: self, options: nil)?.first
+        let top_v = _v  as! UIView
+        top_v.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: _topview_height)
+        top_v.backgroundColor = UIColor.red*/
+        let top_v = topHeadView(CGRect(x: 0, y: 0, width: view.frame.width, height: _topview_height))
         view.addSubview(top_v)
         
+        ///tableview
         tableview?.bounces = false
         tableview?.register(UINib (nibName: "DownloadDetailCell", bundle: nil), forCellReuseIdentifier: "DownloadDetailCellReuseId")
         tableview?.backgroundView = nil
@@ -61,12 +111,46 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         view.backgroundColor = UIColor.white
     }
     
+    
+    func topHeadView(_ frame:CGRect) -> UIView {
+       let bg = UIView (frame: frame)
+       //bg.backgroundColor = UIColor (colorLiteralRed: 160/255.0, green: 160/255.0, blue: 160/255.0, alpha: 0.8)
+        bg.backgroundColor = UIColor.darkGray
+       let url_lab = UILabel (frame: CGRect (x: 10, y: 2, width: frame.width - 10, height: 35))
+        url_lab.font = UIFont.boldSystemFont(ofSize: 20)
+        url_lab.textColor = UIColor.white
+        _urlLable = url_lab
+        url_lab.text = "http://192.168.3.72:88/share/airbus/wyg"
+        bg.addSubview(url_lab)
+       
+        let s_lab = UILabel (frame: CGRect (x: 10, y: url_lab.frame.maxY, width: frame.width - 10, height:30))
+        s_lab.font = UIFont.systemFont(ofSize: 16)
+        s_lab.textColor = UIColor.white
+        _statusLable = s_lab
+        s_lab.text = "unzipping: 1/1"
+        bg.addSubview(s_lab)
+        
+        let progess = UIProgressView.init(progressViewStyle: .bar)
+        progess.frame = CGRect (x: 0, y: s_lab.frame.maxY + 8, width: frame.width, height: 5)
+        progess.transform = CGAffineTransform(scaleX: 1.0, y: 2);
+        progess.trackTintColor = UIColor.lightGray
+        
+        progess.progress = 0.2
+        _progressview = progess
+        bg.addSubview(progess)
+        return bg
+    }
+    
+    
+    
     deinit{
+        _timer = nil
         print("DownloadDetailViewController")
     }
     
     
     func closeBtn(){
+        _timer.invalidate()
        self.dismiss(animated: false) { 
             let vc = DownloadViewController.init()
             let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
@@ -79,13 +163,16 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         }
     }
     
+    //MARK:
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableview?.dequeueReusableCell(withIdentifier: "DownloadDetailCellReuseId", for: indexPath) as! DownloadDetailCell
-        cell.fillCell()
+        let dic = dataArray[indexPath.row] as![String:Any]
+        
+        cell.fillCell(dic)
         cell.backgroundColor = UIColor.clear
         
         return cell

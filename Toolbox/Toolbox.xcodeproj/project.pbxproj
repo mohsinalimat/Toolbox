@@ -119,6 +119,8 @@
 		A1E9BF931F5E808C005251C8 /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9BF911F5E808C005251C8 /* DownloadCell.swift */; };
 		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
+		AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */; };
+		AD10FEA91F88962B00B9B10C /* DownloadDetailtop.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */; };
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
 		ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */; };
 		ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */; };
@@ -265,6 +267,8 @@
 		A1E9BF911F5E808C005251C8 /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
+		AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailtop.swift; sourceTree = "<group>"; };
+		AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailtop.xib; sourceTree = "<group>"; };
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
 		ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailCell.swift; sourceTree = "<group>"; };
 		ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailCell.xib; sourceTree = "<group>"; };
@@ -391,6 +395,8 @@
 			isa = PBXGroup;
 			children = (
 				A1B3637C1F739ACD0049FB56 /* UpdateButton.swift */,
+				AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */,
+				AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -696,6 +702,7 @@
 				A106483D1F04C21E002D088C /* AppIcon-B2C72x72~ipad.png in Resources */,
 				ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */,
 				A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */,
+				AD10FEA91F88962B00B9B10C /* DownloadDetailtop.xib in Resources */,
 				A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */,
 				A1BBCF591F2ACBFF007374B7 /* bookmarkOnHighlighted.png in Resources */,
 				A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */,
@@ -858,6 +865,7 @@
 				ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */,
 				A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
+				AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,
 				ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */,

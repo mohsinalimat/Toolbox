@@ -19,26 +19,23 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFz-i5-kVG">
-                        <rect key="frame" x="207" y="8" width="100" height="27.5"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="100" id="Vql-Af-M1C"/>
-                        </constraints>
+                        <rect key="frame" x="293.5" y="8" width="10.5" height="27.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oJ1-Be-FO2">
-                        <rect key="frame" x="13" y="11" width="189" height="21"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
-                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <rect key="frame" x="13" y="11" width="0.0" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                         <color key="shadowColor" red="0.40000000000000002" green="0.40002685785293579" blue="0.39994865655899048" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="mFz-i5-kVG" firstAttribute="leading" secondItem="oJ1-Be-FO2" secondAttribute="trailing" constant="5" id="Do3-3O-lyd"/>
+                    <constraint firstItem="mFz-i5-kVG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oJ1-Be-FO2" secondAttribute="trailing" constant="5" id="Do3-3O-lyd"/>
                     <constraint firstItem="oJ1-Be-FO2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="5" id="Ud1-7f-xft"/>
-                    <constraint firstItem="mFz-i5-kVG" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="-5" id="b48-m5-tf4"/>
+                    <constraint firstItem="mFz-i5-kVG" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="-8" id="b48-m5-tf4"/>
                     <constraint firstAttribute="bottomMargin" secondItem="mFz-i5-kVG" secondAttribute="bottom" id="bfo-dQ-KcI"/>
                     <constraint firstItem="oJ1-Be-FO2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="3" id="gHs-qz-voi"/>
                     <constraint firstAttribute="bottomMargin" secondItem="oJ1-Be-FO2" secondAttribute="bottom" constant="3.5" id="ndx-VO-3Ir"/>

@@ -22,6 +22,14 @@ class DownloadViewController: BaseViewControllerWithTable {
         RunLoop.main.add(_timer, forMode: RunLoopMode.commonModes);
     }
 
+    func unzipAllComplete(_ noti:Notification) {
+        //防止要显示更新列表，多数据源情况下，一个数据源安装完成其他的还在进行中，视图dismiss。
+        if DataSourceManager.default.unzipQueueIsEmpty().0 {
+            _timer.invalidate()
+            self.dismiss(animated: false, completion: nil)
+        }
+    }
+    
     func timerAction()  {
        let arr = DataSourceModel.search(with: nil, orderBy: "location_url asc") as! [DataSourceModel]
         dataArray.removeAll()
@@ -38,13 +46,6 @@ class DownloadViewController: BaseViewControllerWithTable {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func unzipAllComplete(_ noti:Notification) {
-        //防止要显示更新列表，多数据源情况下，一个数据源安装完成其他的还在进行中，视图dismiss。
-        if DataSourceManager.default.unzipQueueIsEmpty().0 {
-            _timer.invalidate()
-            self.dismiss(animated: false, completion: nil)
-        }
-    }
 
     override func initSubview() {
         tableview?.frame = CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
@@ -118,12 +119,13 @@ class DownloadViewController: BaseViewControllerWithTable {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //return
         _timer.invalidate()
+        let m = dataArray[indexPath.row] as! DataSourceModel
         self.dismiss(animated: false) { 
             let vc = DownloadDetailViewController.init()
             let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 50), height: Int(kCurrentScreenHight - 100))
             vc.view.frame = rect////////开始创建view
+            vc.url = m.location_url
             
             let nav = BaseNavigationController(rootViewController:vc)
             nav.modalPresentationStyle = UIModalPresentationStyle.formSheet

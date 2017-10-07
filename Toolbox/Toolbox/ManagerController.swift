@@ -78,7 +78,7 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     func navigationItemWith(index:Int,width:CGFloat) -> UIBarButtonItem {
-        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: width, height: 30))
+        let btn = UIButton (frame: CGRect (x: 0, y: 0, width: width, height: index==0 ? 28 : 30))
         let title_1 = ["Edit","Select All"]
         let title_2 = ["Cancle","Unselect All"]
         btn.setTitle(title_1[index], for: .normal)

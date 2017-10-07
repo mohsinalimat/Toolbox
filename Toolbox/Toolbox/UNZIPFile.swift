@@ -847,8 +847,7 @@ extension UNZIPFile  {
             if  let ret = DataSourceModel.search(with: "update_status='\(5)'", orderBy: nil) as? [DataSourceModel]{
                 for m in ret{
                     m.ds_file_percent = 0.0
-                    m.update_status = 6
-                    
+                    m.update_status = 6                    
                     if m.location_url == "itunes import"{
                         m.deleteToDB()
                     }else if m.saveToDB() {

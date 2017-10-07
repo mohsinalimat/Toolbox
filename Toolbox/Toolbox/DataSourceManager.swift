@@ -144,9 +144,9 @@ class DataSourceManager: NSObject {
             m.update_status = 2
             m.saveToDB()
             
-            return
+            //return
                 
-            //strongSelf.delegate?.ds_checkoutFromDocument()
+            strongSelf.delegate?.ds_checkoutFromDocument()
         }
         
     }
