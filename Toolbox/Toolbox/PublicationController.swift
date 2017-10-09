@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PublicationController: BaseViewControllerWithTable {
+class PublicationController: BaseViewControllerWithTable ,UISearchBarDelegate{
 
     var selectButton : UIButton?
     var currentAirplaneModel:AirplaneModel!
@@ -29,7 +29,7 @@ class PublicationController: BaseViewControllerWithTable {
     
 
     
-    func loadData() {
+    func loadData(_ key:String? = nil) {
         //数据可能为空
         guard let selectedAirplane = kSelectedAirplane else {
             dataArray.removeAll()
@@ -59,10 +59,15 @@ class PublicationController: BaseViewControllerWithTable {
         sql.remove(at: sql.index(before: sql.endIndex))
         sql = sql.appending(")")
         
-        let m =  PublicationsModel.search(with: "book_uuid in \(sql)", orderBy: nil)
+        var str = "book_uuid in \(sql)"
+        if let key = key {
+            if key.lengthOfBytes(using: String.Encoding.utf8) > 0{
+                str = "book_uuid in \(sql) and display_title like '%\(key)%'"
+            }
+        }
+        let m =  PublicationsModel.search(with: str, orderBy: nil)
         dataArray.removeAll()
         dataArray = dataArray + m!
-        
         tableview?.reloadData()
     }
     
@@ -78,32 +83,52 @@ class PublicationController: BaseViewControllerWithTable {
         searchBar.barStyle = UIBarStyle.default
         searchBar.searchBarStyle = UISearchBarStyle.minimal
         searchBar.placeholder = "Search"
+        searchBar.delegate = self
+        searchBar.returnKeyType = .search
         view.addSubview(searchBar)
         
         tableview?.frame = CGRect (x: 0, y: searchBar.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - searchBar.frame.height)
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
         sectionHeadtitle =  "Publications"
-        
     }
     
-    
+    //MARK: - UISearchBarDelegate
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let msn:String = currentAirplaneModel.airplaneSerialNumber
+        let bookArr = APMMap.search(withSql: "select bookid from APMMAP where msn = '\(msn)' order by bookid asc") as! [APMMap]
+        var sql = "("
+        for (value) in bookArr {
+            sql =  sql.appending("'\(value.bookid!)',")
+        }
+        
+        sql.remove(at: sql.index(before: sql.endIndex))
+        sql = sql.appending(")")
+        
+        var str = "book_uuid in \(sql)"
+        if let key = searchBar.text {
+            if key.lengthOfBytes(using: String.Encoding.utf8) > 0{
+                str = "book_uuid in \(sql) and display_title like '%\(key.uppercased())%'"
+            }
+        }
+        let m =  PublicationsModel.search(with: str, orderBy: nil)
+        dataArray.removeAll()
+        dataArray = dataArray + m!
+        tableview?.reloadData()
+    }
     
     //MARK: 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         if dataArray.count == 0 {
             return getCellForNodata(tableView, info: "NO AIRPLANE SELECTED")
         }
         
         let cell = tableview?.dequeueReusableCell(withIdentifier: "PublicationCellReuseIdentifier", for: indexPath) as! PublicationCell
         let model : PublicationsModel! = dataArray[indexPath.row] as! PublicationsModel
-        
         cell.fillCell(model: model)
         if let kSelectedPublication = kSelectedPublication{
             let select = kSelectedPublication.book_uuid == model.book_uuid
             cell.isSelected(select)
         }
-        
         
         return cell
     }

@@ -95,16 +95,27 @@ class UNZIPFile: NSObject {
     //飞机信息
     func getAirplanesData(withPath path:String,bookName:String){
         print("\(bookName) : 获取飞机信息")
+        var customer_code:String = ""
+        var customer_name:String = ""
+        if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookName)'", orderBy: nil) as? PublicationsModel {
+            customer_code = pub.customer_code;
+            customer_name = pub.customer_name;
+        }
+        
         UNZIPFile.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
             guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
-            AirplaneModel.saveToDb(with: airplaneEntryArr)
-            
+            //AirplaneModel.saveToDb(with: airplaneEntryArr)
             for item in airplaneEntryArr {
-                let item = item as? [String:Any]
-                if let msn = item?["airplaneSerialNumber"]{
-                    let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
-                    APMMap.saveToDb(with: dic)
+                if var item = item as? [String:Any]{
+                    item["customer_code"] = customer_code
+                    item["customer_name"] = customer_name
+                    AirplaneModel.saveToDb(with: item)
+                    /////飞机与手册的关系
+                    if let msn = item["airplaneSerialNumber"]{
+                        let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
+                        APMMap.saveToDb(with: dic)
+                    }
                 }
             }
         })
@@ -984,8 +995,8 @@ extension UNZIPFile  {
     func _parseBook(bookpath:String,bookname:String){
         autoreleasepool(invoking: { () -> () in
         HUD.show(withStatus: "数据更新中...")
-        getAirplanesData(withPath: bookpath,bookName:bookname as String)
         getBookData(withPath: bookpath)
+        getAirplanesData(withPath: bookpath,bookName:bookname as String)
         #if false
         getSegmentsData(withBookPath: bookpath,bookName:bookname as String)
         #else

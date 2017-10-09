@@ -71,6 +71,8 @@
 @property(nonatomic,copy)NSString * operatorName;
 @property(nonatomic,copy)NSString * ownerCode;
 @property(nonatomic,copy)NSString * tailNumber;
+@property(nonatomic,copy)NSString * customer_code;
+@property(nonatomic,copy)NSString * customer_name;
 @end
 
 //手册BOOK
