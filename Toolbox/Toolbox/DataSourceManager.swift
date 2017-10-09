@@ -394,16 +394,18 @@ class DataSourceManager: NSObject {
                             ret.update_status = 3
                             ret.current_files = 0
                             ret.total_files = 0
+                            ret.saveToDB()
+                            
                             ///一个数据源下载完成
                             strongSelf.delegate?.ds_startUnzipFile(base!.absoluteString)
                             strongSelf.ds_isdownloading = false
                             semaphore.signal()
+                        }else{
+                            if ret.saveToDB() {
+                                
+                            }
                         }
                         
-                        if ret.saveToDB() {
-                            
-                        }
-
                     }
                     
                     semaphore.signal()
@@ -492,7 +494,7 @@ class DataSourceManager: NSObject {
         //未考虑删除人为中断的情况????
         for uid in uids {
             if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
-                guard let doc_owner = pub.document_owner else{return}
+                guard let doc_owner = pub.customer_code else{return}
                 
                 print("start delete \(uid) - \(Date())")
                 
@@ -534,6 +536,10 @@ class DataSourceManager: NSObject {
             
         }
         
+        kSelectedAirplane = nil
+        kSelectedPublication = nil
+        kSelectedSegment = nil
+        kseg_hasopened_arr.removeAll()
     }
     
     

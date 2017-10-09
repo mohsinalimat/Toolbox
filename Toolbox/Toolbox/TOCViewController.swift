@@ -151,6 +151,8 @@ class TOCViewController: BaseViewControllerWithTable {
     //MARK: - 数据处理
     func loadData() {
         guard let selectedPublication = kSelectedPublication else {
+            dataArray.removeAll()
+            tableview?.reloadData()
             return
         }
         guard currentPublication !== selectedPublication  else {

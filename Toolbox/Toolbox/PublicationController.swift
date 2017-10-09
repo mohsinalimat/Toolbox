@@ -32,6 +32,8 @@ class PublicationController: BaseViewControllerWithTable {
     func loadData() {
         //数据可能为空
         guard let selectedAirplane = kSelectedAirplane else {
+            dataArray.removeAll()
+            tableview?.reloadData()
             return
         }
         guard currentAirplaneModel !== selectedAirplane  else {

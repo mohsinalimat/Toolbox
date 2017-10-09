@@ -232,7 +232,16 @@ class ManagerController: BaseViewControllerWithTable{
                 print("delete all ok.")
                 editButton?.isSelected = false
                 setEdited(false)
-                HUD.show(successInfo: "删除完成")
+
+                //强制更新检测
+                let action = UIAlertAction.init(title: "继续", style: .destructive, handler: { [weak self](action) in
+                    guard let strongSelf = self else{return}
+                        strongSelf.checkdsUpdate()
+                    })
+                
+                let ac = UIAlertController.init(title: "删除完成", message: nil, preferredStyle: .alert)
+                ac.addAction(action)
+                self.present(ac, animated: false, completion: nil)
             }
             
             loadData()
