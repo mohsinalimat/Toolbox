@@ -531,6 +531,7 @@ class DataSourceManager: NSObject {
                 
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                    NotificationCenter.default.post(name: knotification_publication_changed, object: nil)
                 }
             }
             

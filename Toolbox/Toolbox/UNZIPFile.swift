@@ -357,10 +357,10 @@ extension UNZIPFile  {
                 let fileArr = try fm.contentsOfDirectory(atPath: DocumentPath)
                 let zipArr = getZipFiles(items: fileArr)
                 //guard zipArr.count > 0 else{return}
-                FILESManager.default.fileExistsAt(path: installpath)
-                
+
                 for p in zipArr {
                     if p.hasSuffix(".zip") {
+                        FILESManager.default.fileExistsAt(path: installpath)
                         let srczip = DocumentPath + "/\(p)"
                         print("开始解压：\(srczip)")
                         SSZipArchive.unzipFile(atPath: srczip, toDestination: installpath, progressHandler: { (entry, zipinfo, entrynumber, total) in

@@ -30,6 +30,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         dataArray = dataArray as! [AirplaneModel]
         navigationItem.titleView = nil
 
+        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_ :)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
+        
 //        loadData()
         
 //        var arr = [11,22,33]
@@ -96,13 +98,11 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         selectedDataArray.removeAll()
         
         HUD.show(withStatus: "Loading...")
-        //字段为空的放在最后 "airplaneRegistry like '%\(s)%'"
- 
-        if searchKey != ""{
+        if searchKey != "" && searchKey.lengthOfBytes(using: String.Encoding.utf8) > 0 {
             let arr = AirplaneModel.search(with: "\(opt)!=\"\" and airplaneRegistry like '%\(searchKey)%'", orderBy: "\(opt) asc")
             dataArray = dataArray  + arr!
         }
-        else{
+        else{//字段为空的放在最后 "airplaneRegistry like '%\(s)%'"
             let arr = AirplaneModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
             dataArray = dataArray  + arr!
             
@@ -211,24 +211,39 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         self.present(nav, animated: true)
     }
     
-    //MARK: 
+    //MARK:
+    func textFieldDidChange(_ noti:Notification) {
+        let obj = noti.object;
+        if let tf = obj as? UITextField {
+            print(tf.text!)
+            dataArray.removeAll()
+            selectedDataArray.removeAll()
+            headNumShouldChange = true
+            if let s = tf.text,let arr = AirplaneModel.search(with: "airplaneRegistry like '%\(s)%'", orderBy: "airplaneRegistry asc") {
+                searchKey = s
+                dataArray = dataArray + arr
+            }
+            tableview?.reloadData()
+        }
+        
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print(#function)
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        dataArray.removeAll()
+        /*dataArray.removeAll()
         selectedDataArray.removeAll()
         headNumShouldChange = true
         
-        HUD.show(withStatus: "Loading...")
         if let s = textField.text,let arr = AirplaneModel.search(with: "airplaneRegistry like '%\(s)%'", orderBy: "airplaneRegistry asc") {
             searchKey = s
             dataArray = dataArray + arr
         }
         
         tableview?.reloadData()
-        textField.resignFirstResponder()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            HUD.dismiss()
-        }
-        
+        textField.resignFirstResponder()*/
         return true
     }
     
