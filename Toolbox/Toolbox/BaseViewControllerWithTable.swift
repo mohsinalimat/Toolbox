@@ -206,10 +206,6 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
 
         return {
             if headSectionNum == 0 || headNumShouldChange {
-                if headNumShouldChange && sectionHeadtitle == "Air China"{
-                    headNumShouldChange = false
-                }
-                
                 headSectionNum = dataArray.count
             }
             

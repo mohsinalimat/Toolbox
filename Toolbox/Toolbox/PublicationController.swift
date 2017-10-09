@@ -116,6 +116,10 @@ class PublicationController: BaseViewControllerWithTable ,UISearchBarDelegate{
         tableview?.reloadData()
     }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
     //MARK: 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {

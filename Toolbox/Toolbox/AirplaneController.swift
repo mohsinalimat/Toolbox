@@ -30,7 +30,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         dataArray = dataArray as! [AirplaneModel]
         navigationItem.titleView = nil
 
-        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_ :)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_ :)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
         
 //        loadData()
         
@@ -65,7 +65,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         
         //Test()
         
-        
+       let arr =  PublicationsModel.search(withSql: "select customer_name from APMMAP  order by customer_name asc")
+       
+        print(arr)
     }
 
     func Test() {
@@ -114,8 +116,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
              HUD.dismiss()    
         }
-        
-        
     }
     
     
@@ -149,7 +149,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             searchBtn.clearButtonMode  = UITextFieldViewMode.whileEditing
             searchBtn.delegate = self
             searchBtn.returnKeyType = .search
-            
+            searchBtn.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
             searchBtn.leftViewMode = .always
             let leftview = UIView (frame: CGRect (x: 0, y: 0, width: 25, height: 30))
             let imgview = UIImageView (image: UIImage (named: "search_mag_icon_"))//35 .32
@@ -158,7 +158,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             
             searchBtn.leftView = leftview
             v.addSubview(searchBtn)
-
             return v
         }()
         view.addSubview(topview)
@@ -212,7 +211,25 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     }
     
     //MARK:
-    func textFieldDidChange(_ noti:Notification) {
+    func textFieldDidChange(_ textField:UITextField) {
+         let tf = textField
+        print(tf.text!)
+        dataArray.removeAll()
+        selectedDataArray.removeAll()
+        headNumShouldChange = true
+        if let s = tf.text,let arr = AirplaneModel.search(with: "airplaneRegistry like '%\(s)%'", orderBy: "airplaneRegistry asc") {
+            searchKey = s
+            dataArray = dataArray + arr
+        }
+        tableview?.reloadData()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    /*func textFieldDidChange(_ noti:Notification) {
         let obj = noti.object;
         if let tf = obj as? UITextField {
             print(tf.text!)
@@ -226,29 +243,29 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             tableview?.reloadData()
         }
         
-    }
+    }*/
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print(#function)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        /*dataArray.removeAll()
-        selectedDataArray.removeAll()
-        headNumShouldChange = true
-        
-        if let s = textField.text,let arr = AirplaneModel.search(with: "airplaneRegistry like '%\(s)%'", orderBy: "airplaneRegistry asc") {
-            searchKey = s
-            dataArray = dataArray + arr
-        }
-        
-        tableview?.reloadData()
-        textField.resignFirstResponder()*/
-        return true
-    }
-    
     
     //MARK:
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return {
+            let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
+            v.backgroundColor = kTableview_headView_bgColor
+            let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
+            title.textColor = UIColor.white
+            title.font = UIFont.boldSystemFont(ofSize: 18)
+            title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count - selectedDataArray.count)"
+            
+            v.addSubview(title)
+            return v
+            }()
+    }
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
             return getCellForNodata(tableView, info: "NO AIRPLANE")

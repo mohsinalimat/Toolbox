@@ -110,6 +110,9 @@ class DataSourceManager: NSObject {
                     }
                     if response.result.isFailure{
                         print("Request Error:\(String(describing: response.result.error?.localizedDescription))")
+                        DispatchQueue.main.async {
+                            HUD.show(info: "请求服务器超时!")
+                        }
                     }
                     
                     print("End : \(url)")
