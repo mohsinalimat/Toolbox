@@ -11,74 +11,24 @@ import Alamofire
 import WebKit
 
 class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
-    var selectedDataArray = [String]()//当前已选择展开的model标记
-    var selectedDataDic = [String:[String]]()
-    
-    var selectButton : UIButton?
-    
+    var selectedDataDic = [String:[String]]()//当前已选择展开的model标记
+    var sortButton : UIButton? //sort
     let popButtonWidth = 135
     var popViewselectedIndex:Int = 1 //标记pop当前选择的索引
     let popViewkeyArr = ["Tail","Registry","MSN","Variable","CEC","Line"]
-
     let popViewHeadTitle = "Sort Airplanes By"
     var currentFieldKey:String! = "Registry"
     var currentFieldName:String! = "airplaneRegistry"
-    var searchKey:String = ""
-    
-    var openedCellIndex:Int = 0
-    var pub_customer_arr = [String]()
+    var searchKey:String = ""//search text
+    var pub_customer_arr = [String]()//获取客户名称customer_name
     
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
-        //dataArray = dataArray as! [AirplaneModel]
         navigationItem.titleView = nil
-
-        //NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_ :)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
-        
-//        loadData()
-        
-//        var arr = [11,22,33]
-//        for (i,seg) in arr.enumerated() {
-//            print("\(i) - \(seg)")
-//            if seg == 22 {
-//                arr.remove(at: i)
-//                break
-//            }
-//        }
-        
-        
-//        let workitem1 = DispatchWorkItem(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
-//            for i in 0..<20 {
-//            print("-------\(i)")
-//            }
-//        }
-//        
-//        let workitem2 = DispatchWorkItem.init(qos: .userInitiated, flags: DispatchWorkItemFlags.detached) {
-//            for i in 0..<20 {
-//                print("++++++++\(i)")
-//            }
-//        }
-//        
-//        workitem1.perform()
-//        
-//        let queue = DispatchQueue.init(label: "com.dbmanager.queue",qos:DispatchQoS.utility)
-//        
-//        queue.async(execute: workitem1)
-//        queue.async(execute: workitem2)
-        
-        //Test()
-        
-
-    }
-
-    func Test() {
         
     }
-    
-    
-    
-    //////
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadData()
@@ -93,13 +43,14 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                         ds_arr.insert(0, at: index + 1)
                         dic[key!] = ds_arr
                         dataArray[index_0] = dic
-                        selectedDataArray.append(hasSelectedAir.airplaneId);break
+                        updateSelectedDataWith(key!, value: hasSelectedAir.airplaneId);break
                     }
                 }
 
             }
+        }else{
+        
         }
-
         
         tableview?.reloadData()
     }
@@ -107,7 +58,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     //MARK:-
     func loadData(opt:String = "airplaneRegistry") {
         dataArray.removeAll()
-        selectedDataArray.removeAll()
+        selectedDataDic.removeAll()
         
         if let pub_arr =  PublicationsModel.search(withSql: "select customer_name from Publications  order by customer_name asc"){
             for pub in pub_arr {
@@ -166,7 +117,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20)
             button.imageEdgeInsets = UIEdgeInsetsMake(17, button.frame.width - 20 , 17, 10)
             v.addSubview(button)
-            selectButton = button
+            sortButton = button
             
             let searchBtn = UITextField(frame: CGRect (x: kCurrentScreenWidth - 220, y: 10, width: 200, height: 40))
             searchBtn.placeholder = "Search your fleet"
@@ -231,8 +182,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         
         let nav = BaseNavigationController(rootViewController:vc)
         nav.modalPresentationStyle = UIModalPresentationStyle.popover
-        nav.popoverPresentationController?.sourceView = selectButton
-        nav.popoverPresentationController?.sourceRect = (selectButton?.frame)!
+        nav.popoverPresentationController?.sourceView = sortButton
+        nav.popoverPresentationController?.sourceRect = (sortButton?.frame)!
         nav.preferredContentSize = rect.size
         self.present(nav, animated: true)
     }
@@ -241,7 +192,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     func textFieldDidChange(_ textField:UITextField) {
          let tf = textField
         dataArray.removeAll()
-        selectedDataArray.removeAll()
+        selectedDataDic.removeAll()
         if let s = tf.text {
             for name in pub_customer_arr{
                 let customer_name = name
@@ -273,6 +224,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         return d.values.first!
     }
     
+    //已选择展开的行数据
     func updateSelectedDataWith(_ key:String,value:String) {
         if var arr = selectedDataDic[key]{
             if arr.contains(value){
@@ -280,12 +232,21 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             }else{
                 arr.append(value)
             }
+            selectedDataDic[key] = arr
         }else{
             selectedDataDic[key] = [value]
         }
         
     }
     
+    func hasContains(_ key:String,value:String) -> Bool {
+        if let arr = selectedDataDic[key] {
+            if arr.contains(value){
+                return true;
+            }
+        }
+        return false
+    }
     
     //MARK:
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -300,6 +261,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         let d = dataArray[section] as! [String:[Any]]
         let key = d.keys.first
         let value = d.values.first
+        let select = selectedDataDic[key!]
         
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
@@ -307,8 +269,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
-            title.text = "\t\t\(key!)\t\t\((value?.count)! - selectedDataArray.count)"
-            
+            title.text = "\t\t\(key!)\t\t\((value?.count)! - ((select?.count) ?? 0))"
             v.addSubview(title)
             return v
             }()
@@ -322,7 +283,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         var dic = dataArray[indexPath.section] as![String:[Any]]
         var _dataArray = dic.values.first
         let key = dic.keys.first
-        
         let value = _dataArray?[indexPath.row]
         if  value is Int{
             let value = _dataArray?[indexPath.row - 1]
@@ -338,7 +298,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneCellIdentifierId", for: indexPath) as! AirplaneCell
             cell.selectionStyle = .none
             cell.fillCell(model: model ,title: currentFieldName)
-            if self.selectedDataArray.index(of: model.airplaneId ) != nil || ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int)) {
+            if self.hasContains(key!, value: model.airplaneId) || ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int)) {
                 cell.cellSelectedInit()
             }else{
                 cell._init()
@@ -350,17 +310,15 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                     _dataArray?.insert(0, at: indexPath.row + 1)
                     dic[key!] = _dataArray
                     strongSelf.dataArray[indexPath.section] = dic
-                    //保存唯一标示airplaneId
-                    strongSelf.selectedDataArray.append(model.airplaneId)
-                    //self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 }
                 else{
                     _dataArray?.remove(at: indexPath.row + 1)
                     dic[key!] = _dataArray
                     strongSelf.dataArray[indexPath.section] = dic
-                    strongSelf.selectedDataArray.remove(at: strongSelf.selectedDataArray.index(of: model.airplaneId)!)
                 }
                 
+                strongSelf.updateSelectedDataWith(key!, value: model.airplaneId)
+                //self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 strongSelf.tableview?.reloadData()
             }
             
@@ -370,14 +328,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     }
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if dataArray.count == 0 {
-            return 64;
-        }
-
         let arr = get_ds(indexPath.section)
         let tmp = arr[indexPath.row] as? Int
-        if let isdetail = tmp
-        {
+        if let isdetail = tmp{
             if isdetail == 0 {
                 return 50;
             }
