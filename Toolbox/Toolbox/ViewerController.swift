@@ -29,8 +29,12 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
         webview.delegate = self
         webview.backgroundColor = kTableviewBackgroundColor
-        
         view.addSubview(webview)
+        
+        let sidevc = ViewSideController()
+        sidevc.view.frame = CGRect (x: kCurrentScreenWidth - 30, y: 0, width: 200, height: kCurrentScreenHight - 49)
+        self.addChildViewController(sidevc)
+        view.addSubview(sidevc.view)
     }
 
     func recnotification(_ noti:Notification)  {

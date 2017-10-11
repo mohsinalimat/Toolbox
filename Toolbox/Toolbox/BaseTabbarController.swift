@@ -44,6 +44,7 @@ class BaseTabbarController: UITabBarController {
                 "AirplaneController",
                 "PublicationController",
                 "TOCViewController",
+                //"ViewMainController",
                 "ViewerController",
                 "HistoryController",
                 "BookmarkController",
