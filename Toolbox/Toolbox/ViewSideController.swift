@@ -34,7 +34,7 @@ class ViewSideController: BaseViewController {
         btn.addTarget(self, action: #selector(tapClick), for: .touchUpInside)
         view.addSubview(btn)
         
-        let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 1, width: view.frame.width, height: view.frame.height - 60))
+        let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width, height: view.frame.height - 60))
         bgview.backgroundColor = kTableviewBackgroundColor
         view.addSubview(bgview)
         
@@ -50,7 +50,7 @@ class ViewSideController: BaseViewController {
             view.transform = CGAffineTransform (translationX: 0, y: 0)
         }else{
             isOpen = true
-            view.transform = CGAffineTransform (translationX: -100, y: 0)
+            view.transform = CGAffineTransform (translationX: -200, y: 0)
         }
         
         
