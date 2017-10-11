@@ -369,20 +369,20 @@ extension UNZIPFile  {
                 let zipArr = getZipFiles(items: fileArr)
                 //guard zipArr.count > 0 else{return}
 
+                DispatchQueue.main.async {
+                    HUD.show(withStatus: "文件分析中...")
+                }
                 for p in zipArr {
                     if p.hasSuffix(".zip") {
                         FILESManager.default.fileExistsAt(path: installpath)
                         let srczip = DocumentPath + "/\(p)"
                         print("开始解压：\(srczip)")
                         SSZipArchive.unzipFile(atPath: srczip, toDestination: installpath, progressHandler: { (entry, zipinfo, entrynumber, total) in
-                            print("Doc:\(entrynumber) - \(total)")
-                            /*if !entry.hasSuffix(".zip") {
-                                do{
-                                    try self.fm.moveItem(atPath: despath + "/\(entry)", toPath: baseinfodatapath +  "/\(entry)")
-                                }catch{
-                                    print(error)
+                                print("Doc:\(entrynumber) - \(total)")
+                                let progress =  Float(entrynumber) / Float(total)
+                                DispatchQueue.main.async {
+                                    HUD.showProgress(progress: progress, status: "文件分析中...")
                                 }
-                            }*/
                             }, completionHandler: { (path, success, error) in
                                 print("DOCMENT解压完成：\(path)")
                                 //////////删除源文件
@@ -450,6 +450,10 @@ extension UNZIPFile  {
                                 
                         })
                     }
+                }
+                
+                DispatchQueue.main.async {
+                    HUD.dismiss()
                 }
                 
                 if zipArr.count == 0{

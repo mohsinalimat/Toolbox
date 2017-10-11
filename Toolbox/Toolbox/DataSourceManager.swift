@@ -83,9 +83,12 @@ class DataSourceManager: NSObject {
     
     //MARK:-
     func ds_checkupdate() {
-        _checkupdateFromServer()
-        
-        _checkUpdateFromDocument()
+        DispatchQueue.global().async {
+            self._checkupdateFromServer()
+            
+            self._checkUpdateFromDocument()
+ 
+        }
     }
     
     

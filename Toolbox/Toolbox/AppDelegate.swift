@@ -99,9 +99,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if Tools.isReachable() {
             print("connected network!")
         }
-
-        //checkupdate
-        DataSourceManager.default.ds_checkupdate()
     
     }
     
@@ -132,6 +129,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         print(#function)
         APP_IS_BACKGROUND = false
+        //checkupdate
+        DataSourceManager.default.ds_checkupdate()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
