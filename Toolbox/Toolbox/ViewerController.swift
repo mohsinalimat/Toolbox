@@ -17,6 +17,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     var loveBtn:UIButton!
     var hasloved:Bool = false
+    let SIDER_WIDTH:CGFloat = 460
     
     //MARK:-
     override func viewDidLoad() {
@@ -32,7 +33,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         view.addSubview(webview)
         
         let sidevc = ViewSideController()
-        sidevc.view.frame = CGRect (x: kCurrentScreenWidth - 30, y: 0, width: 200, height: kCurrentScreenHight - 49)
+        sidevc.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHight - 49)
         self.addChildViewController(sidevc)
         view.addSubview(sidevc.view)
     }

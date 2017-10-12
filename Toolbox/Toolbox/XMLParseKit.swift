@@ -125,7 +125,8 @@ class XMLParseKit: NSObject,XMLParserDelegate {
             var _id = modelDic["id"]
             if _id == nil {
                 //print("ID nillll。。。")
-                _id = book_id//.................
+                _id = book_id + "ERROR:SEGMENT_ID_IS_EMPTY"
+                print("segment id error!!!!!!!!!!!!!")
             }
             
             let primaryid = book_id + _id!

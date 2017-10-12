@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ImgDetailView" customModule="Toolbox" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="430" height="650"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Figure 32-20-00-991-00200（SHEETS2）" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5MD-Ya-voy">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="3Sb-Qq-IOq"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="32-20-00-991-00200" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uTN-PH-7c2">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="57U-EJ-asa"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="52P-52-qMI">
+                    <constraints>
+                        <constraint firstAttribute="width" constant="370" id="aNS-2U-kD5"/>
+                        <constraint firstAttribute="height" constant="420" id="rdC-Lx-Mvc"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="nG5-pf-XcC">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="2Bx-6C-aVp">
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PZZ-rY-8UK">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a0j-ph-SiV">
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Zbn-M4-Gj5"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="a0j-ph-SiV" firstAttribute="leading" secondItem="52P-52-qMI" secondAttribute="leading" id="L3g-13-nnz"/>
+                <constraint firstItem="a0j-ph-SiV" firstAttribute="top" secondItem="52P-52-qMI" secondAttribute="bottom" constant="10" id="M4l-78-jcP"/>
+                <constraint firstItem="5MD-Ya-voy" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Pvh-TX-tTY"/>
+                <constraint firstItem="2Bx-6C-aVp" firstAttribute="top" secondItem="a0j-ph-SiV" secondAttribute="bottom" constant="10" id="VfZ-bC-rpP"/>
+                <constraint firstItem="uTN-PH-7c2" firstAttribute="leading" secondItem="5MD-Ya-voy" secondAttribute="leading" id="Z15-HA-Enm"/>
+                <constraint firstItem="uTN-PH-7c2" firstAttribute="top" secondItem="5MD-Ya-voy" secondAttribute="bottom" constant="5" id="aSo-pV-RCB"/>
+                <constraint firstItem="a0j-ph-SiV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="csg-un-364"/>
+                <constraint firstItem="2Bx-6C-aVp" firstAttribute="leading" secondItem="52P-52-qMI" secondAttribute="leading" id="dxU-7Y-GLZ"/>
+                <constraint firstAttribute="bottom" secondItem="2Bx-6C-aVp" secondAttribute="bottom" constant="5" id="eb3-2N-93g"/>
+                <constraint firstItem="52P-52-qMI" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="sd8-j9-s8t"/>
+                <constraint firstItem="52P-52-qMI" firstAttribute="top" secondItem="uTN-PH-7c2" secondAttribute="bottom" constant="10" id="uex-Eo-UPy"/>
+                <constraint firstItem="2Bx-6C-aVp" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="v7O-Uo-H6J"/>
+                <constraint firstItem="5MD-Ya-voy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="xJ2-9Y-4Ec"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="largeImgCollectionView" destination="52P-52-qMI" id="Q5p-Th-yCc"/>
+                <outlet property="samllImgCollectionView" destination="2Bx-6C-aVp" id="YEE-fr-vhV"/>
+                <outlet property="subtitleLab" destination="uTN-PH-7c2" id="Vdh-gp-4eA"/>
+                <outlet property="titleLab" destination="5MD-Ya-voy" id="A1H-vM-A1d"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="-64"/>
+        </view>
+    </objects>
+</document>

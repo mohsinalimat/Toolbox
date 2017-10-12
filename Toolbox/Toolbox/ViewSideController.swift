@@ -14,19 +14,21 @@ class ViewSideController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        initSubview()
+        print("ViewSideController: viewDidLoad")
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        initSubview()
+    }
+    
     func initSubview() {
         view.backgroundColor =  UIColor.clear //kTableviewBackgroundColor
-        
         /*let imgv = UIImageView (frame: CGRect (x: -25, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
         imgv.image =  UIImage (named: "illustrations_selected")
-        imgv.isUserInteractionEnabled = true
-        
+        imgv.isUserInteractionEnabled = true*/
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapClick))
-        imgv.addGestureRecognizer(tap)*/
+        view.addGestureRecognizer(tap)
         
         let ig = UIImage (named: "illustrations_selected")
         let btn = UIButton (frame: CGRect (x: 0, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
@@ -34,10 +36,15 @@ class ViewSideController: BaseViewController {
         btn.addTarget(self, action: #selector(tapClick), for: .touchUpInside)
         view.addSubview(btn)
         
-        let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width, height: view.frame.height - 60))
+        let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width - btn.frame.width, height: view.frame.height))
         bgview.backgroundColor = kTableviewBackgroundColor
-        view.addSubview(bgview)
-        
+
+        //let _v = ImgDetailView (frame: CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height))
+        let _v = Bundle.main.loadNibNamed("ImgDetailView", owner: nil, options: nil)?.last as! ImgDetailView
+        _v.frame = CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height)
+        _v.backgroundColor = UIColor.clear
+        bgview.addSubview(_v)
+        view.addSubview(bgview)        
     }
     
     
@@ -50,7 +57,7 @@ class ViewSideController: BaseViewController {
             view.transform = CGAffineTransform (translationX: 0, y: 0)
         }else{
             isOpen = true
-            view.transform = CGAffineTransform (translationX: -200, y: 0)
+            view.transform = CGAffineTransform (translationX: -420, y: 0)
         }
         
         
