@@ -14,17 +14,23 @@
                 <rect key="frame" x="0.0" y="0.0" width="370" height="420"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQF-ZO-o17">
-                        <color key="backgroundColor" red="0.066666666669999999" green="0.52941176469999995" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
+                    <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0r-3a-quH">
+                        <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <connections>
+                            <outlet property="delegate" destination="gTV-IL-0wX" id="op7-E3-cuk"/>
+                        </connections>
+                    </webView>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="lQF-ZO-o17" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="1sz-Rg-50B"/>
-                <constraint firstAttribute="bottom" secondItem="lQF-ZO-o17" secondAttribute="bottom" id="4NO-dv-Lvr"/>
-                <constraint firstAttribute="trailing" secondItem="lQF-ZO-o17" secondAttribute="trailing" constant="8" id="83y-dY-b9f"/>
-                <constraint firstItem="lQF-ZO-o17" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="W6R-Zb-aYW"/>
+                <constraint firstItem="H0r-3a-quH" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="AXF-ZT-4Nb"/>
+                <constraint firstAttribute="bottom" secondItem="H0r-3a-quH" secondAttribute="bottom" id="DOe-IV-plR"/>
+                <constraint firstItem="H0r-3a-quH" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="dyM-Vo-Box"/>
+                <constraint firstAttribute="trailing" secondItem="H0r-3a-quH" secondAttribute="trailing" constant="8" id="wVQ-UN-wjn"/>
             </constraints>
+            <connections>
+                <outlet property="_imgwebview" destination="H0r-3a-quH" id="j0e-3y-z0n"/>
+            </connections>
         </collectionViewCell>
     </objects>
 </document>

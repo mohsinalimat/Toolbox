@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SSZipArchive
 
-class Tools: NSObject {
+class Tools: NSObject,SSZipArchiveDelegate {
 
     static let `default` = Tools.init()
     let _reach:Reachability
@@ -28,7 +29,30 @@ class Tools: NSObject {
     
     
     
+    func unzipFile(atPath:String,to:String) {
+        SSZipArchive.unzipFile(atPath: atPath, toDestination: to, delegate: self)
+    }
     
+    
+    //MARK:-
+    func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
+        print("zipArchiveWillUnzipArchive")
+    }
+    
+    func zipArchiveDidUnzipArchive(atPath path: String, zipInfo: unz_global_info, unzippedPath: String) {
+        print("zipArchiveDidUnzipArchive")
+        
+        if FileManager.default.isDeletableFile(atPath: path) {
+            do {
+                try FileManager.default.removeItem(atPath: path)
+            }catch{
+                print(error)
+            }
+        }else {
+            print("文件删除失败")
+        }
+        
+    }
     
     
     

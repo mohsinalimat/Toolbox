@@ -61,6 +61,8 @@
 		A18288C31F78F875001786D3 /* trash_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A18288C11F78F875001786D3 /* trash_icon@2x.png */; };
 		A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */; };
 		A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */; };
+		A19F22F71F90A79700F21F5A /* ImgSmallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */; };
+		A19F22F81F90A79700F21F5A /* ImgSmallCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */; };
 		A1A19CA61F57DE08007BF3AD /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1A19CA51F57DE08007BF3AD /* test.txt */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
@@ -218,6 +220,8 @@
 		A18288C11F78F875001786D3 /* trash_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash_icon@2x.png"; sourceTree = "<group>"; };
 		A18AD5F31F3D55B10065FF49 /* UnzipInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnzipInfoViewController.swift; sourceTree = "<group>"; };
 		A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnzipInfoViewController.xib; sourceTree = "<group>"; };
+		A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImgSmallCell.swift; sourceTree = "<group>"; };
+		A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImgSmallCell.xib; sourceTree = "<group>"; };
 		A1A19CA51F57DE08007BF3AD /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
@@ -439,6 +443,8 @@
 				A1E908511F8F04D300EDF6AD /* ImgDetailView.xib */,
 				A1E908531F8F3FA300EDF6AD /* ImgCollectionViewCell.swift */,
 				A1E908541F8F3FA300EDF6AD /* ImgCollectionViewCell.xib */,
+				A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */,
+				A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -786,6 +792,7 @@
 				A10648361F04C21E002D088C /* AppIcon-B2C29x29@2x~ipad.png in Resources */,
 				A1BBCF521F2ACBFF007374B7 /* bookmarkBtnIcon.png in Resources */,
 				A1D597911F46CD3F00C0F5B8 /* book.xml in Resources */,
+				A19F22F81F90A79700F21F5A /* ImgSmallCell.xib in Resources */,
 				A10648411F04C21E002D088C /* Default-Landscape~ipad.png in Resources */,
 				A1C06BDC1F0A35AC00A29620 /* download_data_button@2x.png in Resources */,
 				A12D9FA91F8DB4EB003A7ACB /* illustrations_unselected_port@2x.png in Resources */,
@@ -923,6 +930,7 @@
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
 				ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */,
 				A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */,
+				A19F22F71F90A79700F21F5A /* ImgSmallCell.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
 				AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,

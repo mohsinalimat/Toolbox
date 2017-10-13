@@ -19,7 +19,9 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     @IBOutlet weak var samllImgCollectionView: UICollectionView!
     
     let ImgCollectionViewCellReuseId = "ImgCollectionViewCellReuseId"
+    let ImgSmallCellReuseId = "ImgSmallCellReuseId"
     
+    var dataArray:[Any]?
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -48,50 +50,73 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         let _largeflowlayout = UICollectionViewFlowLayout()
         _largeflowlayout.minimumLineSpacing = 0
         _largeflowlayout.scrollDirection = .horizontal
-        _largeflowlayout.itemSize = CGSize (width: 370, height: 420)
+        _largeflowlayout.itemSize = CGSize (width: 370, height: kCurrentScreenHight - 114 - 205)
         largeImgCollectionView.collectionViewLayout  = _largeflowlayout
         largeImgCollectionView.delegate = self
         largeImgCollectionView.dataSource = self
-        largeImgCollectionView.register(UINib (nibName: "ImgCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImgCollectionViewCellReuseId")
+        largeImgCollectionView.register(UINib (nibName: "ImgCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: ImgCollectionViewCellReuseId)
         largeImgCollectionView.backgroundColor = kTableviewBackgroundColor
         largeImgCollectionView.isPagingEnabled = true
         largeImgCollectionView.showsHorizontalScrollIndicator = false
         
-        let flowlayout = UICollectionViewFlowLayout()
-        flowlayout.minimumLineSpacing = 5
-        flowlayout.scrollDirection = .horizontal
-        flowlayout.itemSize = CGSize (width: 100, height: 100)
-        samllImgCollectionView.collectionViewLayout  = flowlayout
+        let _smallflowlayout = UICollectionViewFlowLayout()
+        _smallflowlayout.minimumLineSpacing = 5
+        _smallflowlayout.scrollDirection = .horizontal
+        _smallflowlayout.itemSize = CGSize (width: 100, height: 100)
+        samllImgCollectionView.collectionViewLayout  = _smallflowlayout
         samllImgCollectionView.delegate = self
         samllImgCollectionView.dataSource = self
-        samllImgCollectionView.register(UINib (nibName: "ImgCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImgCollectionViewCellReuseId")
+        samllImgCollectionView.register(UINib (nibName: "ImgSmallCell", bundle: nil), forCellWithReuseIdentifier: ImgSmallCellReuseId)
         samllImgCollectionView.backgroundColor = kTableviewBackgroundColor
         samllImgCollectionView.isPagingEnabled = true
         samllImgCollectionView.showsHorizontalScrollIndicator = false
 
-
     }
+    
+    
+    func refreshData(_ data:[Any]) {
+        dataArray = data
+        
+        //默认显示第一个图片及信息
+        
+        largeImgCollectionView.reloadData()
+        samllImgCollectionView.reloadData()
+    }
+    
     
     
     //MARK: - 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        if let dataArray = dataArray {
+            return dataArray.count
+        }
+        return 0
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgCollectionViewCellReuseId, for: indexPath)
+        if collectionView == largeImgCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgCollectionViewCellReuseId, for: indexPath) as! ImgCollectionViewCell
+            let m = dataArray?[indexPath.row] as! SegmentModel
+            cell.fillCellWith(m)
+            
+            return cell
+        }else{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgSmallCellReuseId, for: indexPath) as! ImgSmallCell
+            //let m = dataArray?[indexPath.row] as! SegmentModel
+            //cell.fillCellWith(m)
+            
+            return cell
+        }
         
-        return cell
+        
+
     }
     
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
     
     
     

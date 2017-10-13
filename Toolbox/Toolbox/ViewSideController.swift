@@ -14,6 +14,10 @@ class ViewSideController: BaseViewController {
     
     var view_init_center:CGPoint?
     
+    var dataArray:[Any]?
+    var _imgview:ImgDetailView!
+    
+    //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
         print("ViewSideController: viewDidLoad")
@@ -29,7 +33,7 @@ class ViewSideController: BaseViewController {
         /*let imgv = UIImageView (frame: CGRect (x: -25, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
         imgv.image =  UIImage (named: "illustrations_selected")
         imgv.isUserInteractionEnabled = true*/
-        let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapClick))
+        //let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapClick))
         //view.addGestureRecognizer(tap)
         
         let panges = UIPanGestureRecognizer.init(target: self, action:#selector(panGestureAction(_ :)))
@@ -44,12 +48,13 @@ class ViewSideController: BaseViewController {
         let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width - btn.frame.width, height: view.frame.height))
         bgview.backgroundColor = kTableviewBackgroundColor
 
-        let _v = Bundle.main.loadNibNamed("ImgDetailView", owner: nil, options: nil)?.last as! ImgDetailView
-        _v.frame = CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height)
-        _v.backgroundColor = UIColor.clear
-        bgview.addSubview(_v)
+        _imgview = Bundle.main.loadNibNamed("ImgDetailView", owner: nil, options: nil)?.last as! ImgDetailView
+        _imgview.frame = CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height)
+        _imgview.backgroundColor = UIColor.clear
+        bgview.addSubview(_imgview)
         view.addSubview(bgview)
-
+        //_imgview.backgroundColor = UIColor.red
+        
         if view_init_center == nil{
             print("view.center:\(view.center)")
             view_init_center = view.center
@@ -57,29 +62,21 @@ class ViewSideController: BaseViewController {
         
     }
     
-    
+    //MARK: - UIPanGestureRecognizer
     func panGestureAction(_ gesture:UIPanGestureRecognizer) {
         let move_x = gesture.translation(in: view).x
         let vx = gesture.velocity(in: view).x
-        
-        //print(vx)
-        
+
         let left = (view_init_center?.x)! - view.center.x
-        if  left <= 405 && vx < 0 {
+        if  left < 405 && vx < 0 {
             view.center = CGPoint.init(x: view.center.x + move_x, y: view.center.y)
-            if left < 300 {
-                UIView.beginAnimations(nil, context: nil)
-                view.center = CGPoint.init(x: (view_init_center?.x)! - CGFloat(405), y: view.center.y)
-                UIView.commitAnimations()
-                isOpen = true
+            if left >= 200 {
+                open()
             }
         }else if left > 0 && vx > 0 {
             view.center = CGPoint.init(x: view.center.x + move_x, y: view.center.y)
-            if left < 300 {
-                UIView.beginAnimations(nil, context: nil)
-                view.center = view_init_center!
-                UIView.commitAnimations()
-                isOpen = false
+            if left <= 200 {
+                close()
             }
         }
         
@@ -89,51 +86,49 @@ class ViewSideController: BaseViewController {
             print("end")
             print(view.center)
             let left = (view_init_center?.x)! - view.center.x
-            if left < 200 && vx < 0 {
-                UIView.beginAnimations(nil, context: nil)
-                view.center = view_init_center!
-                UIView.commitAnimations()
-                isOpen = false
-            }else if left > 200 && vx > 0 {
-                UIView.beginAnimations(nil, context: nil)
-                view.center = CGPoint.init(x: (view_init_center?.x)! - CGFloat(405), y: view.center.y)
-                UIView.commitAnimations()
-                isOpen = true
+            if left <= 200 && vx < 0 {
+                close()
+            }else if left >= 200 && vx > 0 {
+                open()
             }
         }
         
     }
     
+    //MARK:-
+    func open() {
+        UIView.beginAnimations(nil, context: nil)
+        view.center = CGPoint.init(x: (view_init_center?.x)! - CGFloat(405), y: view.center.y)
+        UIView.commitAnimations()
+        isOpen = true
+        
+        _imgview.refreshData(dataArray!)
+    }
+    
+    func close() {
+        UIView.beginAnimations(nil, context: nil)
+        view.center = view_init_center!
+        UIView.commitAnimations()
+        isOpen = false
+    }
     
     
     func tapClick() {
-        print("tap....")
-        
         if isOpen {
-            isOpen = false
-            UIView.beginAnimations(nil, context: nil)
-            view.center = view_init_center!
-            UIView.commitAnimations()
+            close()
         }else{
-            isOpen = true
-            UIView.beginAnimations(nil, context: nil)
-            view.center = CGPoint.init(x: (view_init_center?.x)! - CGFloat(405), y: view.center.y)
-            UIView.commitAnimations()
+            open()
         }
-        
-        
-        
-        
+
         return
         let vc = BaseViewController()
         vc.view.backgroundColor = UIColor.black
         let nav = BaseNavigationController(rootViewController:vc)
         self.navigationController?.present(nav, animated: true, completion: nil)
     }
+
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //print(#function)
-    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

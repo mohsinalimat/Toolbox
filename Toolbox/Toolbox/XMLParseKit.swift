@@ -42,7 +42,6 @@ class XMLParseKit: NSObject,XMLParserDelegate {
         print("\(path)")
         
         let path = path.appending("/resources/toc.xml")
-        
         book_id = bookName
         if let handler = completeHandler{
             completeHandlers = handler
@@ -85,11 +84,8 @@ class XMLParseKit: NSObject,XMLParserDelegate {
     //MARK:-XMLParserDelegate
     func parserDidEndDocument(_ parser: XMLParser) {
         print("\(#function)")
-        
         _save()
-        
         FMDB.default().insert(with: TotalModel)
-        
         //CoreDataKit.default.update(data: TotalModel as! [[String : Any]])
         if let completeHandler = completeHandlers {
             completeHandler()
@@ -102,12 +98,8 @@ class XMLParseKit: NSObject,XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         //print("\(#function)---- \(elementName)")
-        
         nodeName = elementName
-        
-        guard nodeLevel > 0 else {
-            nodeLevel = nodeLevel + 1;return
-        }
+        guard nodeLevel > 0 else {nodeLevel = nodeLevel + 1;return}
         
         if elementName == "segment" {
             _save()
@@ -135,20 +127,25 @@ class XMLParseKit: NSObject,XMLParserDelegate {
             modelDic["parent_id"] = parent_id
             modelDic["book_id"] = book_id
             modelDic["nodeLevel"] = "\(nodeLevel)"
-            
             parDic[nodeLevel] = parent_id
             parDic[nodeLevel + 1] = primaryid
             
-            
             //content_location
-            let isleaf = Int(modelDic["is_leaf"]!)!
+            if let hasContent = modelDic["has_content"] {
+                if Int(hasContent) == 1{
+                    let localtion :String! = modelDic["content_location"]
+                    let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
+                    modelDic["content_location"] = new
+                }
+            }
+            
+            /*let isleaf = Int(modelDic["is_leaf"]!)!
             let isvisible = Int(modelDic["is_visible"]!)!
             if isleaf == 1 && isvisible == 1 {
                 let localtion :String! = modelDic["content_location"]
                 let new = localtion.substring(from: (localtion.index(localtion.startIndex, offsetBy: 2)))
                 modelDic["content_location"] = new
-            }
-            
+            }*/
             
             //下一层级
             nodeLevel = nodeLevel + 1
@@ -188,17 +185,7 @@ class XMLParseKit: NSObject,XMLParserDelegate {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }
 
 
