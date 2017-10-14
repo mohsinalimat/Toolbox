@@ -22,6 +22,7 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         _imgwebview.scrollView.showsHorizontalScrollIndicator = false
         _imgwebview.scrollView.showsVerticalScrollIndicator = false
         _imgwebview.scrollView.bounces = false
+        _imgwebview.backgroundColor = UIColor.white
     }
     
     func fillCellWith(_ model:SegmentModel) {
@@ -70,46 +71,14 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
     
     
     //MARK:- UIWebViewDelegate
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        /*let url  = request.url
-        let fm = FileManager.default
-        if let url = url {
-
-            let path = "\(url.path)"
-            let exist = fm.fileExists(atPath: path)
-            if !exist {
-                let zip = path + ".zip"
-                let exist = fm.fileExists(atPath: zip)
-                if exist {
-                    guard let des = (URL(string: path)?.deletingLastPathComponent().absoluteString) else {
-                        return false
-                    }
-                    
-                    SSZipArchive.unzipFile(atPath: zip, toDestination: des, progressHandler: {(entry, zipinfo, entrynumber, total) in }, completionHandler: {  (path, success, error) in
-                        print("解压完成：\(path)")
-                        FILESManager.default.deleteFileAt(path: path)
-                    })
-                }
-            }
-        }*/
-        
-        return true
-    }
-    
-    
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("\(#function)-error：\(error.localizedDescription)")
         Dismiss()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        print("\(#function)")
-        
         Dismiss()
     }
-    
-
-    
-    
+ 
 
 }

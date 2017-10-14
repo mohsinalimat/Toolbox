@@ -22,14 +22,8 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     let ImgSmallCellReuseId = "ImgSmallCellReuseId"
     
     var dataArray:[Any]?
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
 
+    //MARK:
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -73,16 +67,23 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
 
     }
     
-    
+    //MARK:
     func refreshData(_ data:[Any]) {
         dataArray = data
         
-        //默认显示第一个图片及信息
-        
+        //每次进入刷新数据默认显示第一个图片及信息
         largeImgCollectionView.reloadData()
         samllImgCollectionView.reloadData()
+    
+        displayTitle(0)
     }
     
+    func displayTitle(_ atIndex:Int) {
+        let m = dataArray?[atIndex] as? SegmentModel
+        guard let _m = m else{return}
+        titleLab.text =  "Figure " + _m.toc_code //+ (_m.title == "" ? "" : ("\(_m.title)"))
+        subtitleLab.text = _m.toc_code
+    }
     
     
     //MARK: - 
@@ -119,6 +120,16 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     }
     
     
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let offset_x = scrollView.contentOffset
+        print(offset_x)
+
+        let _v = scrollView as! UICollectionView
+        guard let indexpath = _v.indexPathForItem(at: offset_x) else{return}
+        //更新其他数据
+        displayTitle(indexpath.row)
+    }
+
     
     
     
