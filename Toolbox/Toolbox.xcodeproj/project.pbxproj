@@ -141,6 +141,7 @@
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
 		ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */; };
 		ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */; };
+		ADF9DA481F92645800C1919D /* LargePicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9DA471F92645800C1919D /* LargePicViewController.swift */; };
 		ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E251F8224A500FB4230 /* Reachability.m */; };
 		ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E271F82274E00FB4230 /* Tools.swift */; };
 /* End PBXBuildFile section */
@@ -306,6 +307,7 @@
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
 		ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailCell.swift; sourceTree = "<group>"; };
 		ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailCell.xib; sourceTree = "<group>"; };
+		ADF9DA471F92645800C1919D /* LargePicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargePicViewController.swift; sourceTree = "<group>"; };
 		ADFE0E241F8224A500FB4230 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		ADFE0E251F8224A500FB4230 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		ADFE0E271F82274E00FB4230 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
@@ -548,6 +550,7 @@
 				A12D9FAC1F8DFACE003A7ACB /* ViewMainController.swift */,
 				A12D9FAE1F8DFB4F003A7ACB /* ViewSideController.swift */,
 				A1C1BD9B1F00ACA2002FC0E0 /* ViewerController.swift */,
+				ADF9DA471F92645800C1919D /* LargePicViewController.swift */,
 				A1310B481F8E14FD000792ED /* ViewScanePicController.swift */,
 				A1C1BD9D1F00ACB5002FC0E0 /* HistoryController.swift */,
 				A1C1BD9F1F00ACC9002FC0E0 /* BookmarkController.swift */,
@@ -932,6 +935,7 @@
 				A170C6871F5FBB86008D2AC7 /* DownloadDetailViewController.swift in Sources */,
 				A19F22F71F90A79700F21F5A /* ImgSmallCell.swift in Sources */,
 				A15AF50B1F53B51D00E57031 /* FMDB.m in Sources */,
+				ADF9DA481F92645800C1919D /* LargePicViewController.swift in Sources */,
 				AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */,
 				A1C1AB0B1F037A9400C29333 /* BaseTableViewController.swift in Sources */,
 				A13F7E8A1F4ABEC400ACA39C /* CoreDataKit.swift in Sources */,

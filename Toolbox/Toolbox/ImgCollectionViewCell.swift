@@ -23,10 +23,11 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         _imgwebview.scrollView.showsVerticalScrollIndicator = false
         _imgwebview.scrollView.bounces = false
         _imgwebview.backgroundColor = UIColor.white
+        _imgwebview.scrollView.isUserInteractionEnabled = false
     }
     
     func fillCellWith(_ model:SegmentModel) {
-        guard var urlStr = getFilePath(model.content_location) else{return}
+        guard var urlStr = Tools.default.getFilePath(model.content_location) else{return}
         
         //Loading()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
@@ -35,38 +36,6 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
         _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))
         
-    }
-    
-    //MARK: - 获取文件路径
-    func getFilePath(_ location:String?) -> String? {
-        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = location else {
-            return nil
-        }
-
-        let s1 = ROOTPATH
-        let s2 = pub_url
-        let s3 = seg_url
-        let htmlfullpath = s1 + s2 + s3
-        let htmlzippath = htmlfullpath + ".zip"
-        let htmldirpath = s1 + s2 + s3.substring(to: (s3.index((s3.startIndex), offsetBy: 3))) + "/images"
-        let fileExist = FileManager.default.fileExists(atPath: htmlfullpath)
-        if !fileExist
-        {
-            print("file：\(htmlfullpath) 不存在！");
-            let zipExist = FileManager.default.fileExists(atPath: htmlzippath)
-            if !zipExist
-            {
-                print("zip路径：\(htmlzippath) 不存在！"); return nil
-            }else{
-                SSZipArchive.unzipFile(atPath: htmlzippath, toDestination: htmldirpath, progressHandler: {(entry, zipinfo, entrynumber, total) in }, completionHandler: {  (path, success, error) in
-                    print("解压完成：\(path)")
-                    FILESManager.default.deleteFileAt(path: path)
-                })
-            }
-            
-        }
-        
-        return htmlfullpath
     }
     
     

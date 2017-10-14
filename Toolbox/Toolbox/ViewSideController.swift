@@ -28,6 +28,10 @@ class ViewSideController: BaseViewController {
         initSubview()
     }
     
+    deinit {
+        print("ViewSideController deinit")
+    }
+    
     func initSubview() {
         view.backgroundColor =  UIColor.clear //kTableviewBackgroundColor
         /*let imgv = UIImageView (frame: CGRect (x: -25, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
@@ -96,13 +100,15 @@ class ViewSideController: BaseViewController {
     }
     
     //MARK:-
-    func open() {
+    func open(_ refresh:Bool = false) {
         UIView.beginAnimations(nil, context: nil)
         view.center = CGPoint.init(x: (view_init_center?.x)! - CGFloat(405), y: view.center.y)
         UIView.commitAnimations()
         isOpen = true
         
-        _imgview.refreshData(dataArray!)
+        if refresh {
+            _imgview.refreshData(dataArray!)
+        }
     }
     
     func close() {
@@ -119,17 +125,9 @@ class ViewSideController: BaseViewController {
         }else{
             open()
         }
-
-        return
-        let vc = BaseViewController()
-        vc.view.backgroundColor = UIColor.black
-        let nav = BaseNavigationController(rootViewController:vc)
-        self.navigationController?.present(nav, animated: true, completion: nil)
     }
 
-    
-    
-    
+ 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

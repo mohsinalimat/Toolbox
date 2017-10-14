@@ -22,11 +22,13 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     let ImgSmallCellReuseId = "ImgSmallCellReuseId"
     
     var dataArray:[Any]?
-
+    var smallIgSelectedIndex:Int = 0
+    
+    let large_size = CGSize(width: 370, height: kCurrentScreenHight - 114 - 205)
+    let small_size = CGSize(width: 100, height: 100)
     //MARK:
     override init(frame: CGRect) {
-        super.init(frame: frame)
-        
+        super.init(frame: frame)        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,7 +38,6 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     
     override func awakeFromNib() {
         print(#function)
-        
         _init()
     }
     
@@ -44,7 +45,7 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         let _largeflowlayout = UICollectionViewFlowLayout()
         _largeflowlayout.minimumLineSpacing = 0
         _largeflowlayout.scrollDirection = .horizontal
-        _largeflowlayout.itemSize = CGSize (width: 370, height: kCurrentScreenHight - 114 - 205)
+        _largeflowlayout.itemSize = large_size
         largeImgCollectionView.collectionViewLayout  = _largeflowlayout
         largeImgCollectionView.delegate = self
         largeImgCollectionView.dataSource = self
@@ -56,7 +57,7 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         let _smallflowlayout = UICollectionViewFlowLayout()
         _smallflowlayout.minimumLineSpacing = 5
         _smallflowlayout.scrollDirection = .horizontal
-        _smallflowlayout.itemSize = CGSize (width: 100, height: 100)
+        _smallflowlayout.itemSize = small_size
         samllImgCollectionView.collectionViewLayout  = _smallflowlayout
         samllImgCollectionView.delegate = self
         samllImgCollectionView.dataSource = self
@@ -73,8 +74,6 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         
         //每次进入刷新数据默认显示第一个图片及信息
         largeImgCollectionView.reloadData()
-        samllImgCollectionView.reloadData()
-    
         displayTitle(0)
     }
     
@@ -83,6 +82,8 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         guard let _m = m else{return}
         titleLab.text =  "Figure " + _m.toc_code //+ (_m.title == "" ? "" : ("\(_m.title)"))
         subtitleLab.text = _m.toc_code
+        
+        samllImgCollectionView.reloadData()
     }
     
     
@@ -99,24 +100,35 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         if collectionView == largeImgCollectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgCollectionViewCellReuseId, for: indexPath) as! ImgCollectionViewCell
             let m = dataArray?[indexPath.row] as! SegmentModel
-            cell.fillCellWith(m)
-            
+            cell.fillCellWith(m)            
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgSmallCellReuseId, for: indexPath) as! ImgSmallCell
-            //let m = dataArray?[indexPath.row] as! SegmentModel
-            //cell.fillCellWith(m)
-            
+            let m = dataArray?[indexPath.row] as! SegmentModel
+            cell.fillCellWith(m)
+            if smallIgSelectedIndex == indexPath.row {
+                cell._isSelected()
+            }
             return cell
         }
-        
-        
 
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        print(#function)
+        if samllImgCollectionView == collectionView {
+            smallIgSelectedIndex = indexPath.row
+            displayTitle(indexPath.row)
+            largeImgCollectionView.scrollToItem(at: indexPath, at: .left, animated: true)
+        }else{//显示大图
+            let vc = LargePicViewController()
+            vc.view.backgroundColor = UIColor.black
+            let nav = BaseNavigationController(rootViewController:vc)
+            nav.navigationBar.barTintColor = UIColor.black
+            nav.navigationBar.setBackgroundImage(nil, for: .default)
+            UIApplication.shared.keyWindow?.rootViewController?.present(nav, animated: true, completion: nil)
+        }
     }
     
     
@@ -128,6 +140,7 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         guard let indexpath = _v.indexPathForItem(at: offset_x) else{return}
         //更新其他数据
         displayTitle(indexpath.row)
+        smallIgSelectedIndex = indexpath.row
     }
 
     

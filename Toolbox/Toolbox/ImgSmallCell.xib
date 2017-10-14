@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,17 +17,22 @@
                 <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJx-I8-yLd">
-                        <color key="backgroundColor" red="0.066666666669999999" green="0.52941176469999995" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
+                    <webView contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1UH-Hz-05G">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                        <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <dataDetectorType key="dataDetectorTypes"/>
+                    </webView>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="dJx-I8-yLd" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="33T-zb-5zf"/>
-                <constraint firstItem="dJx-I8-yLd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="34B-2H-6iK"/>
-                <constraint firstAttribute="trailing" secondItem="dJx-I8-yLd" secondAttribute="trailing" id="QfY-FR-raY"/>
-                <constraint firstAttribute="bottom" secondItem="dJx-I8-yLd" secondAttribute="bottom" id="wwB-6G-swK"/>
+                <constraint firstItem="1UH-Hz-05G" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="02k-4o-IRk"/>
+                <constraint firstAttribute="trailing" secondItem="1UH-Hz-05G" secondAttribute="trailing" id="6oX-eB-6iL"/>
+                <constraint firstItem="1UH-Hz-05G" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="MnZ-an-gt8"/>
+                <constraint firstAttribute="bottom" secondItem="1UH-Hz-05G" secondAttribute="bottom" id="S9a-4c-fpN"/>
             </constraints>
+            <connections>
+                <outlet property="imgwebView" destination="1UH-Hz-05G" id="6EW-Zo-XAV"/>
+            </connections>
         </collectionViewCell>
     </objects>
 </document>
