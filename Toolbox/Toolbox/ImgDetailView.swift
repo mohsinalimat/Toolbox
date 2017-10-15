@@ -24,8 +24,9 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     var dataArray:[Any]?
     var smallIgSelectedIndex:Int = 0
     
-    let large_size = CGSize(width: 370, height: kCurrentScreenHight - 114 - 205)
+    let large_size = CGSize(width: 370, height: kCurrentScreenHeight - 114 - 205)
     let small_size = CGSize(width: 100, height: 100)
+    
     //MARK:
     override init(frame: CGRect) {
         super.init(frame: frame)        
@@ -36,8 +37,12 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         print(#function)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    
     override func awakeFromNib() {
-        print(#function)
         _init()
     }
     
@@ -66,15 +71,26 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         samllImgCollectionView.isPagingEnabled = true
         samllImgCollectionView.showsHorizontalScrollIndicator = false
 
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(indexChanged(_ :)), name: NSNotification.Name (rawValue: "notification_largepic_index_changed"), object: nil)
     }
+    
+    func indexChanged(_ noti:Notification) {
+        if let index = noti.userInfo?["index"] as? Int{
+            largeImgCollectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: .left, animated: true)
+            smallIgSelectedIndex = index
+            displayTitle(smallIgSelectedIndex)
+        }
+    }
+    
     
     //MARK:
     func refreshData(_ data:[Any]) {
         dataArray = data
         
-        //每次进入刷新数据默认显示第一个图片及信息
+        //第一次进入刷新数据默认显示第一个图片及信息
         largeImgCollectionView.reloadData()
-        displayTitle(0)
+        displayTitle(smallIgSelectedIndex)
     }
     
     func displayTitle(_ atIndex:Int) {
@@ -116,7 +132,6 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#function)
         if samllImgCollectionView == collectionView {
             smallIgSelectedIndex = indexPath.row
             displayTitle(indexPath.row)
@@ -124,6 +139,8 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         }else{//显示大图
             let vc = LargePicViewController()
             vc.view.backgroundColor = UIColor.black
+            vc.dataArray = dataArray!
+            vc.index = indexPath.row
             let nav = BaseNavigationController(rootViewController:vc)
             nav.navigationBar.barTintColor = UIColor.black
             nav.navigationBar.setBackgroundImage(nil, for: .default)
@@ -133,11 +150,9 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let offset_x = scrollView.contentOffset
-        print(offset_x)
-
+        let offset = scrollView.contentOffset
         let _v = scrollView as! UICollectionView
-        guard let indexpath = _v.indexPathForItem(at: offset_x) else{return}
+        guard let indexpath = _v.indexPathForItem(at: offset) else{return}
         //更新其他数据
         displayTitle(indexpath.row)
         smallIgSelectedIndex = indexpath.row

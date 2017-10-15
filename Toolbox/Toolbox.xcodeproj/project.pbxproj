@@ -136,6 +136,8 @@
 		A1E9BF931F5E808C005251C8 /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E9BF911F5E808C005251C8 /* DownloadCell.swift */; };
 		A1E9BF941F5E808C005251C8 /* DownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1E9BF921F5E808C005251C8 /* DownloadCell.xib */; };
 		A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ED124E1F56B53900FCD259 /* NetHelper.swift */; };
+		AD0F75921F935302005FD788 /* LargePicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0F75901F935302005FD788 /* LargePicCell.swift */; };
+		AD0F75931F935302005FD788 /* LargePicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD0F75911F935302005FD788 /* LargePicCell.xib */; };
 		AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */; };
 		AD10FEA91F88962B00B9B10C /* DownloadDetailtop.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */; };
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
@@ -302,6 +304,8 @@
 		A1E9BF911F5E808C005251C8 /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		A1E9BF921F5E808C005251C8 /* DownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadCell.xib; sourceTree = "<group>"; };
 		A1ED124E1F56B53900FCD259 /* NetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetHelper.swift; sourceTree = "<group>"; };
+		AD0F75901F935302005FD788 /* LargePicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargePicCell.swift; sourceTree = "<group>"; };
+		AD0F75911F935302005FD788 /* LargePicCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LargePicCell.xib; sourceTree = "<group>"; };
 		AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailtop.swift; sourceTree = "<group>"; };
 		AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailtop.xib; sourceTree = "<group>"; };
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
@@ -445,6 +449,8 @@
 				A1E908511F8F04D300EDF6AD /* ImgDetailView.xib */,
 				A1E908531F8F3FA300EDF6AD /* ImgCollectionViewCell.swift */,
 				A1E908541F8F3FA300EDF6AD /* ImgCollectionViewCell.xib */,
+				AD0F75901F935302005FD788 /* LargePicCell.swift */,
+				AD0F75911F935302005FD788 /* LargePicCell.xib */,
 				A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */,
 				A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */,
 			);
@@ -803,6 +809,7 @@
 				A1B7FB181F0F8912009D6CA9 /* apList.json in Resources */,
 				A1BBCF561F2ACBFF007374B7 /* bookmarkOffHighlighted@2x.png in Resources */,
 				A12D9FA41F8DB4EB003A7ACB /* illustrations_selected_port.png in Resources */,
+				AD0F75931F935302005FD788 /* LargePicCell.xib in Resources */,
 				A1BBCF551F2ACBFF007374B7 /* bookmarkOffHighlighted.png in Resources */,
 				A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */,
 				A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */,
@@ -926,6 +933,7 @@
 				A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */,
 				A1C1BDA01F00ACC9002FC0E0 /* BookmarkController.swift in Sources */,
 				A1C1BD5D1F00A0AA002FC0E0 /* AppDelegate.swift in Sources */,
+				AD0F75921F935302005FD788 /* LargePicCell.swift in Sources */,
 				A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */,
 				A109A4371F74E9B400528B4F /* DS_Delegate.swift in Sources */,
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,

@@ -1,13 +1,14 @@
 //
-//  ImgCollectionViewCell.swift
+//  LargePicCell.swift
 //  Toolbox
 //
-//  Created by gener on 17/10/12.
+//  Created by wyg on 2017/10/15.
 //  Copyright © 2017年 Light. All rights reserved.
 //
 
 import UIKit
-class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
+
+class LargePicCell: UICollectionViewCell {
 
     @IBOutlet weak var _imgwebview: UIWebView!
     
@@ -16,12 +17,13 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         // Initialization code
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.lightGray.cgColor
-        _imgwebview.scrollView.showsHorizontalScrollIndicator = false
-        _imgwebview.scrollView.showsVerticalScrollIndicator = false
-        _imgwebview.scrollView.bounces = false
+        //_imgwebview.scrollView.showsHorizontalScrollIndicator = false
+        //_imgwebview.scrollView.showsVerticalScrollIndicator = false
+        //_imgwebview.scrollView.bounces = false
         _imgwebview.backgroundColor = UIColor.white
-        _imgwebview.scrollView.isUserInteractionEnabled = false
-        _imgwebview.addGestureRecognizer(_imgwebview.scrollView.pinchGestureRecognizer!)
+        
+        _imgwebview.scrollView.minimumZoomScale = 0.5
+        _imgwebview.scrollView.maximumZoomScale = 3
     }
     
     func fillCellWith(_ model:SegmentModel) {
@@ -32,7 +34,7 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         let key:String = "cec"
         let value:String! = kSelectedAirplane?.value(forKey: "customerEffectivity") as! String
         let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
-        _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))        
+        _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))
     }
     
     
@@ -45,6 +47,6 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
     func webViewDidFinishLoad(_ webView: UIWebView) {
         Dismiss()
     }
- 
+    
 
 }

@@ -87,7 +87,7 @@ class PublicationController: BaseViewControllerWithTable ,UISearchBarDelegate{
         searchBar.returnKeyType = .search
         view.addSubview(searchBar)
         
-        tableview?.frame = CGRect (x: 0, y: searchBar.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - searchBar.frame.height)
+        tableview?.frame = CGRect (x: 0, y: searchBar.frame.maxY, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - searchBar.frame.height)
         tableview?.register(UINib(nibName: "PublicationCell", bundle: nil), forCellReuseIdentifier: "PublicationCellReuseIdentifier")
         sectionHeadtitle =  "Publications"
     }

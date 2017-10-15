@@ -20,7 +20,7 @@ let kDOCTYPEColor:[String:UIColor] = ["AIPC":UIColor(red: 255/255.0, green:  227
                                       "TSM":UIColor(red: 146/255.0, green:  154/255.0, blue:  158/255.0, alpha: 1),]
 
 let kCurrentScreenWidth = UIScreen.main.bounds.width
-let kCurrentScreenHight = UIScreen.main.bounds.height
+let kCurrentScreenHeight = UIScreen.main.bounds.height
 
 var APP_IS_BACKGROUND:Bool = false //app是否处于后台
 

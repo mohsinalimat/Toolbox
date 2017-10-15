@@ -125,7 +125,7 @@ class ManagerController: BaseViewControllerWithTable{
         if !isEdit {
             navigationItem.rightBarButtonItems = rightItems_old
             tableview?.isEditing = false
-            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49)
+            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 49)
             selectedInEditModelArr.removeAll()
             view.viewWithTag(201)?.removeFromSuperview()
             rightItemBtn?.isSelected = false
@@ -136,7 +136,7 @@ class ManagerController: BaseViewControllerWithTable{
             }
             navigationItem.rightBarButtonItems = [rightItemSelectAll!]
             tableview?.isEditing = true
-            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49 - 60)
+            tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 49 - 60)
             
             let deleteBtnBg = UIView(frame: CGRect (x: 0, y: (tableview?.frame.maxY)!, width: kCurrentScreenWidth, height: 60))
             deleteBtnBg.tag = 201
@@ -318,7 +318,7 @@ class ManagerController: BaseViewControllerWithTable{
         }()
         //view.addSubview(topview)
 
-        tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 0)
+        tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 0)
         sectionHeadtitle =  "Publications on Device"
         tableview?.register(UINib(nibName: "ManagerCell", bundle: nil), forCellReuseIdentifier: managerCellIdentifier)
         tableview?.register(UINib (nibName:"ManagerDetailCell", bundle: nil), forCellReuseIdentifier: managerDetailCellReuseIdentifier)

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LargePicCellReuseId" id="skV-nr-VRc" customClass="LargePicCell" customModule="Toolbox" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="420"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="370" height="420"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <webView contentMode="scaleToFill" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXR-9S-zyE">
+                        <rect key="frame" x="0.0" y="0.0" width="370" height="420"/>
+                        <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <dataDetectorType key="dataDetectorTypes"/>
+                        <connections>
+                            <outlet property="delegate" destination="skV-nr-VRc" id="qkw-Tb-2rr"/>
+                        </connections>
+                    </webView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="vXR-9S-zyE" secondAttribute="bottom" id="LkK-h1-jA6"/>
+                <constraint firstItem="vXR-9S-zyE" firstAttribute="top" secondItem="skV-nr-VRc" secondAttribute="top" id="aEu-ls-fuO"/>
+                <constraint firstAttribute="trailing" secondItem="vXR-9S-zyE" secondAttribute="trailing" id="bHc-i1-ali"/>
+                <constraint firstItem="vXR-9S-zyE" firstAttribute="leading" secondItem="skV-nr-VRc" secondAttribute="leading" id="fdd-VM-Ign"/>
+            </constraints>
+            <connections>
+                <outlet property="_imgwebview" destination="vXR-9S-zyE" id="dYn-Kq-e6y"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

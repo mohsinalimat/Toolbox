@@ -10,20 +10,13 @@ import UIKit
 import SSZipArchive
 
 class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebViewDelegate{
-    
     var currenthtml_url:String?
-    
     var webview:UIWebView!
     var sideViewController:ViewSideController?
-    
     var loveBtn:UIButton!
     var hasloved:Bool = false
     let SIDER_WIDTH:CGFloat = 460
-    
-    private var _update_pic_ifneed:Bool = false
-    private var _has_add_side:Bool = false
-    private var _htmlwithpic_lastpath:String = ""
-    
+
     //MARK:-
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +25,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
         
         initNavigationBarItem()
-        webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHight - 64 - 49))
+        webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 49))
         webview.delegate = self
         webview.backgroundColor = kTableviewBackgroundColor
         view.addSubview(webview)
@@ -71,7 +64,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         }
         
         Loading()
-        _update_pic_ifneed = true
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
         /*let key:String! = kAirplaneKeyValue[kAIRPLANE_SORTEDOPTION_KEY]
         let value:String! = kSelectedAirplane?.value(forKey: key) as! String!*/
@@ -90,27 +82,14 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return}
         
         let htmlurl = pub_url + seg_url
-        guard currenthtml_url == htmlurl else {return }//...
+        guard currenthtml_url == htmlurl else {return }
         if dataArray.count > 0 {
-            guard _htmlwithpic_lastpath != currenthtml_url else {
-                return
-            }
-            
             print("需要显示图片")
-            //guard _update_pic_ifneed else { return}
-            //_update_pic_ifneed = false
-            //每次重新生成，以后优化
             if sideViewController == nil{
                 sideViewController = ViewSideController()
-                sideViewController?.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHight - 49 - 64)
+                sideViewController?.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49 - 64)
                 self.addChildViewController(sideViewController!)
                 view.addSubview((sideViewController?.view)!)
-            }else{
-                /*sideViewController?.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHight - 49 - 64)
-                if !_has_add_side {
-                    self.addChildViewController(sideViewController!)
-                    view.addSubview((sideViewController?.view)!)
-                }*/
             }
             sideViewController?.dataArray = dataArray
             sideViewController?.open(true)
@@ -120,7 +99,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 vc.view.removeFromSuperview()
                 vc.removeFromParentViewController()
                 sideViewController = nil
-                vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHight - 49)
+                vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
             }
         }
     }

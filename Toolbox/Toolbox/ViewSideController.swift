@@ -9,11 +9,8 @@
 import UIKit
 
 class ViewSideController: BaseViewController {
-
     var isOpen:Bool = false
-    
     var view_init_center:CGPoint?
-    
     var dataArray:[Any]?
     var _imgview:ImgDetailView!
     
@@ -33,35 +30,29 @@ class ViewSideController: BaseViewController {
     }
     
     func initSubview() {
-        view.backgroundColor =  UIColor.clear //kTableviewBackgroundColor
-        /*let imgv = UIImageView (frame: CGRect (x: -25, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
-        imgv.image =  UIImage (named: "illustrations_selected")
-        imgv.isUserInteractionEnabled = true*/
-        //let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapClick))
-        //view.addGestureRecognizer(tap)
-        
-        let panges = UIPanGestureRecognizer.init(target: self, action:#selector(panGestureAction(_ :)))
-        view.addGestureRecognizer(panges)
-        
-        let ig = UIImage (named: "illustrations_selected")
-        let btn = UIButton (frame: CGRect (x: 0, y: (kCurrentScreenHight - 100 - 64 - 49)/2.0, width: 30, height: 100))
-        btn.setImage(ig, for: .normal)
-        btn.addTarget(self, action: #selector(tapClick), for: .touchUpInside)
-        view.addSubview(btn)
-        
-        let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width - btn.frame.width, height: view.frame.height))
-        bgview.backgroundColor = kTableviewBackgroundColor
+        if _imgview == nil {
+            view.backgroundColor =  UIColor.clear //kTableviewBackgroundColor
+            let panges = UIPanGestureRecognizer.init(target: self, action:#selector(panGestureAction(_ :)))
+            view.addGestureRecognizer(panges)
+            
+            let ig = UIImage (named: "illustrations_selected")
+            let btn = UIButton (frame: CGRect (x: 0, y: (kCurrentScreenHeight - 100 - 64 - 49)/2.0, width: 30, height: 100))
+            btn.setImage(ig, for: .normal)
+            btn.addTarget(self, action: #selector(tapClick), for: .touchUpInside)
+            view.addSubview(btn)
+            
+            let bgview = UIView (frame: CGRect (x: btn.frame.width, y: 0, width: view.frame.width - btn.frame.width, height: view.frame.height))
+            bgview.backgroundColor = kTableviewBackgroundColor
 
-        _imgview = Bundle.main.loadNibNamed("ImgDetailView", owner: nil, options: nil)?.last as! ImgDetailView
-        _imgview.frame = CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height)
-        _imgview.backgroundColor = UIColor.clear
-        bgview.addSubview(_imgview)
-        view.addSubview(bgview)
-        //_imgview.backgroundColor = UIColor.red
-        
-        if view_init_center == nil{
-            print("view.center:\(view.center)")
-            view_init_center = view.center
+            _imgview = Bundle.main.loadNibNamed("ImgDetailView", owner: nil, options: nil)?.last as! ImgDetailView
+            _imgview.frame = CGRect (x: 20, y: 0, width: bgview.frame.width - 40, height: bgview.frame.height)
+            _imgview.backgroundColor = UIColor.clear
+            bgview.addSubview(_imgview)
+            view.addSubview(bgview)
+            if view_init_center == nil{
+                print("view.center:\(view.center)")
+                view_init_center = view.center
+            }
         }
         
     }
