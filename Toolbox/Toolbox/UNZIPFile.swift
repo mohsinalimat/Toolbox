@@ -355,7 +355,7 @@ extension UNZIPFile  {
     
     //MARK:- 解压操作
     //--1
-    func unzipFileFromDocument(_ completionHandler:((Void) -> Void)? = nil) {
+    func unzipFileFromDocument(_ completionHandler:((Bool) -> Void)? = nil) {
         autoreleasepool { () -> () in
             let tmppath = LibraryPath.appending("/TDLibrary/tmp")
             let baseinfodatapath = LibraryPath.appending("/Application data")
@@ -441,7 +441,7 @@ extension UNZIPFile  {
                                     print("doc parse ok...")
                                     FILESManager.default.deleteFileAt(path: installpath)
                                     if let handler = completionHandler{
-                                        handler()
+                                        handler(true)
                                     }
                                 }
                             }catch{
@@ -459,7 +459,7 @@ extension UNZIPFile  {
                 if zipArr.count == 0{
                     print("Document not zip.")
                     if let handler = completionHandler{
-                        handler()
+                        handler(false)
                     }
                 }
             }catch{

@@ -94,7 +94,8 @@ class PublicationController: BaseViewControllerWithTable ,UISearchBarDelegate{
     
     //MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let msn:String = currentAirplaneModel.airplaneSerialNumber
+        guard (currentAirplaneModel != nil) else {return}
+        guard let msn:String = currentAirplaneModel.airplaneSerialNumber else {return}
         let bookArr = APMMap.search(withSql: "select bookid from APMMAP where msn = '\(msn)' order by bookid asc") as! [APMMap]
         var sql = "("
         for (value) in bookArr {

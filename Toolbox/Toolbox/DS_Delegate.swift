@@ -10,8 +10,13 @@ import UIKit
 
 class DS_Delegate: NSObject, DSManagerDelegate {
     
+    var unzipfile_arr = [String]()
+    
     //MARK:- DSManagerDelegate
     func ds_startUnzipFile(_ withurl: String) {
+        guard !unzipfile_arr.contains(withurl) else{return}
+        unzipfile_arr.append(withurl)
+        
         UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
             if !APP_IS_BACKGROUND{//全解压完成，可以更新
                 DispatchQueue.main.async {[weak self] in
@@ -31,8 +36,8 @@ class DS_Delegate: NSObject, DSManagerDelegate {
             let files = DataSourceManager.default.unzipQueueIsEmpty().1
             for url in files.keys {
                 if url.hasPrefix("http"){
-                    ds_startUnzipFile(url)
-                }                
+                        ds_startUnzipFile(url)
+                }
             }
         }else{
             print("NO NEED UPDATE")
@@ -64,6 +69,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     //MARK:
     func _showAlert(_ withurl: String) {
         print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
+        unzipfile_arr.removeAll()
         let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
         let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
             UNZIPFile.default.update(url:withurl)

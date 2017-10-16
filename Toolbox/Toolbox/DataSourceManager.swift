@@ -83,6 +83,7 @@ class DataSourceManager: NSObject {
     
     //MARK:-
     func ds_checkupdate() {
+        guard !ds_startupdating else {return}
         DispatchQueue.global().async {
             self._checkupdateFromServer()
             
@@ -98,6 +99,7 @@ class DataSourceManager: NSObject {
             HUD.show(info: "无法连接网络！")
             return
         }
+        guard !ds_isdownloading else {return}
         
         var cnt:Int = 0
         for base in kDataSourceLocations {
@@ -138,87 +140,23 @@ class DataSourceManager: NSObject {
     }
     
     func _checkUpdateFromDocument() {
-        UNZIPFile.default.unzipFileFromDocument{[weak self] in
+        UNZIPFile.default.unzipFileFromDocument{[weak self] isExist in
             print("Document unzip ok,next unzip queue...")
             guard let strongSelf = self else{return}
             guard !strongSelf.unzipQueueIsEmpty().0 else {
                 strongSelf.delegate?.ds_hasCheckedUpdate(false);return
             }
             
+            guard isExist else {return}
             let m = DataSourceModel()
             m.location_url = strongSelf.ds_from_itunes
             m.update_status = 2
             m.saveToDB()
-            
-            //return
-                
             strongSelf.delegate?.ds_checkoutFromDocument()
         }
         
     }
 
-    /*func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
-      guard info.keys.count == 3 else {return}
-      if let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil){
-        guard let server_syncArr = info["sync_manifest.json"] as?[[String:String]] else {return}
-        if !ret.isEmpty && ret.count > 0{
-            let m = ret.first as! DataSourceModel
-            guard let syncjsonStr = m.sync_manifest else{return}
-            do{//比较同步信息
-                guard let data = syncjsonStr.data(using: String.Encoding.utf8) else{return}
-                guard let local_arr = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String:String]] else {return}
-                for sdic in server_syncArr{
-                    guard let doc_number = sdic["doc_number"] else{return}
-                    guard let doc_version = sdic["revision_number"] else{return}
-                    for ldic in local_arr {
-                       guard let doc_number_l = ldic["doc_number"] else{return}
-                       guard let doc_version_l = ldic["revision_number"] else{return}
-                       if doc_number == doc_number_l && doc_version > doc_version_l {///比较版本号
-                        //添加到下载
-                        let zip:String! = sdic["file_loc"]
-                        let fileurl = url + "\(zip!)"
-                        updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                        //更新状态
-                        if m.update_status != 1 {
-                            m.update_status = 1
-                            m.updateToDB()
-                         }
-                        }
-                    }
-                }
-            }catch{
-                print("JSONSerialization: \(error.localizedDescription)")
-            }
-        }else{
-            let m = DataSourceModel()
-            for(key,value) in info{
-                do{
-                    let data =  try JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
-                    let jsonStr = String.init(data: data, encoding: String.Encoding.utf8)
-                    switch key {
-                        case ksync_manifest: m.sync_manifest = jsonStr;break
-                        case kpackage_info: m.package_info = jsonStr;break
-                        case ktdafactorymobilebaseline:m.server_baseline = jsonStr;break
-                        default: break
-                    }
-                }catch{
-                    print("\(key): \(error.localizedDescription)")
-                }
-            }
-            m.location_url = url
-            m.update_status = 1
-            m.saveToDB();
-            
-            //添加到下载
-            for sdic in server_syncArr{
-                let zip:String! = sdic["file_loc"]
-                let fileurl = url + "\(zip!)"
-                updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-            }
-        }
-    }
-        
-    }*/
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
         guard info.keys.count == 3 else {return}

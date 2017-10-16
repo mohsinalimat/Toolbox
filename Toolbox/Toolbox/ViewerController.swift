@@ -44,6 +44,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 webview.isHidden = true
                 loveBtn.isHidden = true
                 getTapNodata();
+            }else{
+                hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
+                loveBtn.isSelected = hasloved;
             }
             return
         }

@@ -22,11 +22,13 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     var searchKey:String = ""//search text
     var pub_customer_arr = [String]()//获取客户名称customer_name
     
+    var is_in_search:Bool = false
+    
+    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,8 +61,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     func loadData(opt:String = "airplaneRegistry") {
         dataArray.removeAll()
         selectedDataDic.removeAll()
+        pub_customer_arr.removeAll()
         
-        if let pub_arr =  PublicationsModel.search(withSql: "select customer_name from Publications  order by customer_name asc"){
+        if let pub_arr =  PublicationsModel.search(withSql: "select customer_name from Publications order by customer_name asc"){
             for pub in pub_arr {
                 let m = pub as! PublicationsModel
                 let name = m.customer_name
@@ -76,7 +79,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             let customer_name = name
             var total_arr:[AirplaneModel] = [AirplaneModel]()
             if searchKey != "" && searchKey.lengthOfBytes(using: String.Encoding.utf8) > 0 {
-                let arr = AirplaneModel.search(with: "\(opt)!=\"\" and airplaneRegistry like '%\(searchKey)%'", orderBy: "\(opt) asc") as! [AirplaneModel]
+                let arr = AirplaneModel.search(with: "\(opt)!=\"\" and airplaneRegistry like '%\(searchKey)%' and customer_name='\(customer_name)'", orderBy: "\(opt) asc") as! [AirplaneModel]
                 total_arr = total_arr  + arr
             }
             else{//字段为空的放在最后 "airplaneRegistry like '%\(s)%'"
@@ -87,8 +90,10 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 total_arr = total_arr + arr2
             }
             
-            let dic = [customer_name:total_arr]
-            dataArray.append(dic)
+            if total_arr.count > 0 {
+                let dic = [customer_name:total_arr]
+                dataArray.append(dic)
+            }
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -96,14 +101,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         }
     }
     
-    
-    var completionHandlers: [() -> Void] = []
-    func someFunctionWithEscapingClosure(completionHandler:@escaping () -> Void) {
-       completionHandlers.append(completionHandler)
-    }
-    
+
     override func initSubview(){
-        title = "Aiplane Selector"
+        title = "Airplane Selector"
         let topview : UIView  = {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 60))
             v.backgroundColor = UIColor.white
@@ -188,7 +188,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         self.present(nav, animated: true)
     }
     
-    //MARK:
+    //MARK: 根据关键字搜索
     func textFieldDidChange(_ textField:UITextField) {
          let tf = textField
         dataArray.removeAll()
@@ -202,8 +202,10 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 let arr2 = AirplaneModel.search(with: "airplaneRegistry=\"\" and airplaneRegistry like '%\(s)%' and customer_name='\(customer_name)'", orderBy: "airplaneRegistry asc") as! [AirplaneModel]
                 total_arr = total_arr + arr2
                 
-                let dic = [customer_name:total_arr]
-                dataArray.append(dic)
+                if total_arr.count > 0 {
+                    let dic = [customer_name:total_arr]
+                    dataArray.append(dic)
+                }
             }
 
             searchKey = s
@@ -216,7 +218,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         return true
     }
     
-    //MARK:
+    //MARK:数据源
     func get_ds(_ index:Int) -> [Any] {
         guard dataArray.count > 0 ,let d = dataArray[index] as? [String:[Any]] else {
             return []
@@ -248,6 +250,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         return false
     }
     
+    
     //MARK:
     override func numberOfSections(in tableView: UITableView) -> Int {
         return dataArray.count
@@ -261,8 +264,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         let d = dataArray[section] as! [String:[Any]]
         let key = d.keys.first
         let value = d.values.first
-        let select = selectedDataDic[key!]
-        
+        let select = selectedDataDic[key!]        
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
             v.backgroundColor = kTableview_headView_bgColor
@@ -297,8 +299,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             let  model:AirplaneModel! = value as! AirplaneModel
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneCellIdentifierId", for: indexPath) as! AirplaneCell
             cell.selectionStyle = .none
-            cell.fillCell(model: model ,title: currentFieldName)
-            if self.hasContains(key!, value: model.airplaneId) || ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int)) {
+            cell.fillCell(model: model ,title: currentFieldName)// && !is_in_search
+            if self.hasContains(key!, value: model.airplaneId) /*|| ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int) )*/ {
                 cell.cellSelectedInit()
             }else{
                 cell._init()
@@ -318,7 +320,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 }
                 
                 strongSelf.updateSelectedDataWith(key!, value: model.airplaneId)
-                //self.tableview?.insertRows(at: [IndexPath.init(row: indexPath.row + 1, section: 0)], with: UITableViewRowAnimation.top)
                 strongSelf.tableview?.reloadData()
             }
             
