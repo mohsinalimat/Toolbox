@@ -24,6 +24,8 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_airplane_changed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
         
+        URLProtocol.registerClass(TestURLProtocol.self)
+        
         initNavigationBarItem()
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 49))
         webview.delegate = self
@@ -338,7 +340,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let url  = request.url
         let fm = FileManager.default
         if let url = url {
-            if url.scheme == "mpAjaxHandler"{
+            if url.scheme == "mpAjaxHandler" {
                 print("-------------- :\(url)")
                 //return false
             }
@@ -362,16 +364,16 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func webViewDidStartLoad(_ webView: UIWebView) {
     
-        if let url = Bundle.main.url(forResource: "ajax_handler", withExtension:"js"){
-            do{
-                let str = try String.init(contentsOf: url, encoding: String.Encoding.utf8)
-                webView.stringByEvaluatingJavaScript(from: str)
-                //webView.stringByEvaluatingJavaScript(from: str)
-            }catch{
-                print(error)
-            }
-            
-        }
+//        if let url = Bundle.main.url(forResource: "ajax_handler", withExtension:"js"){
+//            do{
+//                let str : String = try String.init(contentsOf: url, encoding: String.Encoding.utf8)
+//                webView.stringByEvaluatingJavaScript(from: str)
+//                webView.stringByEvaluatingJavaScript(from: str)
+//            }catch{
+//                print(error)
+//            }
+//            
+//        }
 
     }
     
@@ -393,4 +395,11 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     }
 
 
+}
+
+
+class HoldUrlRequest: URLProtocol ,URLSessionDelegate{
+    
+    
+    
 }
