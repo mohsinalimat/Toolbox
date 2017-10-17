@@ -100,6 +100,12 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
         subtitleLab.text = _m.toc_code
         
         samllImgCollectionView.reloadData()
+        if  atIndex > 2 {
+            samllImgCollectionView.scrollToItem(at: IndexPath.init(row: atIndex - 2, section: 0), at: .left, animated: true)
+        }else{
+            samllImgCollectionView.scrollToItem(at: IndexPath (row: 0, section: 0), at: .left, animated: true)
+        }
+        
     }
     
     
@@ -122,9 +128,7 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImgSmallCellReuseId, for: indexPath) as! ImgSmallCell
             let m = dataArray?[indexPath.row] as! SegmentModel
             cell.fillCellWith(m)
-            if smallIgSelectedIndex == indexPath.row {
-                cell._isSelected()
-            }
+            cell._isSelected(smallIgSelectedIndex == indexPath.row)
             return cell
         }
 
@@ -150,6 +154,9 @@ class ImgDetailView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == largeImgCollectionView else {
+            return
+        }
         let offset = scrollView.contentOffset
         let _v = scrollView as! UICollectionView
         guard let indexpath = _v.indexPathForItem(at: offset) else{return}

@@ -289,7 +289,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let arr:[SegmentModel] = { id in
             var tmpArr = [SegmentModel]()
             func _search(_ id:String){
-                let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
+                let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: "toc_code asc") as! [SegmentModel]
                 for m in chapter {
                     if Int(m.is_visible) == 0 && Int(m.has_content) == 0{
                         //不可见

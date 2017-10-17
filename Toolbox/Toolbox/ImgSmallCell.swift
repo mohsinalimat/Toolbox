@@ -14,8 +14,7 @@ class ImgSmallCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.lightGray.cgColor
+        _cellInit()
         
         imgwebView.scrollView.showsHorizontalScrollIndicator = false
         imgwebView.scrollView.showsVerticalScrollIndicator = false
@@ -39,14 +38,22 @@ class ImgSmallCell: UICollectionViewCell {
         
     }
     
-    func _isSelected() {
-        self.layer.borderWidth = 5
-        self.layer.borderColor = kTableview_headView_bgColor.cgColor
+    func _isSelected(_ selected:Bool = false) {
+        if selected {
+            self.layer.borderWidth = 5
+            self.layer.borderColor = kTableview_headView_bgColor.cgColor
+        }else{
+            _cellInit()
+        }
     }
 
-    override func prepareForReuse() {
+    func _cellInit() {
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.lightGray.cgColor
+    }
+    
+    override func prepareForReuse() {
+        _cellInit()
     }
     
     //MARK:- UIWebViewDelegate

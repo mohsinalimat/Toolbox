@@ -20,6 +20,8 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
     var index:Int = 0
     
     var pageCtr:UIPageControl!
+    let pageCtrHeight:CGFloat = 30
+    let bottombgHeight:CGFloat = 70
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +50,8 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         let _largeflowlayout = UICollectionViewFlowLayout()
         _largeflowlayout.minimumLineSpacing = 0
         _largeflowlayout.scrollDirection = .horizontal
-        _largeflowlayout.itemSize = CGSize (width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 40)
-        largeImgCollectionView = UICollectionView.init(frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 40), collectionViewLayout: _largeflowlayout)
+        _largeflowlayout.itemSize = CGSize (width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - pageCtrHeight)
+        largeImgCollectionView = UICollectionView.init(frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - pageCtrHeight), collectionViewLayout: _largeflowlayout)
         largeImgCollectionView.delegate = self
         largeImgCollectionView.dataSource = self
         largeImgCollectionView.register(UINib (nibName: "LargePicCell", bundle: nil), forCellWithReuseIdentifier: ImgCollectionViewCellReuseId)
@@ -60,7 +62,7 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         
         bottomBackgroundView()
         
-        pageCtr = UIPageControl.init(frame: CGRect (x: (kCurrentScreenWidth - 200)/2, y: largeImgCollectionView.frame.maxY, width: 200, height: 40))
+        pageCtr = UIPageControl.init(frame: CGRect (x: (kCurrentScreenWidth - 200)/2, y: largeImgCollectionView.frame.maxY, width: 200, height: pageCtrHeight))
         pageCtr.pageIndicatorTintColor = UIColor (colorLiteralRed: 210/255.0, green: 210/255.0, blue: 210/255.0, alpha: 0.3)
         pageCtr.currentPageIndicatorTintColor = UIColor.white
         pageCtr.currentPage = 0
@@ -68,7 +70,7 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
     }
     
     func bottomBackgroundView() {
-        let bottomBg = UIView (frame: CGRect (x: 0, y: largeImgCollectionView.frame.maxY - 100, width: kCurrentScreenWidth, height: 100))
+        let bottomBg = UIView (frame: CGRect (x: 0, y: largeImgCollectionView.frame.maxY - bottombgHeight, width: kCurrentScreenWidth, height: bottombgHeight))
         bottomBg.backgroundColor = UIColor.black
         bottomBg.alpha = 0.7
         view.addSubview(bottomBg)
@@ -90,6 +92,9 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         title_3.textAlignment = .left
         title_3.textColor = UIColor.white
         bottomBg.addSubview(title_3)
+        title_1.font = UIFont.systemFont(ofSize: 15)
+        title_2.font = UIFont.systemFont(ofSize: 15)
+        title_3.font = UIFont.systemFont(ofSize: 15)
         _title_1 = title_1
         _title_2 = title_2
         _title_3 = title_3
@@ -98,7 +103,7 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         let con_h1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[title_1]|", options: .alignAllLeading, metrics: nil, views: dic)
         let con_h2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[title_2]|", options: .alignAllLeading, metrics: nil, views: dic)
         let con_h3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(30)-[title_3]", options: .alignAllLeading, metrics: nil, views: dic)
-        let con_v = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[title_1(30)][title_2(30)][title_3(30)]", options: .alignAllCenterX, metrics: nil, views: dic)
+        let con_v = NSLayoutConstraint.constraints(withVisualFormat: "V:|-3-[title_1(20)][title_2(20)][title_3(25)]", options: .alignAllCenterX, metrics: nil, views: dic)
         
         bottomBg.addConstraints(con_h1)
         bottomBg.addConstraints(con_h2)
@@ -172,7 +177,7 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         btn.addTarget(self, action: #selector(buttonClickedAction(_:)), for: .touchUpInside)
         btn.tag = 101
         
-        let ritem_2 = UIBarButtonItem (customView: btn)
+        //let ritem_2 = UIBarButtonItem (customView: btn)
         navigationItem.rightBarButtonItems = [ritem_1]//,ritem_2
         //loveBtn = btn
         
