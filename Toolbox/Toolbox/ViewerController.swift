@@ -397,9 +397,3 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
 
 }
 
-
-class HoldUrlRequest: URLProtocol ,URLSessionDelegate{
-    
-    
-    
-}

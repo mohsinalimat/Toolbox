@@ -455,6 +455,20 @@ class ManagerController: BaseViewControllerWithTable{
         return UITableViewCellEditingStyle(rawValue: 3)!
     }
     
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return {
+            let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
+            v.backgroundColor = kTableview_headView_bgColor
+            let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
+            title.textColor = UIColor.white
+            title.font = UIFont.boldSystemFont(ofSize: 18)
+            title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count - (selectedDataArray.count))"
+            v.addSubview(title)
+            return v
+            }()
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

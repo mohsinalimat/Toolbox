@@ -13,33 +13,14 @@ class TestURLProtocol: URLProtocol ,URLSessionDataDelegate {
     
     open override class func canInit(with request: URLRequest) -> Bool{
         print(request.url)
-        guard let _urlpath = request.url else {return false }
-        let str = "\(_urlpath)"
-        if !FileManager.default.fileExists(atPath: str) {
-            var zippath = str + ".zip"
-            let _encodeurl = String.addingPercentEncoding(zippath)
-            let zipExist = FileManager.default.fileExists(atPath: zippath)
-            if zipExist {
-                let desdir = _urlpath.deletingLastPathComponent()
-                SSZipArchive.unzipFile(atPath: zippath, toDestination: "\(desdir)", progressHandler: {(entry, zipinfo, entrynumber, total) in }, completionHandler: {  (path, success, error) in
-                    print("--------------解压完成：\(path)")
-                    FILESManager.default.deleteFileAt(path: path)
-                })
-            }else{
-                return false
-            }
-        }
-        
         if (TestURLProtocol.property(forKey: "has_start_loading", in: request) != nil){
             return false
         }
-        
         return true
     }
  
     open override class func canonicalRequest(for request: URLRequest) -> URLRequest{
         print(#function)
-        
         return request
     }
     
@@ -47,20 +28,41 @@ class TestURLProtocol: URLProtocol ,URLSessionDataDelegate {
         print(#function)
         
         let req = self.request
-        let mutal = NSMutableURLRequest.init(url: req.url!, cachePolicy: req.cachePolicy, timeoutInterval: req.timeoutInterval)
-        TestURLProtocol.setProperty(true, forKey: "has_start_loading", in: mutal)
-        
-        _session = URLSession.init(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
-       let task =  _session.dataTask(with: req)
-        
-        task.resume()
+        guard let _urlpath = req.url else {return  }
+        let str = _urlpath.path
+        if !FileManager.default.fileExists(atPath: str) {
+            let zippath = str + ".zip"
+            let zipExist = FileManager.default.fileExists(atPath: zippath)
+            if zipExist {
+                let desdir = _urlpath.deletingLastPathComponent().path
+                SSZipArchive.unzipFile(atPath: zippath, toDestination: "\(desdir)", progressHandler: {(entry, zipinfo, entrynumber, total) in }, completionHandler: {  (path, success, error) in
+                        FILESManager.default.deleteFileAt(path: path)
+                        self.startTaskWith(req)
+                })
+            }else{//即使文件不存在也请求一次，由回调处理结果
+                startTaskWith(req)
+            }
+        }else{
+            startTaskWith(req)
+        }
     }
     
     override func stopLoading() {
-        print(#function)
+        //TestURLProtocol.removeProperty(forKey: "", in: <#T##NSMutableURLRequest#>)
         _session.invalidateAndCancel()
         _session = nil
     }
+    
+    //MARK:
+    func startTaskWith(_ req:URLRequest)  {
+        let mutab = NSMutableURLRequest.init(url: req.url!, cachePolicy: req.cachePolicy, timeoutInterval: req.timeoutInterval)
+        TestURLProtocol.setProperty(true, forKey: "has_start_loading", in: mutab)
+        
+        self._session = URLSession.init(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
+        let task =  self._session.dataTask(with: req)
+        task.resume()
+    }
+    
     
     
     //MARK:
@@ -88,16 +90,8 @@ class TestURLProtocol: URLProtocol ,URLSessionDataDelegate {
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
-        print(#function)
         completionHandler(proposedResponse)
     }
 }
-
-
-
-
-
-
-
 
 
