@@ -21,6 +21,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     var currentFieldName:String! = "airplaneRegistry"
     var searchKey:String = ""//search text
     var pub_customer_arr = [String]()//获取客户名称customer_name
+    var selectedindexPath:IndexPath?
     
     var is_in_search:Bool = false
     
@@ -42,6 +43,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 for (index,m) in ds_arr.enumerated() {
                     let m = m as? AirplaneModel
                     if hasSelectedAir.airplaneId == m?.airplaneId {
+                        selectedindexPath = IndexPath (row: index, section: index_0)
                         ds_arr.insert(0, at: index + 1)
                         dic[key!] = ds_arr
                         dataArray[index_0] = dic
@@ -50,11 +52,12 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 }
 
             }
-        }else{
-        
         }
         
         tableview?.reloadData()
+        if let indexpath = selectedindexPath{
+            tableview?.scrollToRow(at: indexpath, at: .top, animated: true);
+        }
     }
     
     //MARK:-

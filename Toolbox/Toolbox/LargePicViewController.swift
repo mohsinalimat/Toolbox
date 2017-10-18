@@ -20,8 +20,8 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
     var index:Int = 0
     
     var pageCtr:UIPageControl!
-    let pageCtrHeight:CGFloat = 30
-    let bottombgHeight:CGFloat = 70
+    let pageCtrHeight:CGFloat = 25
+    let bottombgHeight:CGFloat = 50
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +72,7 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
     func bottomBackgroundView() {
         let bottomBg = UIView (frame: CGRect (x: 0, y: largeImgCollectionView.frame.maxY - bottombgHeight, width: kCurrentScreenWidth, height: bottombgHeight))
         bottomBg.backgroundColor = UIColor.black
-        bottomBg.alpha = 0.7
+        bottomBg.alpha = 0.5
         view.addSubview(bottomBg)
         
         let title_1 = UILabel()
@@ -92,9 +92,9 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         title_3.textAlignment = .left
         title_3.textColor = UIColor.white
         bottomBg.addSubview(title_3)
-        title_1.font = UIFont.systemFont(ofSize: 15)
-        title_2.font = UIFont.systemFont(ofSize: 15)
-        title_3.font = UIFont.systemFont(ofSize: 15)
+        title_1.font = UIFont.systemFont(ofSize: 13)
+        title_2.font = UIFont.systemFont(ofSize: 13)
+        title_3.font = UIFont.systemFont(ofSize: 13)
         _title_1 = title_1
         _title_2 = title_2
         _title_3 = title_3
@@ -102,8 +102,10 @@ class LargePicViewController: BaseViewControllerWithTable,UIWebViewDelegate,UICo
         let dic = ["title_1":title_1,"title_2":title_2,"title_3":title_3]
         let con_h1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[title_1]|", options: .alignAllLeading, metrics: nil, views: dic)
         let con_h2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[title_2]|", options: .alignAllLeading, metrics: nil, views: dic)
-        let con_h3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(30)-[title_3]", options: .alignAllLeading, metrics: nil, views: dic)
-        let con_v = NSLayoutConstraint.constraints(withVisualFormat: "V:|-3-[title_1(20)][title_2(20)][title_3(25)]", options: .alignAllCenterX, metrics: nil, views: dic)
+        let con_h3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(20)-[title_3]", options: .alignAllLeading, metrics: nil, views: dic)
+        let con_v = NSLayoutConstraint.constraints(withVisualFormat: "V:|-2-[title_1(18)][title_2(18)]", options: .alignAllCenterX, metrics: nil, views: dic)
+        bottomBg.addConstraint(NSLayoutConstraint.init(item: title_3, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 20))
+        bottomBg.addConstraints([NSLayoutConstraint.init(item: title_3, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.lessThanOrEqual, toItem: title_2, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 5)])
         
         bottomBg.addConstraints(con_h1)
         bottomBg.addConstraints(con_h2)
