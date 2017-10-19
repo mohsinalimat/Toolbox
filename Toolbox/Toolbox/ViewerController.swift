@@ -16,7 +16,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     var loveBtn:UIButton!
     var hasloved:Bool = false
     let SIDER_WIDTH:CGFloat = 460
-
+    var item_go_back:UIBarButtonItem?
+    var item_go_forward:UIBarButtonItem?
+    
     //MARK:-
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,6 +156,8 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         //....
         litem_1.isEnabled = false
         litem_2.isEnabled = false
+        item_go_back = litem_1
+        item_go_forward = litem_2
         
         navigationItem.leftBarButtonItems = [fixed, litem_1,fixed,fixed,litem_2]
     }
@@ -167,7 +171,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         switch btn.tag {
             case 100:
                 btn.isSelected = !btn.isSelected
-                
                 //是否已收藏
                 let hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
                 if !hasloved {
@@ -182,12 +185,13 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                     }
                 }
             
-            case 101:print("back")
+            case 101: webview.goBack();
             
-            case 102:print("forward")
+            //webview.reload();
+            break
+            case 102: webview.goForward();break
             default: break
         }
-        
     }
     
     func getBaseData() -> [String:Any] {
@@ -384,7 +388,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         print("\(#function)")
-
+        item_go_back?.isEnabled = webView.canGoBack;
+        //item_go_forward?.isEnabled = webView.canGoForward
+        
         Dismiss()
     }
 

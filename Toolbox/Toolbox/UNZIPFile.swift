@@ -59,16 +59,17 @@ class UNZIPFile: NSObject {
     /// - parameter path:               文件路径
     /// - parameter preprogressHandler: 预处理操作（可选）
     /// - parameter completionHandler:  回调处理
+    @discardableResult
     static func parseJsonData(
         path:String,
         preprogressHandler:((String)->(String))? = nil,
-        completionHandler:((Any)->()))
+        completionHandler:((Any)->())) -> Any?
     {
         print(path)
         let isExist = FileManager.default.fileExists(atPath: path)
         if !isExist
         {
-            print("目标路径：\(path) 不存在！");return
+            print("目标路径：\(path) 不存在！");return nil
         }
          
         do{
@@ -76,6 +77,7 @@ class UNZIPFile: NSObject {
                 .replacingOccurrences(of: "\n", with: "")
                 .replacingOccurrences(of: " ", with: "")
                 .replacingOccurrences(of: "\r", with: "")
+                .replacingOccurrences(of: ";", with: "")
             if let preprogressHandler = preprogressHandler {
                 jsonString = preprogressHandler(jsonString)
             }
@@ -84,23 +86,33 @@ class UNZIPFile: NSObject {
                 // let json = JSON(data: dataFromString)
                 let anyObj =  try JSONSerialization.jsonObject(with: jsondata, options: .allowFragments)
                 completionHandler(anyObj)
+                return anyObj
             }
         }catch{
             print("json解析异常 ： \(error)")
         }
 
+        return nil
     }
 
+    
+    
     //MARK:
     //飞机信息
     func getAirplanesData(withPath path:String,bookName:String){
         print("\(bookName) : 获取飞机信息")
-        var customer_code:String = ""
-        var customer_name:String = ""
-        if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookName)'", orderBy: nil) as? PublicationsModel {
-            customer_code = pub.customer_code;
-            customer_name = pub.customer_name;
+        guard let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookName)'", orderBy: nil) as? PublicationsModel else { return }
+        let customer_code = pub.customer_code;
+        let customer_name = pub.customer_name;
+        let _modelpath = ROOTPATH + "/\(pub.customer_code!)" + "/\(pub.book_uuid!)" + "/apModelMap.js"
+        
+        var _apmodel = [String:[String:String]]()
+        if FILESManager.default.fileExistsAt(path: _modelpath){
+            _apmodel = UNZIPFile.parseJsonData(path: _modelpath, completionHandler: { (obj) in
+            }) as! [String : [String : String]]
+
         }
+        
         
         UNZIPFile.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
@@ -112,15 +124,34 @@ class UNZIPFile: NSObject {
                     item["customer_name"] = customer_name
                     AirplaneModel.saveToDb(with: item)
                     /////飞机与手册的关系
-                    if let msn = item["airplaneSerialNumber"]{
-                        let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
-                        APMMap.saveToDb(with: dic)
+                    if let msn = item["airplaneSerialNumber"] as? String {
+                        /*let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
+                        APMMap.saveToDb(with: dic)*/
+                        if var model = _apmodel[msn]{
+                            model[pub.doc_abbreviation.lowercased()] = pub.book_uuid
+                            _apmodel[msn] = model
+                        }else{
+                            _apmodel[msn] = [pub.doc_abbreviation.lowercased():pub.book_uuid]
+                        }
                     }
+                    
                 }
             }
+            
+            //_apmodel 写入文件
+            
         })
     }
 
+    func updateApModelMap(with msn:String,bookId:String,type:String) {
+        
+    }
+    
+    func deleteApModelMap(with bookId:String) {
+        
+    }
+    
+    
     
     //获取手册信息
     func getBookData(withPath path:String) {
