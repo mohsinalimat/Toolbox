@@ -113,6 +113,7 @@ class ManagerController: BaseViewControllerWithTable{
                 }
             }
             self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
+            self.deleteButton?.setTitle("Delete" + (selectedInEditModelArr.count > 0 ? " (\(selectedInEditModelArr.count))":""), for: .normal)
             tableview?.reloadData();break
         default:break
         }

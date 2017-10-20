@@ -89,7 +89,7 @@ class UNZIPFile: NSObject {
                 return anyObj
             }
         }catch{
-            print("json解析异常 ： \(error)")
+            print("json解析异常 ： \(error.localizedDescription)")
         }
 
         return nil
@@ -104,13 +104,12 @@ class UNZIPFile: NSObject {
         guard let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookName)'", orderBy: nil) as? PublicationsModel else { return }
         let customer_code = pub.customer_code;
         let customer_name = pub.customer_name;
-        let _modelpath = ROOTPATH + "/\(pub.customer_code!)" + "/\(pub.book_uuid!)" + "/apModelMap.js"
         
+        //获取apmodel
+        let _modelpath = ROOTPATH + "/\(pub.customer_code!)" + "/apModelMap.js"
         var _apmodel = [String:[String:String]]()
-        if FILESManager.default.fileExistsAt(path: _modelpath){
-            _apmodel = UNZIPFile.parseJsonData(path: _modelpath, completionHandler: { (obj) in
-            }) as! [String : [String : String]]
-
+        if let m = readApModelMap(_modelpath) {
+            _apmodel = m 
         }
         
         
@@ -125,8 +124,9 @@ class UNZIPFile: NSObject {
                     AirplaneModel.saveToDb(with: item)
                     /////飞机与手册的关系
                     if let msn = item["airplaneSerialNumber"] as? String {
-                        /*let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
-                        APMMap.saveToDb(with: dic)*/
+                        let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
+                        APMMap.saveToDb(with: dic)
+                        ////
                         if var model = _apmodel[msn]{
                             model[pub.doc_abbreviation.lowercased()] = pub.book_uuid
                             _apmodel[msn] = model
@@ -139,16 +139,61 @@ class UNZIPFile: NSObject {
             }
             
             //_apmodel 写入文件
-            
+            updateApModelMap(with: _apmodel, atPath: _modelpath)
         })
     }
 
-    func updateApModelMap(with msn:String,bookId:String,type:String) {
-        
+    //MARK:-  ApModelMap
+    func readApModelMap(_ atPath:String) -> [String:[String:String]]? {
+        if FILESManager.default.fileExistsAt(path: atPath,createWhenNotExist: false){
+            return UNZIPFile.parseJsonData(path: atPath,
+                                               preprogressHandler: { (str) -> String in
+                                                return str.replacingOccurrences(of: "varapModelMap=", with: "")
+                },
+                                               completionHandler: { (obj) in
+            }) as? [String : [String:String]]
+        }
+       
+        return nil
+    }
+    
+    
+    func updateApModelMap(with obj:[String:[String:String]],atPath:String) {
+        do{
+            var total_data:Data = "var apModelMap = ".data(using: String.Encoding.utf8)!
+            let jsondata = try JSONSerialization.data(withJSONObject: obj, options: JSONSerialization.WritingOptions.prettyPrinted)
+            let c = ";".data(using: String.Encoding.utf8)
+            total_data.append(jsondata)
+            total_data.append(c!)
+            try total_data.write(to: URL.init(fileURLWithPath:atPath), options: Data.WritingOptions.atomicWrite)
+        }catch{
+            print(error.localizedDescription)
+        }
     }
     
     func deleteApModelMap(with bookId:String) {
-        
+        guard let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookId)'", orderBy: nil) as? PublicationsModel else { return }
+        let path = ROOTPATH + "/\(pub.customer_code!)" + "/apModelMap.js"
+        if let total = readApModelMap(path) {
+            var new = [String:[String:String]]()
+            for (key,value) in total{
+                if value.values.contains(bookId){
+                    var _t = [String:String]()
+                    for (_k,_v) in value {
+                        if _v != bookId {
+                            _t[_k] = _v;
+                        }
+                    }
+                    if _t.keys.count > 0 {
+                        new[key] = _t
+                    }
+                }else{
+                    new[key] = value;
+                }
+            }
+            
+            updateApModelMap(with: new, atPath: path)
+        }
     }
     
     

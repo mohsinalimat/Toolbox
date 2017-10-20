@@ -439,8 +439,8 @@ class DataSourceManager: NSObject {
         for uid in uids {
             if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
                 guard let doc_owner = pub.customer_code else{return}
-                
                 print("start delete \(uid) - \(Date())")
+                UNZIPFile.default.deleteApModelMap(with: uid)
                 
                 //delete Publication
                 pub.deleteToDB()
@@ -459,18 +459,15 @@ class DataSourceManager: NSObject {
                     if msnArr.count == 1{
                         AirplaneModel.delete(with: "airplaneSerialNumber='\(msn!)'")
                     }
-                    
                     map.deleteToDB()
                 }
                 
                 
                 //bookmark
                 BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
-                
                 //delete files in Library
                 let path = ROOTPATH.appending("/\(doc_owner)/\(uid)")
                 FILESManager.default.deleteFileAt(path: path)
-                
                 print("end  delete \(uid) - \(Date())")
                 
                 DispatchQueue.main.async {
