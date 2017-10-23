@@ -19,6 +19,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     var item_go_back:UIBarButtonItem?
     var item_go_forward:UIBarButtonItem?
     
+    var current_disp_fullpath:String = ""
+    var has_opened_filePath:[String] = [String]()
+    
     //MARK:-
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +41,13 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     func recnotification(_ noti:Notification)  {
         kSelectedSegment = nil
         currenthtml_url = nil
+        if let vc = sideViewController {
+            vc.view.removeFromSuperview()
+            vc.removeFromParentViewController()
+            sideViewController = nil
+            vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
+        }
+
     }
     
     
@@ -285,6 +295,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         return htmlfullpath
     }
     
+    //获取图片
     /// - parameter modelId:  当前model的主键-primary_id
     /// - parameter flushDir: 标记为是否需要清空已展开的目录数据
     func getNewData(modelId:String,flushDir:Bool? = false){
@@ -387,13 +398,62 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        print("\(#function)")
+        print("----------\(#function)----------")
+        let url = webView.request?.url
+        print(url)
+        
+        refreshModelDataWithUrl(url!)
+        
         item_go_back?.isEnabled = webView.canGoBack;
         //item_go_forward?.isEnabled = webView.canGoForward
         
         Dismiss()
     }
 
+    
+    //MARK:
+    func refreshModelDataWithUrl(_ url:URL) {
+        guard url.pathExtension == "html" else {return}
+        let pathCompents = url.pathComponents
+        let seg_toc_code = pathCompents.last?.replacingOccurrences(of: ".html", with: "")
+        let book = pathCompents[pathCompents.count - 4]
+        let newSegId = book + seg_toc_code!
+        print(newSegId)
+        current_disp_fullpath = url.path
+        has_opened_filePath.append(url.path)
+        
+        guard newSegId != kSelectedSegment?.primary_id else {
+            print("now is now..."); return
+        }
+        
+        //需要改变前级数据
+        if let newseg = SegmentModel.searchSingle(withWhere: "primary_id='\(newSegId)'", orderBy: nil) as? SegmentModel{
+            kSelectedSegment = newseg
+            let bookid = newseg.book_id as String
+            let book = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookid)'", orderBy: nil) as? PublicationsModel
+            kSelectedPublication = book
+            kseg_parentnode_arr.removeAll()
+            
+            func _search(_ s_id:String){
+                if let m = SegmentModel.searchSingle(withWhere: "primary_id='\(s_id)'", orderBy: nil) as? SegmentModel{
+                    if m.nodeLevel > 0 {
+                        kseg_parentnode_arr.insert(m, at: 0)
+                        _search(m.parent_id)
+                    }
+                }
+            }
+           
+            _search(newseg.parent_id)
+        }
+        
+        
+        
+        
+        
+        
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
