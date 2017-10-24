@@ -8,27 +8,25 @@
 
 import UIKit
 import SSZipArchive
+let SIDER_WIDTH:CGFloat = 460
 
 class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebViewDelegate{
-    var currenthtml_url:String?
     var webview:UIWebView!
     var sideViewController:ViewSideController?
     var loveBtn:UIButton!
     var hasloved:Bool = false
-    let SIDER_WIDTH:CGFloat = 460
     var item_go_back:UIBarButtonItem?
     var item_go_forward:UIBarButtonItem?
     
-    var current_disp_fullpath:String = ""
-    var has_opened_filePath:[String] = [String]()
+    var _current_segment_id:String? //当前打开的页面segment id
+    var _current_html_fullpath:String = ""//当前打开页面完整路径
+    var has_opened_filePath = [String]()//已经打开过的页面
     
     //MARK:-
     override func viewDidLoad() {
         super.viewDidLoad()
-
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_airplane_changed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
-        
         URLProtocol.registerClass(TestURLProtocol.self)
         
         initNavigationBarItem()
@@ -40,7 +38,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
 
     func recnotification(_ noti:Notification)  {
         kSelectedSegment = nil
-        currenthtml_url = nil
+        _current_segment_id = nil
+        
+        has_opened_filePath.removeAll()
         if let vc = sideViewController {
             vc.view.removeFromSuperview()
             vc.removeFromParentViewController()
@@ -54,7 +54,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard var urlStr = getFilePath() else {
-            if currenthtml_url == nil {
+            if _current_segment_id == nil {
                 webview.isHidden = true
                 loveBtn.isHidden = true
                 getTapNodata();
@@ -88,39 +88,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let value:String! = kSelectedAirplane?.value(forKey: "customerEffectivity") as! String
         let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
         webview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))
-        hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
-        loveBtn.isSelected = hasloved
+
         addModel(m: model())
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return}
-        
-        let htmlurl = pub_url + seg_url
-        guard currenthtml_url == htmlurl else {return }
-        if dataArray.count > 0 {
-            print("需要显示图片")
-            if sideViewController == nil{
-                sideViewController = ViewSideController()
-                sideViewController?.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49 - 64)
-                self.addChildViewController(sideViewController!)
-                view.addSubview((sideViewController?.view)!)
-            }
-            sideViewController?.dataArray = dataArray
-            sideViewController?.open(true)
-        }else{
-            print("不需要显示图片")
-            if let vc = sideViewController {
-                vc.view.removeFromSuperview()
-                vc.removeFromParentViewController()
-                sideViewController = nil
-                vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
-            }
-        }
-    }
-    
     
     //提示无内容
     func getTapNodata() {
@@ -184,7 +154,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 //是否已收藏
                 let hasloved = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
                 if !hasloved {
-                    let dic = getBaseData()
+                    let dic = getBaseDataForModel()
                     BookmarkModel.saveToDb(with: dic)
                     HUD.show(successInfo: "添加书签")
                 }else{
@@ -195,16 +165,24 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                     }
                 }
             
-            case 101: webview.goBack();
-            
-            //webview.reload();
-            break
-            case 102: webview.goForward();break
+            case 101:_reloadWebView();break
+        case 102:_reloadWebView(false);break
             default: break
         }
     }
     
-    func getBaseData() -> [String:Any] {
+    //重新刷新页面
+    func _reloadWebView(_ isback:Bool = true) {
+        guard let index = has_opened_filePath.index(of: _current_html_fullpath) else{return}
+        let url = has_opened_filePath[isback ? index - 1 : index + 1]
+        
+        Loading()
+        webview.loadRequest(URLRequest (url: URL (string: url)!))
+        addModel(m: model())
+    }
+    
+    
+    func getBaseDataForModel() -> [String:Any] {
         var dic = [String:Any]()
         dic["seg_primary_id"] = kSelectedSegment?.primary_id
         dic["seg_original_tag"] = kSelectedSegment?.original_tag
@@ -241,7 +219,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func model() -> BookmarkModel {
         let m = BookmarkModel()
-        return m.model(with: getBaseData())
+        return m.model(with: getBaseDataForModel())
     }
     
     func addModel(m:BookmarkModel) {
@@ -256,15 +234,13 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     //MARK: - 获取文件路径
     func getFilePath() -> String? {
-        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {
-            return nil
+        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return nil}
+        guard let seg_id = kSelectedSegment?.primary_id else {return nil}
+        
+        if let currenthtmlid = _current_segment_id {
+            guard currenthtmlid != seg_id else {return nil}
         }
-        let htmlurl = pub_url + seg_url
-        if let currenthtml_url = currenthtml_url {
-            guard currenthtml_url != htmlurl else {return nil}
-        }
-        currenthtml_url = htmlurl
-        getNewData(modelId: (kSelectedSegment?.primary_id)!)
+        _current_segment_id = seg_id
         
         /*
          /var/mobile/Containers/Data/Application/3DE63D99-03B4-40D6-8CA5-581FD04C1AF1/Library/TDLibrary
@@ -298,7 +274,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     //获取图片
     /// - parameter modelId:  当前model的主键-primary_id
     /// - parameter flushDir: 标记为是否需要清空已展开的目录数据
-    func getNewData(modelId:String,flushDir:Bool? = false){
+    func getImgData(segmentId:String,flushDir:Bool? = false){//...没有过滤有效性
         dataArray.removeAll()
         var key_arr:[String] = [String]()
         
@@ -322,10 +298,38 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             
             _search(id)
             return tmpArr
-        }(modelId)
+        }(segmentId)
         
         dataArray = dataArray + arr
-
+        
+        ///show
+        showImgIfExist()
+    }
+    
+    
+    func showImgIfExist() {
+        /*guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return}
+        let htmlurl = pub_url + seg_url
+        guard currenthtml_url == htmlurl else {return }*/
+        if dataArray.count > 0 {
+            print("需要显示图片")
+            if sideViewController == nil{
+                sideViewController = ViewSideController()
+                sideViewController?.view.frame = CGRect (x: kCurrentScreenWidth - 40, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49 - 64)
+                self.addChildViewController(sideViewController!)
+                view.addSubview((sideViewController?.view)!)
+            }
+            sideViewController?.dataArray = dataArray
+            sideViewController?.open(true)
+        }else{
+            print("不需要显示图片")
+            if let vc = sideViewController {
+                vc.view.removeFromSuperview()
+                vc.removeFromParentViewController()
+                sideViewController = nil
+                vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
+            }
+        }
     }
     
     
@@ -403,10 +407,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         print(url)
         
         refreshModelDataWithUrl(url!)
-        
-        item_go_back?.isEnabled = webView.canGoBack;
-        //item_go_forward?.isEnabled = webView.canGoForward
-        
         Dismiss()
     }
 
@@ -419,16 +419,28 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let book = pathCompents[pathCompents.count - 4]
         let newSegId = book + seg_toc_code!
         print(newSegId)
-        current_disp_fullpath = url.path
-        has_opened_filePath.append(url.path)
+        let _path = url.path + "?" + url.query!
         
-        guard newSegId != kSelectedSegment?.primary_id else {
-            print("now is now..."); return
+        _current_html_fullpath = _path
+        if !has_opened_filePath.contains(_path){
+            has_opened_filePath.append(_path);
         }
         
+        if has_opened_filePath.count > 1 {
+            item_go_back?.isEnabled = has_opened_filePath.first != _path;
+            item_go_forward?.isEnabled = has_opened_filePath.last != _path
+        }
+        
+        guard newSegId != kSelectedSegment?.primary_id else {
+            _showImgAndLovedStatusIfNeed()
+            print("now is now..."); return
+        }
+
         //需要改变前级数据
         if let newseg = SegmentModel.searchSingle(withWhere: "primary_id='\(newSegId)'", orderBy: nil) as? SegmentModel{
             kSelectedSegment = newseg
+            _current_segment_id = newseg.primary_id
+            
             let bookid = newseg.book_id as String
             let book = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookid)'", orderBy: nil) as? PublicationsModel
             kSelectedPublication = book
@@ -446,12 +458,15 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             _search(newseg.parent_id)
         }
         
-        
-        
-        
-        
-        
+        _showImgAndLovedStatusIfNeed()
     }
+    
+    func _showImgAndLovedStatusIfNeed()  {
+        loveBtn.isSelected = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
+        getImgData(segmentId: (kSelectedSegment?.primary_id)!)
+    }
+    
+    
     
     
     
