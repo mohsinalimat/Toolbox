@@ -63,7 +63,6 @@
 		A18AD5F61F3D55B20065FF49 /* UnzipInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */; };
 		A19F22F71F90A79700F21F5A /* ImgSmallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */; };
 		A19F22F81F90A79700F21F5A /* ImgSmallCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */; };
-		A1A19CA61F57DE08007BF3AD /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1A19CA51F57DE08007BF3AD /* test.txt */; };
 		A1A27F151F0207FC000CFBDE /* AirplaneSubCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */; };
 		A1A27F161F0207FC000CFBDE /* AirplaneSubCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */; };
 		A1B13AB01F3982A10049250F /* FILESManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B13AAF1F3982A10049250F /* FILESManager.swift */; };
@@ -226,7 +225,6 @@
 		A18AD5F41F3D55B10065FF49 /* UnzipInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnzipInfoViewController.xib; sourceTree = "<group>"; };
 		A19F22F51F90A79600F21F5A /* ImgSmallCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImgSmallCell.swift; sourceTree = "<group>"; };
 		A19F22F61F90A79700F21F5A /* ImgSmallCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImgSmallCell.xib; sourceTree = "<group>"; };
-		A1A19CA51F57DE08007BF3AD /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		A1A27F131F0207FC000CFBDE /* AirplaneSubCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirplaneSubCell.swift; sourceTree = "<group>"; };
 		A1A27F141F0207FC000CFBDE /* AirplaneSubCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AirplaneSubCell.xib; sourceTree = "<group>"; };
 		A1B13AAF1F3982A10049250F /* FILESManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FILESManager.swift; sourceTree = "<group>"; };
@@ -491,7 +489,6 @@
 				A1C1BDA81F00FF5B002FC0E0 /* source */,
 				A1C1BD5C1F00A0AA002FC0E0 /* AppDelegate.swift */,
 				A1C1BD5E1F00A0AA002FC0E0 /* ViewController.swift */,
-				A1A19CA51F57DE08007BF3AD /* test.txt */,
 				A1B7FB171F0F8912009D6CA9 /* apList.json */,
 				A1D597901F46CD3F00C0F5B8 /* book.xml */,
 				A1C1BD651F00A0AA002FC0E0 /* LaunchScreen.storyboard */,
@@ -763,7 +760,6 @@
 				A1E908561F8F3FA300EDF6AD /* ImgCollectionViewCell.xib in Resources */,
 				A17C81081F30589400EF8B9D /* error@2x.png in Resources */,
 				A1BBCF541F2ACBFF007374B7 /* bookmarkOff@2x.png in Resources */,
-				A1A19CA61F57DE08007BF3AD /* test.txt in Resources */,
 				A106483D1F04C21E002D088C /* AppIcon-B2C72x72~ipad.png in Resources */,
 				ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */,
 				A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */,

@@ -12,11 +12,8 @@ private let kSegmentCellIdentifier = "SegmentCellIdentifier"
 private let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 
 class TOCViewController: BaseViewControllerWithTable {
-
     var currentPublication:PublicationsModel!
     var currentSegment:SegmentModel!
-    
-//    var kseg_parentnode_arr:[SegmentModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +31,6 @@ class TOCViewController: BaseViewControllerWithTable {
         dataArray.removeAll()
         
         tableview?.reloadData()
-        
     }
     
     
@@ -52,9 +48,7 @@ class TOCViewController: BaseViewControllerWithTable {
         tableview?.backgroundView = nil;
     }
     
-    
-    
-    
+
     //MARK:
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
@@ -112,6 +106,7 @@ class TOCViewController: BaseViewControllerWithTable {
                 }
                 
                 getNewData(modelId: m.primary_id)
+                tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
             }
             else {//最后一级目录
                     let cell = tableView.cellForRow(at: indexPath)
@@ -215,10 +210,7 @@ class TOCViewController: BaseViewControllerWithTable {
     }
 
  
-    
-    
-    
-    
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

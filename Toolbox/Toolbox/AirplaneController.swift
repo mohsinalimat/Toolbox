@@ -8,8 +8,6 @@
 
 import UIKit
 import Alamofire
-import WebKit
-
 class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     var selectedDataDic = [String:[String]]()//当前已选择展开的model标记
     var sortButton : UIButton? //sort
@@ -30,14 +28,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = nil
-        
-        //获取apmodel
-//        let _modelpath = ROOTPATH + "/CCA" + "/apModelMap.js"
-//        var _apmodel = [String:[String:String]]()
-//        if let m = UNZIPFile.default.readApModelMap(_modelpath) {
-//            _apmodel = m
-//        }
-
         
     }
 
