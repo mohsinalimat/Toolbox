@@ -50,7 +50,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
 
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard var urlStr = getFilePath() else {
@@ -80,7 +79,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             }
         }
         
-        Loading()
+        //Loading()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
         /*let key:String! = kAirplaneKeyValue[kAIRPLANE_SORTEDOPTION_KEY]
         let value:String! = kSelectedAirplane?.value(forKey: key) as! String!*/
@@ -132,22 +131,17 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let litem_2 = UIBarButtonItem (customView: lbtn_2)
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 8
-        
-        //....
+
         litem_1.isEnabled = false
         litem_2.isEnabled = false
         item_go_back = litem_1
         item_go_forward = litem_2
-        
         navigationItem.leftBarButtonItems = [fixed, litem_1,fixed,fixed,litem_2]
     }
     
     
     func buttonClickedAction(_ btn:UIButton){
-        if webview.isLoading {
-            print("webview loading");return
-        }
-        
+        if webview.isLoading { return }
         switch btn.tag {
             case 100:
                 btn.isSelected = !btn.isSelected
@@ -164,8 +158,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                         HUD.show(successInfo: "取消书签")
                     }
                 }
-            
-            case 101:_reloadWebView();break
+        case 101:_reloadWebView(); break
         case 102:_reloadWebView(false);break
             default: break
         }
@@ -176,9 +169,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         guard let index = has_opened_filePath.index(of: _current_html_fullpath) else{return}
         let url = has_opened_filePath[isback ? index - 1 : index + 1]
         
-        Loading()
-        webview.loadRequest(URLRequest (url: URL (string: url)!))
+        dismissImg();
         addModel(m: model())
+        webview.loadRequest(URLRequest (url: URL (string: url)!))
     }
     
     
@@ -196,7 +189,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         dic["pub_model"] = kSelectedPublication?.model
         dic["airplaneId"] = kSelectedAirplane?.airplaneId
         dic["mark_content"] = ""
-        
         do{
             var tmp:[String] = []
             for m in kseg_parentnode_arr {
@@ -236,7 +228,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     func getFilePath() -> String? {
         guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return nil}
         guard let seg_id = kSelectedSegment?.primary_id else {return nil}
-        
         if let currenthtmlid = _current_segment_id {
             guard currenthtmlid != seg_id else {return nil}
         }
@@ -274,34 +265,42 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     //获取图片
     /// - parameter modelId:  当前model的主键-primary_id
     /// - parameter flushDir: 标记为是否需要清空已展开的目录数据
-    func getImgData(segmentId:String,flushDir:Bool? = false){//...没有过滤有效性
+    func getImgData(segmentId:String,flushDir:Bool? = false){
         dataArray.removeAll()
         var key_arr:[String] = [String]()
-        
-        //向下遍历子孙节点
         let arr:[SegmentModel] = { id in
             var tmpArr = [SegmentModel]()
             func _search(_ id:String){
                 let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: "toc_code asc") as! [SegmentModel]
                 for m in chapter {
-                    if Int(m.is_visible) == 0 && Int(m.has_content) == 0{
-                        //不可见
+                    if Int(m.is_visible) == 0 && Int(m.has_content) == 0{//不可见
                         _search(m.primary_id)
                     }else{
                         if !key_arr.contains(m.primary_id){
                             key_arr.append(m.primary_id)
-                            tmpArr.append(m)
+                            ///过滤数据有效性
+                            let msn = Int((kSelectedAirplane?.customerEffectivity)!)
+                            if let eff = m.effrg,let msn = msn{
+                                if  eff.characters.count > 0{
+                                    let arr = eff.components(separatedBy: " ")
+                                    for e in arr {
+                                        let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
+                                        let s2 = e.substring(from: s1.endIndex)
+                                        if msn >= Int(s1)! && msn <= Int(s2)!  {
+                                            tmpArr.append(m);break
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            
             _search(id)
             return tmpArr
         }(segmentId)
         
         dataArray = dataArray + arr
-        
         ///show
         showImgIfExist()
     }
@@ -322,15 +321,19 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             sideViewController?.dataArray = dataArray
             sideViewController?.open(true)
         }else{
-            print("不需要显示图片")
-            if let vc = sideViewController {
-                vc.view.removeFromSuperview()
-                vc.removeFromParentViewController()
-                sideViewController = nil
-                vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
-            }
+            dismissImg();
         }
     }
+    
+    func dismissImg() {
+        if let vc = sideViewController {
+            vc.view.removeFromSuperview()
+            vc.removeFromParentViewController()
+            sideViewController = nil
+            vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
+        }
+    }
+    
     
     
     //MARK:-
@@ -340,7 +343,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     func zipArchiveDidUnzipArchive(atPath path: String, zipInfo: unz_global_info, unzippedPath: String) {
         print("zipArchiveDidUnzipArchive")
-        
         if FileManager.default.isDeletableFile(atPath: path) {
             do {
                 try FileManager.default.removeItem(atPath: path)
@@ -382,18 +384,18 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     }
     
     func webViewDidStartLoad(_ webView: UIWebView) {
-    
-//        if let url = Bundle.main.url(forResource: "ajax_handler", withExtension:"js"){
-//            do{
-//                let str : String = try String.init(contentsOf: url, encoding: String.Encoding.utf8)
-//                webView.stringByEvaluatingJavaScript(from: str)
-//                webView.stringByEvaluatingJavaScript(from: str)
-//            }catch{
-//                print(error)
-//            }
-//            
-//        }
-
+        print("----------\(#function)----------")
+        dismissImg();
+        Loading()
+        /*if let url = Bundle.main.url(forResource: "ajax_handler", withExtension:"js"){
+            do{
+                let str : String = try String.init(contentsOf: url, encoding: String.Encoding.utf8)
+                webView.stringByEvaluatingJavaScript(from: str)
+                webView.stringByEvaluatingJavaScript(from: str)
+            }catch{
+                print(error)
+            }
+        }*/
     }
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
@@ -404,8 +406,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     func webViewDidFinishLoad(_ webView: UIWebView) {
         print("----------\(#function)----------")
         let url = webView.request?.url
-        print(url)
-        
         refreshModelDataWithUrl(url!)
         Dismiss()
     }
@@ -418,7 +418,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let seg_toc_code = pathCompents.last?.replacingOccurrences(of: ".html", with: "")
         let book = pathCompents[pathCompents.count - 4]
         let newSegId = book + seg_toc_code!
-        print(newSegId)
         let _path = url.path + "?" + url.query!
         
         _current_html_fullpath = _path
@@ -431,10 +430,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             item_go_forward?.isEnabled = has_opened_filePath.last != _path
         }
         
-        guard newSegId != kSelectedSegment?.primary_id else {
-            _showImgAndLovedStatusIfNeed()
-            print("now is now..."); return
-        }
+        guard newSegId != kSelectedSegment?.primary_id else { _showImgAndLovedStatusIfNeed(); return}
 
         //需要改变前级数据
         if let newseg = SegmentModel.searchSingle(withWhere: "primary_id='\(newSegId)'", orderBy: nil) as? SegmentModel{
@@ -445,7 +441,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             let book = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookid)'", orderBy: nil) as? PublicationsModel
             kSelectedPublication = book
             kseg_parentnode_arr.removeAll()
-            
             func _search(_ s_id:String){
                 if let m = SegmentModel.searchSingle(withWhere: "primary_id='\(s_id)'", orderBy: nil) as? SegmentModel{
                     if m.nodeLevel > 0 {
@@ -465,9 +460,6 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         loveBtn.isSelected = BookmarkModel.search(with: "seg_primary_id='\((kSelectedSegment?.primary_id!)!)'", orderBy: nil).count > 0
         getImgData(segmentId: (kSelectedSegment?.primary_id)!)
     }
-    
-    
-    
     
     
     override func didReceiveMemoryWarning() {

@@ -11,6 +11,8 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
 
     @IBOutlet weak var _imgwebview: UIWebView!
     
+    var activity:UIActivityIndicatorView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -26,25 +28,41 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
     
     func fillCellWith(_ model:SegmentModel) {
         guard var urlStr = Tools.default.getFilePath(model.content_location) else{return}
-        
-        //Loading()
+
+        _initActivityView()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
-        let key:String = "cec"
-        let value:String! = kSelectedAirplane?.value(forKey: "customerEffectivity") as! String
-        let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
-        _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))        
+        _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: urlStr)!))
     }
     
+    func _initActivityView() {
+        activity = UIActivityIndicatorView.init(frame: CGRect (x: 0, y: 0, width: 50, height: 50))
+        activity.center = CGPoint (x: (self.frame.width - activity.frame.width) / 2, y: (self.frame.height - activity.frame.width)/2)
+        activity.activityIndicatorViewStyle = .gray
+        activity.hidesWhenStopped = true
+        self.addSubview(activity)
+        
+        activity.startAnimating()
+    }
+    
+    
+    override func prepareForReuse() {
+        _imgwebview.isHidden = true
+    }
     
     //MARK:- UIWebViewDelegate
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
-        print("\(#function)-error：\(error.localizedDescription)")
-        Dismiss()
+        dismiss()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        Dismiss()
+        dismiss();
     }
  
-
+    func dismiss() {
+        if _imgwebview.isHidden {
+            _imgwebview.isHidden = false
+        }
+        
+        activity.stopAnimating()
+    }
 }
