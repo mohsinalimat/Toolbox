@@ -41,13 +41,15 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         _current_segment_id = nil
         
         has_opened_filePath.removeAll()
+        item_go_back?.isEnabled = false
+        item_go_forward?.isEnabled = false
+        
         if let vc = sideViewController {
             vc.view.removeFromSuperview()
             vc.removeFromParentViewController()
             sideViewController = nil
             vc.view.frame = CGRect (x: kCurrentScreenWidth, y: 0, width: SIDER_WIDTH, height: kCurrentScreenHeight - 49)
         }
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -441,6 +443,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             let book = PublicationsModel.searchSingle(withWhere: "book_uuid='\(bookid)'", orderBy: nil) as? PublicationsModel
             kSelectedPublication = book
             kseg_parentnode_arr.removeAll()
+            kseg_direction = 2
             func _search(_ s_id:String){
                 if let m = SegmentModel.searchSingle(withWhere: "primary_id='\(s_id)'", orderBy: nil) as? SegmentModel{
                     if m.nodeLevel > 0 {

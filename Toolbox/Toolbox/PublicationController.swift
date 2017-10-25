@@ -36,9 +36,9 @@ class PublicationController: BaseViewControllerWithTable ,UISearchBarDelegate{
             tableview?.reloadData()
             return
         }
-        guard currentAirplaneModel !== selectedAirplane  else {
+        /*guard currentAirplaneModel !== selectedAirplane  else {
             return
-        }
+        }*/
         
         currentAirplaneModel = selectedAirplane
         
