@@ -141,7 +141,7 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         }
         
         _progressview.progress = model.ds_file_percent
-        if model.update_status != 6 {
+        if model.update_status == 6 {
             _timer.invalidate()
         }
     }

@@ -294,7 +294,7 @@
 		A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetterViewController.swift; sourceTree = "<group>"; };
 		A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetterViewController.xib; sourceTree = "<group>"; };
 		A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = "<group>"; };
-		A1CC40031FA1D32800C8573D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extension.swift; path = com/Extension.swift; sourceTree = "<group>"; };
+		A1CC40031FA1D32800C8573D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A1CC40061FA1D70C00C8573D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A1CC40071FA1D70C00C8573D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		A1D5978E1F4689D100C0F5B8 /* XMLParseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLParseKit.swift; sourceTree = "<group>"; };
@@ -534,7 +534,6 @@
 			isa = PBXGroup;
 			children = (
 				A1CC40021FA1D26900C8573D /* com */,
-				A1CC40031FA1D32800C8573D /* Extension.swift */,
 				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
 				A1B7A5F91F7200B9008412AD /* themeColor.swift */,
@@ -617,6 +616,7 @@
 			children = (
 				A1CC40051FA1D70C00C8573D /* Reachability */,
 				A1ED124D1F56B35C00FCD259 /* hud */,
+				A1CC40031FA1D32800C8573D /* Extension.swift */,
 			);
 			path = com;
 			sourceTree = "<group>";
