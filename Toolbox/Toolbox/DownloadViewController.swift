@@ -123,7 +123,7 @@ class DownloadViewController: BaseViewControllerWithTable {
         let m = dataArray[indexPath.row] as! DataSourceModel
         self.dismiss(animated: false) { 
             let vc = DownloadDetailViewController.init()
-            let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 50), height: Int(kCurrentScreenHeight - 100))
+            let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 50), height: 440)//Int(kCurrentScreenHeight - 100)
             vc.view.frame = rect////////开始创建view
             vc.url = m.location_url
             

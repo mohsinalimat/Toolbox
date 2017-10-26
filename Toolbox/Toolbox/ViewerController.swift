@@ -81,7 +81,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
             }
         }
         
-        //Loading()
+        Loading()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
         /*let key:String! = kAirplaneKeyValue[kAIRPLANE_SORTEDOPTION_KEY]
         let value:String! = kSelectedAirplane?.value(forKey: key) as! String!*/

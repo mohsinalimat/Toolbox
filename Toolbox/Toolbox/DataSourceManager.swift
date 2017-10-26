@@ -185,6 +185,7 @@ class DataSourceManager: NSObject {
                             //更新状态
                             if m.update_status != 1 {
                                 m.update_status = 1
+                                m.time = "\(Date.timeIntervalSinceReferenceDate)"
                                 m.updateToDB()
                             }
                         }
@@ -198,6 +199,7 @@ class DataSourceManager: NSObject {
                         //更新状态
                         if m.update_status != 1 {
                             m.update_status = 1
+                            m.time = "\(Date.timeIntervalSinceReferenceDate)"
                             m.updateToDB()
                         }
                     }

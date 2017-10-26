@@ -11,7 +11,6 @@ import UIKit
 class DownloadDetailViewController: BaseViewControllerWithTable {
     let _topview_height :CGFloat = 80.0;
     var url:String?
-    
     var _urlLable: UILabel!
     var _statusLable:UILabel!
     var _progressview:UIProgressView!
@@ -21,22 +20,105 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         super.viewDidLoad()
         title = "更新信息"
         _timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
-        
-        dataArray = [["Status":""],
-                     ["Time Left Until Update Required":"0"],
-                     ["Document Online":"0"],
-                     ["Document on Device":"0"],
-                     ["Document to be Added":"1"],
-                     ["Document to be Update":"0"],
-                     ["Document to be Deleted":"0"],
-                     ["Last Checked":"N/A"],
-                     ["Last Data Package":"AMU_Order_2017-05-01 00:00:00"]]
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let rect = view.frame
+        tableview?.frame = CGRect (x: 0, y: _topview_height, width: rect.width, height: rect.height - _topview_height)
+        NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
+        
+        updateStatus()
+        
+        dataArray = dataArray + getDataSource()
+    }
+    
+    deinit{
+        if  nil != _timer {
+            _timer = nil
+        }
+    }
+    
+
+    //MARK:
+    func objectFromJson(_ jsonstr:String) -> Any? {
+        do {
+            guard let data = jsonstr.data(using: String.Encoding.utf8, allowLossyConversion: true) else {return nil}
+            return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments);
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    
+    
+    func getDataSource() -> [[String:String]] {
+        var ds = [[String:String]]()
+        
+        //status
+        let model = DataSourceModel.searchSingle(withWhere: "location_url='\(url!)'", orderBy: nil) as! DataSourceModel
+        let d1 = ["Status":model.update_status == 6 ? "Update Success" : ""]
+        ds.append(d1)
+        
+        /////
+        let update_time:String? = model.time
+        var _last_update:Date?
+        if let up_time = update_time {
+            _last_update = Date.init(timeIntervalSinceReferenceDate: TimeInterval.init(up_time)!)
+        }
+        
+        var _package:String?
+        var _threshold :String = ""
+        if let packageinfodic = objectFromJson(model.package_info) as? [String:Any]{
+            let customer_code = packageinfodic["customer_code"];
+            let orderdata = packageinfodic["order_datetime"]
+            _threshold = packageinfodic["threshold"] as! String
+            _package = "\(customer_code!)_Order_\(orderdata!)"
+        }
+        
+        //left time
+        var left_time:String = "N/A"
+        if let last_update = _last_update {
+            let sec = Date.init().timeIntervalSince(last_update);
+            let th = Double.init(_threshold)!
+            let lefthour =  th * 24 - sec / 3600
+            let day = lefthour / 24
+            let hour = lefthour.truncatingRemainder(dividingBy: 24)
+            left_time = "\(Int(day))" + " days," + "\(Int(hour))" + " hours"
+        }
+        let d2 = ["Time Left Until Update Required":left_time]
+        ds.append(d2)
+        
+        //number
+        var num = 0
+        if let sync_arr = objectFromJson(model.sync_manifest) as? [[String:String]] {
+            num = sync_arr.count;
+        }
+        let d3 = ["Document Online":"\(num)"]
+        ds.append(d3)
+        let d4 = ["Document on Device":"\(num)"]
+        ds.append(d4)
+        
+        //last check time
+        let lasttimestr = _last_update != nil ? Date.stringFromDate(_last_update!, withFormatter: "yyyy-MM-dd HH:mm") : "N/A"
+        let d5 = ["Last Checked":lasttimestr]
+        ds.append(d5)
+        
+        //last data package
+        let d6 = ["Last Data Package":_package ?? "N/A"]
+        ds.append(d6)
+        return ds
+    }
+    
+    
+    //MARK:
     func unzipAllComplete(_ noti:Notification) {
         //防止要显示更新列表，多数据源情况下，一个数据源安装完成其他的还在进行中，视图dismiss。
         if DataSourceManager.default.unzipQueueIsEmpty().0 {
-            _timer.invalidate()
+            if _timer.isValid{
+                _timer.invalidate();
+            }
             self.dismiss(animated: false, completion: nil)
         }
     }
@@ -47,9 +129,7 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
 
     func updateStatus() {
         let model = DataSourceModel.searchSingle(withWhere: "location_url='\(url!)'", orderBy: nil) as! DataSourceModel
-        
         _urlLable.text = model.location_url;
-        
         switch model.update_status {
         case 1:_statusLable.text = "等待中";break
         case 2:_statusLable.text = "下载文件: \(model.current_files) / \(model.total_files)";break
@@ -61,19 +141,10 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         }
         
         _progressview.progress = model.ds_file_percent
+        if model.update_status != 6 {
+            _timer.invalidate()
+        }
     }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let rect = view.frame
-        tableview?.frame = CGRect (x: 0, y: _topview_height, width: rect.width, height: rect.height - _topview_height)
-        NotificationCenter.default.addObserver(self, selector: #selector(unzipAllComplete(_:)), name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete"), object: nil)
-        
-        updateStatus()
-    }
-    
     
     override func initSubview() {
         needtitleView = false
@@ -107,7 +178,6 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         
         navigationItem.leftBarButtonItems = nil
         navigationItem.leftBarButtonItem = litem
-
         view.backgroundColor = UIColor.white
     }
     
@@ -120,14 +190,14 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         url_lab.font = UIFont.boldSystemFont(ofSize: 20)
         url_lab.textColor = UIColor.white
         _urlLable = url_lab
-        url_lab.text = "http://192.168.3.72:88/share/airbus/wyg"
+        url_lab.text = ""
         bg.addSubview(url_lab)
        
         let s_lab = UILabel (frame: CGRect (x: 10, y: url_lab.frame.maxY, width: frame.width - 10, height:30))
         s_lab.font = UIFont.systemFont(ofSize: 16)
         s_lab.textColor = UIColor.white
         _statusLable = s_lab
-        s_lab.text = "unzipping: 1/1"
+        s_lab.text = ""
         bg.addSubview(s_lab)
         
         let progess = UIProgressView.init(progressViewStyle: .bar)
@@ -140,17 +210,11 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         bg.addSubview(progess)
         return bg
     }
-    
-    
-    
-    deinit{
-        _timer = nil
-        print("DownloadDetailViewController")
-    }
-    
-    
+
     func closeBtn(){
-        _timer.invalidate()
+        if _timer != nil && _timer.isValid {
+            _timer.invalidate();
+        }
        self.dismiss(animated: false) { 
             let vc = DownloadViewController.init()
             let rect =  CGRect (x: 0, y: 0, width: Int(kCurrentScreenWidth - 200), height: 60 * 5)
@@ -173,6 +237,7 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         let dic = dataArray[indexPath.row] as![String:Any]
         
         cell.fillCell(dic)
+        cell.detailLab.textColor = indexPath.row == 0 ? UIColor.blue:UIColor.darkGray
         cell.backgroundColor = UIColor.clear
         
         return cell
@@ -185,3 +250,6 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
 
 
 }
+
+
+

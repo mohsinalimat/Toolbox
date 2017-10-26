@@ -50,7 +50,7 @@ class ViewSideController: BaseViewController {
             bgview.addSubview(_imgview)
             view.addSubview(bgview)
             if view_init_center == nil{
-                print("view.center:\(view.center)")
+                //print("view.center:\(view.center)")
                 view_init_center = view.center
             }
         }
@@ -78,8 +78,6 @@ class ViewSideController: BaseViewController {
         //1214  807
         gesture.setTranslation(CGPoint.init(x: 0, y: 0), in: view)
         if (gesture.state == .ended) {
-            print("end")
-            print(view.center)
             let left = (view_init_center?.x)! - view.center.x
             if left <= 200 && vx < 0 {
                 close()

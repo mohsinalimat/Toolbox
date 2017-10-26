@@ -167,6 +167,7 @@
 @property(nonatomic,copy)NSString * server_baseline;
 @property(nonatomic,assign)NSInteger  update_status;//当前数据源更新状态
 @property(nonatomic,copy)NSString * misc;
+@property(nonatomic,copy)NSString * time;
 
 @property(nonatomic,assign)float ds_file_percent;//下载、解压进度
 @property(nonatomic,assign)NSInteger total_files;//总文件数

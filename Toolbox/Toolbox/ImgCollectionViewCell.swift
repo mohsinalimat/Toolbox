@@ -24,12 +24,14 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         _imgwebview.backgroundColor = UIColor.white
         _imgwebview.scrollView.isUserInteractionEnabled = false
         _imgwebview.addGestureRecognizer(_imgwebview.scrollView.pinchGestureRecognizer!)
+        
+        _initActivityView()
     }
     
     func fillCellWith(_ model:SegmentModel) {
         guard var urlStr = Tools.default.getFilePath(model.content_location) else{return}
 
-        _initActivityView()
+        activity.startAnimating()
         urlStr =  urlStr.replacingOccurrences(of: " ", with: "%20")
         _imgwebview.loadRequest(URLRequest.init(url: URL.init(string: urlStr)!))
     }
@@ -39,9 +41,8 @@ class ImgCollectionViewCell: UICollectionViewCell,UIWebViewDelegate {
         activity.center = CGPoint (x: (self.frame.width - activity.frame.width) / 2, y: (self.frame.height - activity.frame.width)/2)
         activity.activityIndicatorViewStyle = .gray
         activity.hidesWhenStopped = true
+        activity.tag = 130
         self.addSubview(activity)
-        
-        activity.startAnimating()
     }
     
     

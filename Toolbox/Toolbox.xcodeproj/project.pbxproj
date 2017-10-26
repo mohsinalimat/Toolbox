@@ -125,6 +125,8 @@
 		A1CA21861F3472CE0055BCB0 /* SetterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */; };
 		A1CA21871F3472CE0055BCB0 /* SetterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */; };
 		A1CAEA5E1F5E6C4500CE751B /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */; };
+		A1CC40041FA1D32800C8573D /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CC40031FA1D32800C8573D /* Extension.swift */; };
+		A1CC40081FA1D70C00C8573D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A1CC40071FA1D70C00C8573D /* Reachability.m */; };
 		A1D5978F1F4689D100C0F5B8 /* XMLParseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5978E1F4689D100C0F5B8 /* XMLParseKit.swift */; };
 		A1D597911F46CD3F00C0F5B8 /* book.xml in Resources */ = {isa = PBXBuildFile; fileRef = A1D597901F46CD3F00C0F5B8 /* book.xml */; };
 		A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DE045E1F21D06B000C5069 /* SegmentCell.swift */; };
@@ -144,7 +146,6 @@
 		ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */; };
 		ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */; };
 		ADF9DA481F92645800C1919D /* LargePicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9DA471F92645800C1919D /* LargePicViewController.swift */; };
-		ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E251F8224A500FB4230 /* Reachability.m */; };
 		ADFE0E281F82274E00FB4230 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFE0E271F82274E00FB4230 /* Tools.swift */; };
 /* End PBXBuildFile section */
 
@@ -293,6 +294,9 @@
 		A1CA21841F3472CE0055BCB0 /* SetterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetterViewController.swift; sourceTree = "<group>"; };
 		A1CA21851F3472CE0055BCB0 /* SetterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetterViewController.xib; sourceTree = "<group>"; };
 		A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = "<group>"; };
+		A1CC40031FA1D32800C8573D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extension.swift; path = com/Extension.swift; sourceTree = "<group>"; };
+		A1CC40061FA1D70C00C8573D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		A1CC40071FA1D70C00C8573D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		A1D5978E1F4689D100C0F5B8 /* XMLParseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLParseKit.swift; sourceTree = "<group>"; };
 		A1D597901F46CD3F00C0F5B8 /* book.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = book.xml; sourceTree = "<group>"; };
 		A1DE045E1F21D06B000C5069 /* SegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentCell.swift; sourceTree = "<group>"; };
@@ -312,8 +316,6 @@
 		ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailCell.swift; sourceTree = "<group>"; };
 		ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailCell.xib; sourceTree = "<group>"; };
 		ADF9DA471F92645800C1919D /* LargePicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargePicViewController.swift; sourceTree = "<group>"; };
-		ADFE0E241F8224A500FB4230 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		ADFE0E251F8224A500FB4230 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		ADFE0E271F82274E00FB4230 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		C6490A7AFFD96B531DE60339 /* Pods-Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		F082408167EDD359A7B14175 /* Pods_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -531,8 +533,8 @@
 		A1C1BD911F00A6E0002FC0E0 /* common */ = {
 			isa = PBXGroup;
 			children = (
-				ADFE0E231F8224A500FB4230 /* Reachability */,
-				A1ED124D1F56B35C00FCD259 /* hud */,
+				A1CC40021FA1D26900C8573D /* com */,
+				A1CC40031FA1D32800C8573D /* Extension.swift */,
 				A136F11F1F13727000349572 /* db */,
 				A1C1BD921F00A718002FC0E0 /* constant.swift */,
 				A1B7A5F91F7200B9008412AD /* themeColor.swift */,
@@ -610,6 +612,24 @@
 			name = source;
 			sourceTree = "<group>";
 		};
+		A1CC40021FA1D26900C8573D /* com */ = {
+			isa = PBXGroup;
+			children = (
+				A1CC40051FA1D70C00C8573D /* Reachability */,
+				A1ED124D1F56B35C00FCD259 /* hud */,
+			);
+			path = com;
+			sourceTree = "<group>";
+		};
+		A1CC40051FA1D70C00C8573D /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				A1CC40061FA1D70C00C8573D /* Reachability.h */,
+				A1CC40071FA1D70C00C8573D /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 		A1ED124D1F56B35C00FCD259 /* hud */ = {
 			isa = PBXGroup;
 			children = (
@@ -620,15 +640,7 @@
 				A17C81061F30589400EF8B9D /* success@2x.png */,
 			);
 			name = hud;
-			sourceTree = "<group>";
-		};
-		ADFE0E231F8224A500FB4230 /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				ADFE0E241F8224A500FB4230 /* Reachability.h */,
-				ADFE0E251F8224A500FB4230 /* Reachability.m */,
-			);
-			path = Reachability;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B495764C74D6D6E244280D7C /* Frameworks */ = {
@@ -924,6 +936,7 @@
 				A1E908501F8F04BE00EDF6AD /* ImgDetailView.swift in Sources */,
 				A1C1BDA21F00ACE0002FC0E0 /* ManagerController.swift in Sources */,
 				A12D9FAF1F8DFB4F003A7ACB /* ViewSideController.swift in Sources */,
+				A1CC40081FA1D70C00C8573D /* Reachability.m in Sources */,
 				A10A87371F4BD59F0089149F /* CoreDataModel+CoreDataProperties.swift in Sources */,
 				A12D9FAD1F8DFACF003A7ACB /* ViewMainController.swift in Sources */,
 				A1C1BD9A1F00AC77002FC0E0 /* TOCViewController.swift in Sources */,
@@ -931,6 +944,7 @@
 				A15580221F05E89E008C1787 /* PublicationCell.swift in Sources */,
 				A1ED124F1F56B53900FCD259 /* NetHelper.swift in Sources */,
 				A1C1BDA01F00ACC9002FC0E0 /* BookmarkController.swift in Sources */,
+				A1CC40041FA1D32800C8573D /* Extension.swift in Sources */,
 				A1C1BD5D1F00A0AA002FC0E0 /* AppDelegate.swift in Sources */,
 				AD0F75921F935302005FD788 /* LargePicCell.swift in Sources */,
 				A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */,
@@ -949,7 +963,6 @@
 				ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */,
 				A1E908551F8F3FA300EDF6AD /* ImgCollectionViewCell.swift in Sources */,
 				A1C1BD961F00AC18002FC0E0 /* AirplaneController.swift in Sources */,
-				ADFE0E261F8224A500FB4230 /* Reachability.m in Sources */,
 				A10A87361F4BD59F0089149F /* CoreDataModel+CoreDataClass.swift in Sources */,
 				A136F1211F1372BC00349572 /* UNZIPFile.swift in Sources */,
 				A1C1BD9E1F00ACB5002FC0E0 /* HistoryController.swift in Sources */,
