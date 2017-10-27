@@ -24,6 +24,9 @@ class DS_Delegate: NSObject, DSManagerDelegate {
                     if ktabbarVCIndex != 6{
                         RootControllerChangeWithIndex(6)
                     }
+                    
+                    UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
+                    UserDefaults.standard.synchronize()
                     strongSelf._showAlert(withurl)
                 }
             }

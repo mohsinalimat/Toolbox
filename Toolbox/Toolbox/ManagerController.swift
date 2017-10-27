@@ -227,6 +227,7 @@ class ManagerController: BaseViewControllerWithTable{
                 ///手册更新完毕，刷新列表
                 self.ds_isbusying = false
                 DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
+                UserDefaults.standard.removeObject(forKey: "user_should_show_alert_update")
                 HUD.show(successInfo: "更新完成")
             }else{
                 //全部删除完成

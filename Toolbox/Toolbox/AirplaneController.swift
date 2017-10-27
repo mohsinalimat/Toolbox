@@ -29,8 +29,28 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         super.viewDidLoad()
         navigationItem.titleView = nil
         
+        if UserDefaults.standard.value(forKey: "user_should_show_alert_update") != nil{
+            show();
+        }
     }
 
+    func show() {
+        if ktabbarVCIndex != 6{
+            RootControllerChangeWithIndex(6)
+        }
+        
+        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+        let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
+            UNZIPFile.default.update()
+        })
+        
+        let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
+        ac.addAction(action_1)
+        ac.addAction(action_2)
+        UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadData()

@@ -13,18 +13,7 @@ import SSZipArchive
 class UNZIPFile: NSObject {
     static let `default` :UNZIPFile = UNZIPFile()
     let fm = FileManager.default
-    var unzipFilesnumber = 0
     let queue:OperationQueue
-    
-    var zip_total_filescnt:Int = 0
-    var zip_current_filescnt:Int = 0
-    var zip_unzip_progress:Float = 0
-    
-    var update_total_filescnt = 0
-    var update_current_filescnt = 0
-    
-    ////
-    var _unzip_ds_url:String?
 
     //MARK:-
     override init() {
@@ -143,7 +132,7 @@ class UNZIPFile: NSObject {
         })
     }
 
-    //MARK:-  ApModelMap
+    //ApModelMap
     func readApModelMap(_ atPath:String) -> [String:[String:String]]? {
         if FILESManager.default.fileExistsAt(path: atPath,createWhenNotExist: false){
             return UNZIPFile.parseJsonData(path: atPath,
@@ -359,40 +348,11 @@ class UNZIPFile: NSObject {
             
         }
     }
-
-    
-    
-    //MARK:-
-    /*
-    //表更新记录
-    private func updateTableinfo(cls:Model.Type,id:String? = nil)  {
-        var infodic = [String:Any]()
-        infodic["table_name"] = cls.getTableName()
-        infodic["update_time"] = Date().timeIntervalSince1970
-        if let id = id {
-            infodic["ID"] = id
-        }
-        
-        UpdateInfo.saveToDb(with: infodic)
-    }
-*/
-    
-
-    
-    
-    //Document 是否有更新
-   static func hasBookNeedUpdate() ->Bool{
-        let zipArr = UNZIPFile.default.getFilesAt(path: DocumentPath)
-        return zipArr.count > 0
-    }
     
 }
 
-
-//1502086746.428690
-//MARK: 文件解压及数据处理
+//MARK: - 文件解压及数据处理
 extension UNZIPFile  {
-    
     //获取手册路径
     func getBookPath(withRelPath path:String) -> String {
         var bookpath:String = path
@@ -400,7 +360,6 @@ extension UNZIPFile  {
         if files.count > 0 {
             bookpath.append("/\(files[0])")
         }
-        
         return bookpath
     }
     
@@ -544,91 +503,9 @@ extension UNZIPFile  {
             
         }
     }
-    
-    
-    //解压缓存目录到指定目录，然后解压资源文件
-    func unzipFileFromTmp(url:String? = nil)  {
-        let path = ROOTPATH.appending("/tmp")
-        let fileArr = getFilesAt(path: path)
-        let zipArr = getZipFiles(items: fileArr)
-        
-        guard zipArr.count > 0 else{return}
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_totalnumber"), object: nil, userInfo: ["filesnumber":zipArr.count])
-            
-            UNZIPFile.default.setValue(zipArr.count, forKey: "zip_total_filescnt")
-        }
-        
-        //单个数据源情况
-        if let url = url{
-            DataSourceManager.default._update_ds_status(url: url, key: "update_status", value: 4)
-            DataSourceManager.default._update_ds_status(url: url, key: "total_files", value: zipArr.count)
-        }
-        
-        for item in zipArr {
-            if item.hasSuffix(".zip") {//解压tmp目录
-                let srcpath = path.appending("/\(item)")
-                let newpath = ROOTPATH + "/\(Date().timeIntervalSince1970)"
-                FILESManager.default.fileExistsAt(path: newpath)
-                
-                SSZipArchive.unzipFile(atPath: srcpath, toDestination:newpath , progressHandler:{(entry, zipinfo, entrynumber, total)in
-                    //print("Tmp:\(entrynumber) - \(total)")
-//                    DispatchQueue.main.async {
-                        let progress =  Float(entrynumber) / Float(total)
-                        //kUnzipprogress.progress = kUnzipProgressStatus
-                        UNZIPFile.default.setValue(progress, forKey: "zip_unzip_progress")
-                        
-                        if progress <= 1.0 {
-                            if let url = url{
-                                DataSourceManager.default._update_ds_status(url: url, key: "ds_file_percent", value: progress)
-                            }
-                        }
-//                    }
-                    },completionHandler:{/*[weak self]*/(path, success, error) in
-                       /* DispatchQueue.main.async {
-                            NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzipsinglefile_complete")))
-                            
-                            //已解压完的zip
-                            self.zip_current_filescnt = self.zip_current_filescnt + 1
-                            UNZIPFile.default.setValue(self.zip_current_filescnt, forKey: "zip_current_filescnt")
-                            print("++++++++++已解压完成的文件数 : \(self.zip_current_filescnt)")
-                            
-                        }*/
-                        
-                        self.zip_current_filescnt = self.zip_current_filescnt + 1
 
-                        if let url = url, let ret = DataSourceModel.search(with: "location_url='\(url)'", orderBy: nil).first as? DataSourceModel{
-                            ret.ds_file_percent = 0.0
-                            ret.current_files = self.zip_current_filescnt
-                            
-                            if self.zip_current_filescnt == zipArr.count{
-                                print("++++++++++++++++++++ 全部解压完成!")
-                                ret.update_status = 5 //解压完成，准备更新数据库
-                                ret.current_files = 0
-                                ret.ds_file_percent = 0
-                                ret.total_files = 0
-                            }
-                            
-                            if ret.saveToDB() {
-                                
-                            }
-                            
-                        }
-                        
-                        //遍历资源目录
-                        self._unzipSourceFile(filePath: newpath)
-                        
-                         FILESManager.default.deleteFileAt(path: srcpath)
-                })
-            }
-        }
-        
-        //删除tmp所有文件
-        //FILESManager.default.deleteFileAt(path: path)
-    }
-    
     //unzip queue获取数据
-    func unzipFileFromTmp_2(url:String? = nil)  {
+    func unzipFileFromTmp(url:String? = nil)  {
         let path = ROOTPATH.appending("/tmp")
         let plist = DataSourceManager.default.kUnzip_queue_path
         let downloadfiles = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
@@ -716,43 +593,14 @@ extension UNZIPFile  {
         
     }
     
-    /*func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
-        _unzip_ds_url = withurl
-        
-//        let zipqueue = unzipOperationQueue()
-        
-        //从tmp更新
-        self.queue.addOperation({
-            self.unzipFileFromTmp_2(url: withurl)
-        })
-        
-        self.queue.addOperation {
-            let path = ROOTPATH.appending("/tmp")
-            //FILESManager.default.deleteFileAt(path: path)
-        }
-        
-        self.queue.addOperation({
-            print("解压完成！！")
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
-            }
-        })
-        
-        self.queue.addOperation({
-            self.queue.isSuspended = true
-            handler()    
-        })
-        
-        self.queue.isSuspended = false
-    }*/
-    
+
     func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
         let zipqueue = unzipOperationQueue()
         UIApplication.shared.isIdleTimerDisabled = true
         
         //从tmp更新
         zipqueue.addOperation({
-            self.unzipFileFromTmp_2(url: withurl)
+            self.unzipFileFromTmp(url: withurl)
         })
 
         zipqueue.addOperation({
@@ -773,156 +621,6 @@ extension UNZIPFile  {
         zipqueue.isSuspended = false
     }
 
-    
-    //MARK:-
-    func checkUpdate() {
-        let tmppath = LibraryPath.appending("/TDLibrary/tmp")
-        let doczip = getZipFiles(items: UNZIPFile.default.getFilesAt(path: DocumentPath))
-        if doczip.count > 0 {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil, userInfo: nil)
-            }
-            
-            FILESManager.default.deleteFileAt(path: tmppath)
-            //从doc更新
-            self.queue.addOperation({
-                self.unzipFileFromDocument()
-            })
-            
-            //delete doc
-            self.queue.addOperation {
-                let files = self.getFilesAt(path: DocumentPath)
-                let zipArr = self.getZipFiles(items: files)
-                for p in zipArr {
-                    if p.hasSuffix(".zip") {
-                        let srczip = DocumentPath + "/\(p)"
-                        FILESManager.default.deleteFileAt(path: srczip)
-                    }
-                }
-            }
-            
-            self.queue.addOperation({
-                self.unzipFileFromTmp()
-            })
-            
-            //delete tmp
-            self.queue.addOperation {
-                let path = ROOTPATH.appending("/tmp")
-                FILESManager.default.deleteFileAt(path: path)
-            }
-            
-            self.queue.addOperation({
-                print("解压完成！！")
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
-                }
-            })
-            
-            self.queue.addOperation {
-                self._sendNotificationBeforeUpdate()
-            }
-
-            self.queue.addOperation({
-                self._startUpdate()
-            })
-            
-            self.queue.addOperation({
-                print("移动完成！！")
-                self.queue.isSuspended = true
-            })
-            
-            
-        }else{
-            
-            if FILESManager.default.fileExistsAt(path: tmppath, createWhenNotExist: false) && UNZIPFile.default.getFilesAt(path: tmppath).count > 0{
-                
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_unzipfile_start"), object: nil, userInfo: nil)
-                }
-
-                let files = getFilesAt(path: ROOTPATH)
-                    for item in files {
-                        if Double(item as String) != nil {
-                            let itempath = ROOTPATH.appending("/\(item)")
-                            FILESManager.default.deleteFileAt(path: itempath)
-                        }
-                    }
-                
-                //从tmp更新
-                self.queue.addOperation({
-                    self.unzipFileFromTmp()
-                })
-                
-                self.queue.addOperation {
-                    let path = ROOTPATH.appending("/tmp")
-                    FILESManager.default.deleteFileAt(path: path)
-                }
-                
-                
-                self.queue.addOperation({
-                    print("解压完成！！")
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(Notification.init(name: NSNotification.Name (rawValue: "kNotification_unzip_all_complete")))
-                    }
-                })
-                
-                self.queue.addOperation {
-                    self._sendNotificationBeforeUpdate()
-                }
-
-                self.queue.addOperation({
-                    self._startUpdate()
-                })
-                
-                self.queue.addOperation({
-                    print("移动完成！！")
-                    self.queue.isSuspended = true
-                })
-
-            }else{
-                if let path = UserDefaults.standard.string(forKey: "book_path") {
-                    let bookpath = getBookPath(withRelPath: ROOTPATH.appending("/\(path)"))
-                    let arr  = path.components(separatedBy: "/")
-                    let name = arr.last//...？？？？
-                    
-                    //从3.更新
-                    self.queue.addOperation({
-                        self._parseBook(bookpath: bookpath, bookname: name!)
-                    })
-                    
-                    self.queue.addOperation {
-                        self._sendNotificationBeforeUpdate()
-                    }
-
-                    self.queue.addOperation({
-                        self._startUpdate()
-                    })
-                    
-                    self.queue.addOperation({
-                        print("移动完成！！")
-                        self.queue.isSuspended = true
-                    })
-                }else{
-                    print("DOCUMENT 没有文档需要更新！")
-                }
-                
-            }
-            
-            }
-       
-    }
-    
-    //安装手册
-    func installBook(){
-
-        //检测是否有更新
-        UIApplication.shared.isIdleTimerDisabled = true
-        
-        checkUpdate()
-        
-        self.queue.isSuspended = false
-    }
-    
     func update(url:String? = nil) {
         UIApplication.shared.isIdleTimerDisabled = true
 
@@ -958,7 +656,6 @@ extension UNZIPFile  {
     
 
     //MARK:- 数据更新
-    ///
     func _sendNotificationBeforeUpdate(){
         let files = getFilesAt(path: ROOTPATH)
         let pubs = {(_ items: [String]) -> ([String]) in
@@ -1095,7 +792,7 @@ extension UNZIPFile  {
     
     
     //MARK: - SSZipArchiveDelegate
-    func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
+    /*func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
         print("\(#function)")
     }
     
@@ -1111,7 +808,7 @@ extension UNZIPFile  {
             print("文件删除失败-----------------------")
         }
     
-    }
+    }*/
     
     
 }

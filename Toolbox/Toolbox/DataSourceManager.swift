@@ -63,6 +63,8 @@ class DataSourceManager: NSObject {
     let delegate: DS_Delegate?
     let _opreationqueue:OperationQueue
     private let _dispatch_queue:DispatchQueue
+    
+    //MARK:-
     override init() {
         FILESManager.default.fileExistsAt(path: kLibrary_tmp_path)
         FILESManager.default.fileExistsAt(path: ds_plist_basepath)
@@ -79,9 +81,6 @@ class DataSourceManager: NSObject {
         _dispatch_queue = DispatchQueue.init(label: "com.gener-tech.download")
     }
     
-    
-    
-    //MARK:-
     func ds_checkupdate() {
         guard !ds_startupdating else {return}
         DispatchQueue.global().async {
@@ -154,9 +153,7 @@ class DataSourceManager: NSObject {
             m.saveToDB()
             strongSelf.delegate?.ds_checkoutFromDocument()
         }
-        
     }
-
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
         guard info.keys.count == 3 else {return}
@@ -182,29 +179,21 @@ class DataSourceManager: NSObject {
                             //添加到下载
                             let fileurl = url + "\(file)"
                             updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                            //更新状态
-                            if m.update_status != 1 {
-                                m.update_status = 1
-                                m.time = "\(Date.timeIntervalSinceReferenceDate)"
-                                m.updateToDB()
-                            }
+                            m.update_status = 1
                         }
                     }else{
                         var dic = dic
                         dic["data_source"] = url
                         PublicationVersionModel.saveToDb(with: dic)
-                        //添加到下载
                         let fileurl = url + "\(file)"
                         updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                        //更新状态
-                        if m.update_status != 1 {
-                            m.update_status = 1
-                            m.time = "\(Date.timeIntervalSinceReferenceDate)"
-                            m.updateToDB()
-                        }
+                        m.update_status = 1//更新状态
                     }
             }
-        }else{//不同的数据源会不会有相同的数据？？？,有待验证
+            
+            m.time = "\(Date.timeIntervalSinceReferenceDate)"
+            m.updateToDB()
+        }else{//不存在，(不同的数据源会不会有相同的数据？？？,有待验证)
                 let m = DataSourceModel()
                 for(key,value) in info{
                     do{
@@ -222,6 +211,7 @@ class DataSourceManager: NSObject {
                 }
                 m.location_url = url
                 m.update_status = 1
+                m.time = "\(Date.timeIntervalSinceReferenceDate)"
                 m.saveToDB();
                 
                 //添加到下载
@@ -232,8 +222,6 @@ class DataSourceManager: NSObject {
                     PublicationVersionModel.saveToDb(with: dic)
                 }
             }
-        
-        
     }
     
 
@@ -250,12 +238,12 @@ class DataSourceManager: NSObject {
         switch datatype {
             case .download: path = ds_download_queue_path; break
             case .unzip:
+                path = kUnzip_queue_path;
                 if /*key.hasPrefix("http")*/ true {
-                    path = kUnzip_queue_path;
+                    
                 }else{
-                    path = ds_unzip_queue_itunes
+                    //path = ds_unzip_queue_itunes
                 }
-
             break
         }
         
@@ -323,7 +311,6 @@ class DataSourceManager: NSObject {
                 }
                 .response(queue:_dispatch_queue) {[weak self] (response) in
                     //...判断响应状态，检测网络
-                    
                     let des = response.request?.url
                     let base = des?.deletingLastPathComponent()
                     let zip = des?.lastPathComponent
