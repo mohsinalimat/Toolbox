@@ -63,7 +63,6 @@ let kAirplaneKeyValue:[String:String]! = [
 ];
 
 var kAIRPLANE_SORTEDOPTION_KEY:String = "Registry"
-
 var kAllPublications:[String:Any] = [:]//手册与飞机关联信息msn
 var kSelectedAirplane:AirplaneModel?//当前选中的飞机
 var kSelectedPublication:PublicationsModel?//当前选中的手册
@@ -112,13 +111,10 @@ let ksync_manifest = "sync_manifest.json"
 let ktdafactorymobilebaseline = "tdafactorymobilebaseline.json"
 
 
-
-
-#if Debug
-    func print(_: item) {
-        print(item)
+///////////
+#if !DEBUG
+    public func print(_ items: Any...) {
     }
-#else
 
 #endif
 
