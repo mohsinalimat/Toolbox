@@ -515,7 +515,7 @@ extension UNZIPFile  {
         
         guard zipArr.count > 0 else{return}
         //单个数据源情况
-        DataSourceManager.default._update_ds_status(url: url, key: "update_status", value: 4)
+        DataSourceManager.default._update_ds_status(url: url, key: "update_status", value: DSStatus.unzipping.rawValue)
         DataSourceManager.default._update_ds_status(url: url, key: "total_files", value: zipArr.count)
         var has_unzipCnts:Int = 0
         
@@ -540,7 +540,7 @@ extension UNZIPFile  {
                             ret.current_files = has_unzipCnts
                             if has_unzipCnts == zipArr.count{
                                 print("++++++++++++++++++++:\(url), 全部解压完成!")
-                                ret.update_status = 5 //解压完成，准备更新数据库
+                                ret.update_status = DSStatus.will_update.rawValue //解压完成，准备更新数据库
                                 ret.current_files = 0
                                 ret.ds_file_percent = 0
                                 ret.total_files = 0
@@ -596,8 +596,7 @@ extension UNZIPFile  {
 
     func unzipWithCompleted(withurl:String, _ handler:@escaping (()->Void)) {
         let zipqueue = unzipOperationQueue()
-        UIApplication.shared.isIdleTimerDisabled = true
-        
+
         //从tmp更新
         zipqueue.addOperation({
             self.unzipFileFromTmp(url: withurl)
@@ -636,7 +635,7 @@ extension UNZIPFile  {
             if  let ret = DataSourceModel.search(with: "update_status='\(5)'", orderBy: nil) as? [DataSourceModel]{
                 for m in ret{
                     m.ds_file_percent = 0.0
-                    m.update_status = 6                    
+                    m.update_status = DSStatus.completed.rawValue
                     if m.location_url == "itunes import"{
                         m.deleteToDB()
                     }else if m.saveToDB() {
@@ -791,8 +790,8 @@ extension UNZIPFile  {
     
     
     
-    //MARK: - SSZipArchiveDelegate
-    /*func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
+    /*//////
+    func zipArchiveWillUnzipArchive(atPath path: String, zipInfo: unz_global_info) {
         print("\(#function)")
     }
     

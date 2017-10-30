@@ -32,6 +32,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         if UserDefaults.standard.value(forKey: "user_should_show_alert_update") != nil{
             show();
         }
+
+    
     }
 
     func show() {
@@ -39,13 +41,13 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             RootControllerChangeWithIndex(6)
         }
         
-        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+        //let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
         let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
             UNZIPFile.default.update()
         })
         
         let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
-        ac.addAction(action_1)
+        //ac.addAction(action_1)
         ac.addAction(action_2)
         UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
     }

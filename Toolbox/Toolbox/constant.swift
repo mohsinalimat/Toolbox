@@ -40,8 +40,20 @@ let Dismiss = {HUD.dismiss()}
 
 
 //MARK: - 全局变量
+//数据源更新状态
+enum DSStatus:Int{
+    case wait_update    = 1
+    case downloading    = 2
+    case will_unzip     = 3
+    case unzipping      = 4
+    case will_update    = 5
+    case completed      = 6
+    
+}
+
 //对应字段
-let kAirplaneKeyValue:[String:String]! = ["Tail":"tailNumber",
+let kAirplaneKeyValue:[String:String]! = [
+    "Tail":"tailNumber",
     "Registry":"airplaneRegistry",
     "MSN":"airplaneSerialNumber",
     "Variable":"airplaneId",

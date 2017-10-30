@@ -58,7 +58,7 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         
         //status
         let model = DataSourceModel.searchSingle(withWhere: "location_url='\(url!)'", orderBy: nil) as! DataSourceModel
-        let d1 = ["Status":model.update_status == 6 ? "Update Success" : ""]
+        let d1 = ["Status":model.update_status == DSStatus.completed.rawValue ? "Update Success" : ""]
         ds.append(d1)
         
         /////
@@ -141,7 +141,7 @@ class DownloadDetailViewController: BaseViewControllerWithTable {
         }
         
         _progressview.progress = model.ds_file_percent
-        if model.update_status == 6 {
+        if model.update_status == DSStatus.completed.rawValue {
             _timer.invalidate()
         }
     }

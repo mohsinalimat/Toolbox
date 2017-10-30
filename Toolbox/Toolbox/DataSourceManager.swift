@@ -149,7 +149,7 @@ class DataSourceManager: NSObject {
             guard isExist else {return}
             let m = DataSourceModel()
             m.location_url = strongSelf.ds_from_itunes
-            m.update_status = 2
+            m.update_status = DSStatus.downloading.rawValue
             m.saveToDB()
             strongSelf.delegate?.ds_checkoutFromDocument()
         }
@@ -179,7 +179,7 @@ class DataSourceManager: NSObject {
                             //添加到下载
                             let fileurl = url + "\(file)"
                             updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                            m.update_status = 1
+                            m.update_status = DSStatus.wait_update.rawValue
                         }
                     }else{
                         var dic = dic
@@ -187,7 +187,7 @@ class DataSourceManager: NSObject {
                         PublicationVersionModel.saveToDb(with: dic)
                         let fileurl = url + "\(file)"
                         updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                        m.update_status = 1//更新状态
+                        m.update_status = DSStatus.wait_update.rawValue//更新状态
                     }
             }
             
@@ -210,7 +210,7 @@ class DataSourceManager: NSObject {
                     }
                 }
                 m.location_url = url
-                m.update_status = 1
+                m.update_status = DSStatus.wait_update.rawValue
                 m.time = "\(Date.timeIntervalSinceReferenceDate)"
                 m.saveToDB();
                 
@@ -324,7 +324,7 @@ class DataSourceManager: NSObject {
                         ret.current_files = strongSelf.ds_currentDownloadCnt
                         if strongSelf.ds_totalDownloadCnt == strongSelf.ds_currentDownloadCnt{
                             print("全部下载完成!")
-                            ret.update_status = 3
+                            ret.update_status = DSStatus.will_unzip.rawValue
                             ret.current_files = 0
                             ret.total_files = 0
                             ret.saveToDB()
@@ -348,9 +348,10 @@ class DataSourceManager: NSObject {
         
         DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
         if let downloadfiles = downloadfiles {//多个数据源地址
+            UIApplication.shared.isIdleTimerDisabled = true
             for (key,value) in downloadfiles {
                 semaphore.wait()
-                _update_ds_status(url: key, key: "update_status", value: 2)
+                _update_ds_status(url: key, key: "update_status", value: DSStatus.downloading.rawValue)
                 _update_ds_status(url: key, key: "total_files", value: value.count)
                 print("begin server : \(key)")
                 
@@ -453,7 +454,10 @@ class DataSourceManager: NSObject {
                 
                 
                 //bookmark
-                BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
+                if BookmarkModel.isExistsFromDB(){
+                    BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
+                }
+                
                 //delete files in Library
                 let path = ROOTPATH.appending("/\(doc_owner)/\(uid)")
                 FILESManager.default.deleteFileAt(path: path)
