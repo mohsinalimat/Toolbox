@@ -33,6 +33,11 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         webview = UIWebView.init(frame:  CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 49))
         webview.delegate = self
         webview.backgroundColor = kTableviewBackgroundColor
+        webview.scalesPageToFit = true
+        
+        webview.scrollView.minimumZoomScale = 1
+        webview.scrollView.maximumZoomScale = 2
+        
         view.addSubview(webview)
     }
 

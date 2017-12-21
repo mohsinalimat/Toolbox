@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var locationManager = LocationManager.init();
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -35,6 +35,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         HUD.config()
         _setterConfig()
         
+        //注册通知
+        _initNotification()
+        
+        //位置定位
+        locationManager.didUpDateLocatonHandler = { location in
+            print("didUpdateLocations")
+        }
+        
+        
+        
+    }
+    
+    func _initNotification() {
+        UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings.init(types: [.alert,.sound,.badge], categories: nil))
     }
     
     
@@ -102,6 +116,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     }
     
+    //PUBLIC METHOD
+    func sendLocalNotification() {
+        let local = UILocalNotification.init()
+        local.alertBody = "body"
+        local.alertTitle = "title"
+        //local.soundName = UILocalNotificationDefaultSoundName
+        UIApplication.shared.scheduleLocalNotification(local)
+    }
+ 
+    //MARK:
+    func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
+        print(#function)
+        let alert = UIAlertController.init(title: "Update Completed", message: nil, preferredStyle: .alert)
+        let action = UIAlertAction.init(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        
+        application.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(#function)
+    }
     
     
     //MARK:

@@ -60,10 +60,15 @@ class SetterViewController: UITableViewController {
         var detailStr = ""
         switch (indexPath.section,indexPath.row) {
         case (0,0):
-            detailStr = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+            if let info = Bundle.main.infoDictionary {
+                let appversion = info["CFBundleShortVersionString"]
+                let buildno = info["CFBundleVersion"]
+                detailStr = "\(appversion!)(build\(buildno!))"
+            }
+
             break
         case (0,1):
-            detailStr = "Copyright@gener-tech2017.All rights reserved"
+            detailStr = "Copyright@2017.All rights reserved"
             break
         case (1,0):
             detailStr = kAIRPLANE_SORTEDOPTION_KEY

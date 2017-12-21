@@ -22,8 +22,13 @@ class LargePicCell: UICollectionViewCell {
         //_imgwebview.scrollView.bounces = false
         _imgwebview.backgroundColor = UIColor.white
         
-        _imgwebview.scrollView.minimumZoomScale = 0.5
+        _imgwebview.scalesPageToFit = true
+        _imgwebview.scrollView.minimumZoomScale = 1
         _imgwebview.scrollView.maximumZoomScale = 3
+    }
+    
+    override func prepareForReuse() {
+        _imgwebview.scrollView.zoomScale = 1
     }
     
     func fillCellWith(_ model:SegmentModel) {

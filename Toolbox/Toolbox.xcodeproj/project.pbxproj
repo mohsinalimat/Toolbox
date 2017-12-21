@@ -127,6 +127,7 @@
 		A1CAEA5E1F5E6C4500CE751B /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CAEA5D1F5E6C4400CE751B /* DownloadViewController.swift */; };
 		A1CC40041FA1D32800C8573D /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CC40031FA1D32800C8573D /* Extension.swift */; };
 		A1CC40081FA1D70C00C8573D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A1CC40071FA1D70C00C8573D /* Reachability.m */; };
+		A1D324AE1FEB9D5900BF1BC7 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D324AD1FEB9D5900BF1BC7 /* LocationManager.swift */; };
 		A1D5978F1F4689D100C0F5B8 /* XMLParseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5978E1F4689D100C0F5B8 /* XMLParseKit.swift */; };
 		A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DE045E1F21D06B000C5069 /* SegmentCell.swift */; };
 		A1DE04611F21D06B000C5069 /* SegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1DE045F1F21D06B000C5069 /* SegmentCell.xib */; };
@@ -296,6 +297,7 @@
 		A1CC40031FA1D32800C8573D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A1CC40061FA1D70C00C8573D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A1CC40071FA1D70C00C8573D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		A1D324AD1FEB9D5900BF1BC7 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A1D5978E1F4689D100C0F5B8 /* XMLParseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLParseKit.swift; sourceTree = "<group>"; };
 		A1DE045E1F21D06B000C5069 /* SegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentCell.swift; sourceTree = "<group>"; };
 		A1DE045F1F21D06B000C5069 /* SegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentCell.xib; sourceTree = "<group>"; };
@@ -614,6 +616,7 @@
 				A1CC40051FA1D70C00C8573D /* Reachability */,
 				A1ED124D1F56B35C00FCD259 /* hud */,
 				A1CC40031FA1D32800C8573D /* Extension.swift */,
+				A1D324AD1FEB9D5900BF1BC7 /* LocationManager.swift */,
 			);
 			path = com;
 			sourceTree = "<group>";
@@ -723,6 +726,11 @@
 						DevelopmentTeam = 8R29X3H9MY;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					A1C1BD6C1F00A0AA002FC0E0 = {
 						CreatedOnToolsVersion = 8.0;
@@ -966,6 +974,7 @@
 				A1B13AB01F3982A10049250F /* FILESManager.swift in Sources */,
 				A13F7E881F4AA61C00ACA39C /* Model.xcdatamodeld in Sources */,
 				A1C1BDA61F00EEB3002FC0E0 /* AirplaneCell.swift in Sources */,
+				A1D324AE1FEB9D5900BF1BC7 /* LocationManager.swift in Sources */,
 				A1D5978F1F4689D100C0F5B8 /* XMLParseKit.swift in Sources */,
 				A1C1BD901F00A61B002FC0E0 /* BaseNavigationController.swift in Sources */,
 				A1C1BD8C1F00A5BB002FC0E0 /* BaseTabbarController.swift in Sources */,
