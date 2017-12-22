@@ -29,6 +29,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         super.viewDidLoad()
         navigationItem.titleView = nil
         
+        NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
+        
         if UserDefaults.standard.value(forKey: "user_should_show_alert_update") != nil{
             show();
         }
@@ -36,6 +38,19 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     
     }
 
+    func allbookupdatecomplete(_ noti:Notification)  {
+        if let type = noti.userInfo?["type"] as? Int {
+            if type == 0 {
+                ///手册更新完毕，刷新列表
+                DS_Delegate._updateCompletionHandler()
+                
+                HUD.show(successInfo: "更新完成")
+            }
+            
+            loadData()
+        }
+    }
+    
     func show() {
         if ktabbarVCIndex != 6{
             RootControllerChangeWithIndex(6)

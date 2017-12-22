@@ -43,8 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("didUpdateLocations")
         }
         
-        
-        
+        //..test
+
     }
     
     func _initNotification() {
@@ -119,15 +119,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //PUBLIC METHOD
     func sendLocalNotification() {
         let local = UILocalNotification.init()
-        local.alertBody = "body"
-        local.alertTitle = "title"
-        //local.soundName = UILocalNotificationDefaultSoundName
+        local.alertBody = "准备更新"
+        local.alertTitle = "解压完成，准备更新"
+        local.soundName = UILocalNotificationDefaultSoundName
         UIApplication.shared.scheduleLocalNotification(local)
     }
  
     //MARK:
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         print(#function)
+        let ds_delegate = DS_Delegate.init()
+        ds_delegate._showAlert("")
+        
         let alert = UIAlertController.init(title: "Update Completed", message: nil, preferredStyle: .alert)
         let action = UIAlertAction.init(title: "OK", style: .default, handler: nil)
         alert.addAction(action)

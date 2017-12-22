@@ -44,6 +44,12 @@ class SegmentCell: UITableViewCell {
         
         headIndentValue.constant = headIndentValue.constant + CGFloat( model.nodeLevel - 1) * 15
 
+        //展开button
+        if shouldAddOpenButton(model){
+            //self.addSubview(button())
+            
+        }
+        
         //effrg
         guard Int(model.is_leaf)==1 ,Int(model.is_visible)==1 else {
             return
@@ -67,7 +73,46 @@ class SegmentCell: UITableViewCell {
                 }
             }
         }
+        
+
+        
     }
+    
+    //MARK: - 
+    //是否添加展开按钮-显示子目录，点击row 跳转本身页面
+    
+    var cellOpenButtonClickedHandler:((Bool) -> Void)?
+    var cellButtonIsOpened:Bool = false;
+    
+    func shouldAddOpenButton(_ model:SegmentModel) -> Bool {
+        if Int(model.is_leaf) == 0 && Int(model.has_content) == 1 && Int(model.is_visible) == 1 {
+            return true
+        }
+        
+        return false
+    }
+    
+    func button() -> UIButton {
+        let btn = UIButton (frame: CGRect (x: 10, y: 10, width: 60, height: 50))
+        btn.setImage(UIImage (named: "toc_show_more_lt"), for: .normal)
+        btn.setImage(UIImage (named: "toc_show_less_lt"), for: .selected)
+        btn.tag = 188
+        btn.addTarget(self, action: #selector(openAction(_ :)), for: .touchUpInside)
+        //btn.backgroundColor = UIColor.red
+        btn.isSelected = cellButtonIsOpened
+        
+        return btn
+    }
+    
+    func openAction(_ btn:UIButton)  {
+        btn.isSelected = !btn.isSelected
+        
+        if let handler = cellOpenButtonClickedHandler {
+            handler(btn.isSelected)
+        }
+        
+    }
+    
     
     override func prepareForReuse() {
         headIndentValue.constant = kBaseValue
@@ -75,6 +120,9 @@ class SegmentCell: UITableViewCell {
         titleLable.textColor = kcellDefaultColor
         
         self.backgroundView = nil;
+        
+        self.viewWithTag(188)?.removeFromSuperview()
+        
 //        backgroundColor = kCellDefaultBgColor
     }
     

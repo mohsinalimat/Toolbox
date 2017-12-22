@@ -293,7 +293,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                                     for e in arr {
                                         let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
                                         let s2 = e.substring(from: s1.endIndex)
-                                        if msn >= Int(s1)! && msn <= Int(s2)!  {
+                                        if msn >= Int(s1)! && msn <= Int(s2)! && m.mime_type == "image/svg" {
                                             tmpArr.append(m);break
                                         }
                                     }

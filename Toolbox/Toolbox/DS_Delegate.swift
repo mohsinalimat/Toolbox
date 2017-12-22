@@ -17,6 +17,10 @@ class DS_Delegate: NSObject, DSManagerDelegate {
         guard !unzipfile_arr.contains(withurl) else{return}
         unzipfile_arr.append(withurl)
         
+        //开始更新位置
+        let app = UIApplication.shared.delegate as? AppDelegate
+        app?.locationManager.startUpdateLocation()
+        
         UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
             if !APP_IS_BACKGROUND{//全解压完成，可以更新
                 DispatchQueue.main.async {[weak self] in
@@ -29,6 +33,10 @@ class DS_Delegate: NSObject, DSManagerDelegate {
                     UserDefaults.standard.synchronize()
                     strongSelf._showAlert(withurl)
                 }
+            }else{//处于后台通知提醒
+                let appdelegate =  UIApplication.shared.delegate as? AppDelegate
+                appdelegate?.sendLocalNotification()
+            
             }
         }
     }
@@ -82,6 +90,19 @@ class DS_Delegate: NSObject, DSManagerDelegate {
         ac.addAction(action_1)
         ac.addAction(action_2)
         UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
+    }
+    
+    //更新完成后状态处理
+    static func _updateCompletionHandler()  {
+        UIApplication.shared.isIdleTimerDisabled = false
+        
+        DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
+        
+        UserDefaults.standard.removeObject(forKey: "user_should_show_alert_update")
+        
+        //停止更新位置
+        let app = UIApplication.shared.delegate as? AppDelegate
+        app?.locationManager.stopUpdateLocation()
     }
     
     

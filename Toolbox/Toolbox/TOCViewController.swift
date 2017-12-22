@@ -64,8 +64,6 @@ class TOCViewController: BaseViewControllerWithTable {
         else{
             let cell = tableview?.dequeueReusableCell(withIdentifier: kSegmentCellIdentifier, for: indexPath) as! SegmentCell
             let model = dataArray[indexPath.row] as! SegmentModel
-        
-            cell.fillCell(model: model)
             
             if currentSegment?.primary_id == model.primary_id {//是否选中
                 cell.backgroundColor = kCellSelectedBgColor
@@ -76,6 +74,20 @@ class TOCViewController: BaseViewControllerWithTable {
                 cell.cellIsSelected(false)
             }
             
+            //添加展开按钮操作
+            if shouldAddOpenButton(model) {
+                cell.cellButtonIsOpened = kseg_parentnode_arr.contains(model)
+                cell.cellOpenButtonClickedHandler = {[weak self] b in
+                    guard let strongSelf = self else {
+                        return
+                    }
+
+                    strongSelf.didSelectHandler2(model, tableView: tableView, indexPath: indexPath)
+                }
+                
+            }
+            
+            cell.fillCell(model: model)
             
             return cell
         }
@@ -87,7 +99,6 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if indexPath.row == 0 {//根目录
             currentSegment = nil
             kSelectedSegment = nil
@@ -95,37 +106,87 @@ class TOCViewController: BaseViewControllerWithTable {
         }
         else{
             let m = dataArray[indexPath.row] as! SegmentModel
-            currentSegment = m
-            if Int(m.is_leaf) == 0 {
-                let has = kseg_parentnode_arr.index(of: m)
-                if let has = has {
-                    kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
-                }
-                else if has == nil {
-                    kseg_parentnode_arr.append(m)
-                }
-                
-                getNewData(modelId: m.primary_id)
-                tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
-            }
-            else {//最后一级目录
-                    let cell = tableView.cellForRow(at: indexPath)
-                    cell?.backgroundColor = kCellSelectedBgColor
-                    kSelectedSegment = m
-                    tableView.reloadData()
-                
-                if cell?.backgroundView != nil{
-                    showMsg()
-                }
-                else {
-                    RootControllerChangeWithIndex(3)
-                }
-                
-                
-            }
+            didSelectHandler(m, tableView: tableView, indexPath: indexPath)
         }
         
     }
+    
+    //MARK: - 
+    
+    func didSelectHandler(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
+        currentSegment = m
+        if Int(m.is_leaf) == 0 {
+            let has = kseg_parentnode_arr.index(of: m)
+            if let has = has {
+                kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
+            }
+            else if has == nil {
+                kseg_parentnode_arr.append(m)
+            }
+            
+            //....
+            if false && Int(m.has_content) == 1 && Int(m.is_visible) == 1 {
+                jumpToNext(m, tableView: tableView, indexPath: indexPath)
+            }else{
+                getNewData(modelId: m.primary_id)
+                tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
+            }
+        }else {//最后一级目录
+            jumpToNext(m, tableView: tableView, indexPath: indexPath)
+        }
+        
+    }
+    
+    func didSelectHandler2(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
+        currentSegment = m
+        if Int(m.is_leaf) == 0 {
+            let has = kseg_parentnode_arr.index(of: m)
+            if let has = has {
+                kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
+            }
+            else if has == nil {
+                kseg_parentnode_arr.append(m)
+            }
+            
+//            if Int(m.has_content) == 1 && Int(m.is_visible) == 1 {
+//                jumpToNext(m, tableView: tableView, indexPath: indexPath)
+//            }else{
+                getNewData(modelId: m.primary_id)
+                tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
+//            }
+        }else {//最后一级目录
+            jumpToNext(m, tableView: tableView, indexPath: indexPath)
+        }
+        
+    }
+    
+    
+    
+    //跳转到视图控制器
+    func jumpToNext(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.backgroundColor = kCellSelectedBgColor
+        kSelectedSegment = m
+        tableView.reloadData()
+        
+        if cell?.backgroundView != nil{
+            showMsg()
+        }
+        else {
+            RootControllerChangeWithIndex(3)
+        }
+    }
+    
+    
+    //是否添加展开按钮-显示子目录，点击row 跳转本身页面
+    func shouldAddOpenButton(_ model:SegmentModel) -> Bool {
+        if Int(model.is_leaf) == 0 && Int(model.has_content) == 1 && Int(model.is_visible) == 1 {
+            return true
+        }
+        
+        return false
+    }
+    
     
     func showMsg() {
        let alert = UIAlertController.init(title: "提示", message: "将要打开的内容不适合当前选择的机型，是否是要继续查看?", preferredStyle: .alert)

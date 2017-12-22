@@ -92,10 +92,12 @@ class LocationManager: NSObject ,CLLocationManagerDelegate {
     
     //MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(#function)
+        //print(#function)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        //print(#function)
+        
         if _shouldUpdate {
             if let location = locations.last {
                 _shouldUpdate = false
