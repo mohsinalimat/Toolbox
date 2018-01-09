@@ -12,9 +12,12 @@ private let kSegmentCellIdentifier = "SegmentCellIdentifier"
 private let kPublicationCellReuseIdentifier = "PublicationCellReuseIdentifier"
 
 class TOCViewController: BaseViewControllerWithTable {
-    var currentPublication:PublicationsModel!
-    var currentSegment:SegmentModel!
+    private var currentPublication:PublicationsModel!
+    private var currentSegment:SegmentModel!
     
+    private var cellIsOpened:Bool = false
+    
+    //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -49,7 +52,7 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
 
-    //MARK:
+    //MARK: - UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if dataArray.count == 0 {
             return getCellForNodata(tableView, info: "NO PUBLICATION SELECTED")
@@ -65,24 +68,21 @@ class TOCViewController: BaseViewControllerWithTable {
             let cell = tableview?.dequeueReusableCell(withIdentifier: kSegmentCellIdentifier, for: indexPath) as! SegmentCell
             let model = dataArray[indexPath.row] as! SegmentModel
             
-            if currentSegment?.primary_id == model.primary_id {//是否选中
-                cell.backgroundColor = kCellSelectedBgColor
-                cell.cellIsSelected(true)
-            }
-            else{
-                cell.backgroundColor = kCellDefaultBgColor
-                cell.cellIsSelected(false)
-            }
-            
-            //添加展开按钮操作
-            if shouldAddOpenButton(model) {
-                cell.cellButtonIsOpened = kseg_parentnode_arr.contains(model)
+            //是否选中
+            let isselected = currentSegment?.primary_id == model.primary_id
+            cell.backgroundColor = isselected ? kCellSelectedBgColor : kCellDefaultBgColor
+            cell.cellIsSelected(isselected)
+
+            //添加展开按钮操作(如果需要)
+            if cell.shouldAddOpenButton(model) {
+                cell.cellButtonIsOpened = cellIsOpened
                 cell.cellOpenButtonClickedHandler = {[weak self] b in
                     guard let strongSelf = self else {
                         return
                     }
-
-                    strongSelf.didSelectHandler2(model, tableView: tableView, indexPath: indexPath)
+                    
+                    strongSelf.cellIsOpened = b
+                    strongSelf.cellButtonClickedHandler(model, tableView: tableView, indexPath: indexPath)
                 }
                 
             }
@@ -112,23 +112,25 @@ class TOCViewController: BaseViewControllerWithTable {
     }
     
     //MARK: - 
-    
+    //目录节点点击操作
     func didSelectHandler(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
         currentSegment = m
+        
         if Int(m.is_leaf) == 0 {
-            let has = kseg_parentnode_arr.index(of: m)
-            if let has = has {
-                kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
-            }
-            else if has == nil {
-                kseg_parentnode_arr.append(m)
-            }
+            __kseg_parentnode_arr_with_model(m)
             
-            //....
-            if false && Int(m.has_content) == 1 && Int(m.is_visible) == 1 {
+            //选中目录节点，但是内容可见
+            if  Int(m.has_content) == 1 && Int(m.is_visible) == 1 {
+                cellIsOpened = true
+                
+                cellButtonClickedHandler(m, tableView: tableView, indexPath: indexPath)
+                
                 jumpToNext(m, tableView: tableView, indexPath: indexPath)
             }else{
+                cellIsOpened = false
+                
                 getNewData(modelId: m.primary_id)
+                
                 tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
             }
         }else {//最后一级目录
@@ -137,36 +139,41 @@ class TOCViewController: BaseViewControllerWithTable {
         
     }
     
-    func didSelectHandler2(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
+    func cellButtonClickedHandler(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
         currentSegment = m
+        
         if Int(m.is_leaf) == 0 {
-            let has = kseg_parentnode_arr.index(of: m)
-            if let has = has {
-                kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
-            }
-            else if has == nil {
-                kseg_parentnode_arr.append(m)
-            }
+            __kseg_parentnode_arr_with_model(m)
             
-//            if Int(m.has_content) == 1 && Int(m.is_visible) == 1 {
-//                jumpToNext(m, tableView: tableView, indexPath: indexPath)
-//            }else{
-                getNewData(modelId: m.primary_id)
-                tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
-//            }
-        }else {//最后一级目录
-            jumpToNext(m, tableView: tableView, indexPath: indexPath)
+            //展开闭合
+            getNewData(modelId: m.primary_id , flushDir: false, traverseChild: cellIsOpened)
+            
+            //当前cell可见
+            tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
         }
         
     }
     
-    
+    //node add/delete
+    func __kseg_parentnode_arr_with_model(_ m: SegmentModel)  {
+        let has = kseg_parentnode_arr.index(of: m)
+        if let has = has {
+            kseg_parentnode_arr.removeSubrange(has+1..<kseg_parentnode_arr.count)
+        }
+        else if has == nil {
+            kseg_parentnode_arr.append(m)
+        }
+        
+    }
     
     //跳转到视图控制器
     func jumpToNext(_ m : SegmentModel,tableView:UITableView ,indexPath:IndexPath)  {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.backgroundColor = kCellSelectedBgColor
         kSelectedSegment = m
+        
+        NotificationCenter.default.post(name: knotification_segment_changed, object: nil, userInfo: ["flag":"1"])
+        
         tableView.reloadData()
         
         if cell?.backgroundView != nil{
@@ -177,23 +184,11 @@ class TOCViewController: BaseViewControllerWithTable {
         }
     }
     
-    
-    //是否添加展开按钮-显示子目录，点击row 跳转本身页面
-    func shouldAddOpenButton(_ model:SegmentModel) -> Bool {
-        if Int(model.is_leaf) == 0 && Int(model.has_content) == 1 && Int(model.is_visible) == 1 {
-            return true
-        }
-        
-        return false
-    }
-    
-    
+
     func showMsg() {
-       let alert = UIAlertController.init(title: "提示", message: "将要打开的内容不适合当前选择的机型，是否是要继续查看?", preferredStyle: .alert)
-       let action_1 = UIAlertAction.init(title: "取消", style: .cancel) { (action) in
-        
-        }
-        let action_2 = UIAlertAction.init(title: "继续", style: .default) { (action) in
+       let alert = UIAlertController.init(title: "提示", message: "将要打开的内容不适合当前选择的机型，是否要继续查看?", preferredStyle: .alert)
+       let action_1 = UIAlertAction.init(title: "取消", style: .cancel) 
+       let action_2 = UIAlertAction.init(title: "继续", style: .default) { (action) in
             RootControllerChangeWithIndex(3)
         }
         
@@ -201,7 +196,6 @@ class TOCViewController: BaseViewControllerWithTable {
         alert.addAction(action_2)
         
         self.present(alert, animated: true)
-        
     }
     
     //MARK: - 数据处理
@@ -231,10 +225,10 @@ class TOCViewController: BaseViewControllerWithTable {
     
     
     /// 获取目录数据
-    ///
     /// - parameter modelId:  当前model的主键-primary_id
     /// - parameter flushDir: 标记为是否需要清空已展开的目录数据
-    func getNewData(modelId:String,flushDir:Bool? = false){
+    /// - parameter traverseChild: 是否遍历子节点
+    func getNewData(modelId:String,flushDir:Bool? = false, traverseChild:Bool? = true){
         dataArray.removeAll()
         dataArray.append(currentPublication)
         
@@ -247,26 +241,31 @@ class TOCViewController: BaseViewControllerWithTable {
             }
         }
         
-        //向下遍历子孙节点
-        let arr:[SegmentModel] = { id in
-            var tmpArr = [SegmentModel]()
-            func _search(_ id:String){
-                let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
-                for m in chapter {
-                    if Int(m.is_visible) == 0 {
-                        //不可见
-                        _search(m.primary_id)
-                    }else{
-                        tmpArr.append(m);
+        if let needChild = traverseChild {
+            if needChild {//向下遍历子孙节点
+                let arr:[SegmentModel] = { id in
+                    var tmpArr = [SegmentModel]()
+                    func _search(_ id:String){
+                        let chapter:[SegmentModel] = SegmentModel.search(with: "parent_id='\(id)'", orderBy: nil) as! [SegmentModel]
+                        for m in chapter {
+                            if Int(m.is_visible) == 0 {//当前为不可见,继续寻找子节点
+                                _search(m.primary_id)
+                            }else{
+                                tmpArr.append(m);
+                            }
+                        }
                     }
-                }
+                    
+                    _search(id)
+                    
+                    return tmpArr
+                }(modelId)
+                
+                dataArray = dataArray + arr
             }
-            
-            _search(id)
-            return tmpArr
-        }(modelId)
+        }
         
-        dataArray = dataArray + arr
+
         tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
     }
 

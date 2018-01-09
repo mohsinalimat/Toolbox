@@ -27,6 +27,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_airplane_changed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_publication_changed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recnotification(_:)), name: knotification_segment_changed, object: nil)
         URLProtocol.registerClass(TestURLProtocol.self)
         
         initNavigationBarItem()
@@ -37,14 +38,15 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         
         webview.scrollView.minimumZoomScale = 1
         webview.scrollView.maximumZoomScale = 2
-        
         view.addSubview(webview)
     }
 
     func recnotification(_ noti:Notification)  {
-        kSelectedSegment = nil
-        _current_segment_id = nil
-        
+        if noti.userInfo?["flag"] == nil {
+            kSelectedSegment = nil
+            _current_segment_id = nil
+        }
+
         has_opened_filePath.removeAll()
         item_go_back?.isEnabled = false
         item_go_forward?.isEnabled = false

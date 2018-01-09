@@ -10,6 +10,7 @@ import UIKit
 
 let indentValueArray = [0,5,15,35,50]
 let kBaseValue:CGFloat = 80.0
+let kButtonTag = 188
 
 let kcellSelectedColor = UIColor (red: 42/255.0, green: 78/255.0, blue: 115/255.0, alpha: 1)
 let kcellDefaultColor = UIColor.black
@@ -46,14 +47,14 @@ class SegmentCell: UITableViewCell {
 
         //展开button
         if shouldAddOpenButton(model){
-            //self.addSubview(button())
-            
+            self.addSubview(button())
         }
         
         //effrg
         guard Int(model.is_leaf)==1 ,Int(model.is_visible)==1 else {
             return
         }
+        
         let msn = Int((kSelectedAirplane?.customerEffectivity)!)
         let eff = model.effrg
         if let eff = eff,let msn = msn{
@@ -73,14 +74,11 @@ class SegmentCell: UITableViewCell {
                 }
             }
         }
-        
-
-        
+      
     }
     
     //MARK: - 
-    //是否添加展开按钮-显示子目录，点击row 跳转本身页面
-    
+    //是否添加展开按钮-显示子目录，点击row 跳转本身页面    
     var cellOpenButtonClickedHandler:((Bool) -> Void)?
     var cellButtonIsOpened:Bool = false;
     
@@ -96,9 +94,8 @@ class SegmentCell: UITableViewCell {
         let btn = UIButton (frame: CGRect (x: 10, y: 10, width: 60, height: 50))
         btn.setImage(UIImage (named: "toc_show_more_lt"), for: .normal)
         btn.setImage(UIImage (named: "toc_show_less_lt"), for: .selected)
-        btn.tag = 188
+        btn.tag = kButtonTag
         btn.addTarget(self, action: #selector(openAction(_ :)), for: .touchUpInside)
-        //btn.backgroundColor = UIColor.red
         btn.isSelected = cellButtonIsOpened
         
         return btn
@@ -120,10 +117,7 @@ class SegmentCell: UITableViewCell {
         titleLable.textColor = kcellDefaultColor
         
         self.backgroundView = nil;
-        
-        self.viewWithTag(188)?.removeFromSuperview()
-        
-//        backgroundColor = kCellDefaultBgColor
+        self.viewWithTag(kButtonTag)?.removeFromSuperview()
     }
     
     
@@ -132,9 +126,6 @@ class SegmentCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
-//        backgroundColor = kCellSelectedBgColor
-        
     }
     
 }
