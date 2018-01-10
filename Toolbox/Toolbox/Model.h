@@ -38,8 +38,9 @@
 
 +(NSArray*)searchWithSql:(NSString*)sql;
 
-+(BOOL)deleteWith:(NSString*)query;
++(BOOL)deleteWith:(NSString*)query;//删除表中数据
 
++(BOOL)isExistTable;//表是否存在
 
 /**
  创建实例

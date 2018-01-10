@@ -454,7 +454,7 @@ class DataSourceManager: NSObject {
                 
                 
                 //bookmark
-                if BookmarkModel.isExistsFromDB(){
+                if BookmarkModel.isExistTable() {
                     BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
                 }
                 

@@ -181,6 +181,9 @@
         return [[[self alloc]init] deleteWith:query];
     }
 
++(BOOL)isExistTable{
+    return [[DBTool default].helper isExistsWithTableName:[self getTableName] where:nil];
+}
 
 @end
 
