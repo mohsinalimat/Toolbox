@@ -61,11 +61,11 @@ class DownloadViewController: BaseViewControllerWithTable {
 
         //checkupdatebtn
         let checkupdatebtn = UIButton (frame: CGRect (x: 0, y: 0, width: 100, height: 40))
-        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
-        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
+//        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .normal)
+//        checkupdatebtn.setBackgroundImage(UIImage (named: "donwload_data_button"), for: .highlighted)
         checkupdatebtn.setTitle("检测更新", for: .normal)
         checkupdatebtn.setTitleColor(UIColor.white, for: .normal)
-        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: 1)
+        checkupdatebtn.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: 1)
         checkupdatebtn.addTarget(self, action: #selector(checkUpdateBtn), for: .touchUpInside)
         checkupdatebtn.tag = 100
         checkupdatebtn.layer.cornerRadius = 10

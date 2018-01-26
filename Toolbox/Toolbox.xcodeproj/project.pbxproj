@@ -16,6 +16,9 @@
 		A12AF8E21F063D0300FC7AD3 /* ManagerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */; };
 		A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */; };
 		A12AF8E61F063D2600FC7AD3 /* ManagerDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */; };
+		A12B438F2019DBF400DE26A7 /* DatePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12B438D2019DBF400DE26A7 /* DatePickerController.swift */; };
+		A12B43902019DBF400DE26A7 /* DatePickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A12B438E2019DBF400DE26A7 /* DatePickerController.xib */; };
+		A12B43922019DC1E00DE26A7 /* BasePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12B43912019DC1E00DE26A7 /* BasePickerViewController.swift */; };
 		A12D9FA41F8DB4EB003A7ACB /* illustrations_selected_port.png in Resources */ = {isa = PBXBuildFile; fileRef = A12D9F9C1F8DB4EB003A7ACB /* illustrations_selected_port.png */; };
 		A12D9FA51F8DB4EB003A7ACB /* illustrations_selected_port@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A12D9F9D1F8DB4EB003A7ACB /* illustrations_selected_port@2x.png */; };
 		A12D9FA61F8DB4EB003A7ACB /* illustrations_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = A12D9F9E1F8DB4EB003A7ACB /* illustrations_selected.png */; };
@@ -162,6 +165,9 @@
 		A12AF8E01F063D0300FC7AD3 /* ManagerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerCell.xib; sourceTree = "<group>"; };
 		A12AF8E31F063D2600FC7AD3 /* ManagerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerDetailCell.swift; sourceTree = "<group>"; };
 		A12AF8E41F063D2600FC7AD3 /* ManagerDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManagerDetailCell.xib; sourceTree = "<group>"; };
+		A12B438D2019DBF400DE26A7 /* DatePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerController.swift; sourceTree = "<group>"; };
+		A12B438E2019DBF400DE26A7 /* DatePickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePickerController.xib; sourceTree = "<group>"; };
+		A12B43912019DC1E00DE26A7 /* BasePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasePickerViewController.swift; sourceTree = "<group>"; };
 		A12D9F9C1F8DB4EB003A7ACB /* illustrations_selected_port.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = illustrations_selected_port.png; sourceTree = "<group>"; };
 		A12D9F9D1F8DB4EB003A7ACB /* illustrations_selected_port@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "illustrations_selected_port@2x.png"; sourceTree = "<group>"; };
 		A12D9F9E1F8DB4EB003A7ACB /* illustrations_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = illustrations_selected.png; sourceTree = "<group>"; };
@@ -474,6 +480,9 @@
 				A1C1AB0C1F037D2900C29333 /* BaseViewControllerWithTable.swift */,
 				A1C06BC91F0A2D2800A29620 /* PopViewController.swift */,
 				A1C06BCA1F0A2D2800A29620 /* PopViewController.xib */,
+				A12B43912019DC1E00DE26A7 /* BasePickerViewController.swift */,
+				A12B438D2019DBF400DE26A7 /* DatePickerController.swift */,
+				A12B438E2019DBF400DE26A7 /* DatePickerController.xib */,
 			);
 			name = BaseController;
 			sourceTree = "<group>";
@@ -674,7 +683,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 8R29X3H9MY;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -729,6 +738,7 @@
 				ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */,
 				A1BBCF631F2ACFDF007374B7 /* header_band.png in Resources */,
 				AD10FEA91F88962B00B9B10C /* DownloadDetailtop.xib in Resources */,
+				A12B43902019DBF400DE26A7 /* DatePickerController.xib in Resources */,
 				A1B71D091F0B36570054CA04 /* BookmarksCell.xib in Resources */,
 				A1BBCF591F2ACBFF007374B7 /* bookmarkOnHighlighted.png in Resources */,
 				A1C06BD01F0A356400A29620 /* cancel@2x.png in Resources */,
@@ -857,6 +867,7 @@
 			files = (
 				A18AD5F51F3D55B20065FF49 /* UnzipInfoViewController.swift in Sources */,
 				A1B3637D1F739ACD0049FB56 /* UpdateButton.swift in Sources */,
+				A12B43922019DC1E00DE26A7 /* BasePickerViewController.swift in Sources */,
 				A12AF8E11F063D0300FC7AD3 /* ManagerCell.swift in Sources */,
 				A1C06BCB1F0A2D2800A29620 /* PopViewController.swift in Sources */,
 				A1C1AB0D1F037D2900C29333 /* BaseViewControllerWithTable.swift in Sources */,
@@ -888,6 +899,7 @@
 				AD0F75921F935302005FD788 /* LargePicCell.swift in Sources */,
 				A1DE04601F21D06B000C5069 /* SegmentCell.swift in Sources */,
 				A109A4371F74E9B400528B4F /* DS_Delegate.swift in Sources */,
+				A12B438F2019DBF400DE26A7 /* DatePickerController.swift in Sources */,
 				A12AF8E51F063D2600FC7AD3 /* ManagerDetailCell.swift in Sources */,
 				A1B4CFCB1F58EC91001AB279 /* DataSourceManager.swift in Sources */,
 				A1C1BD981F00AC5A002FC0E0 /* PublicationController.swift in Sources */,
@@ -1062,14 +1074,14 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 8R29X3H9MY;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Toolbox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gener-tech.ToolBox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ebd521e8-e8a9-4bdb-8d9d-109ac0bdaf74";
-				PROVISIONING_PROFILE_SPECIFIER = "wygtest-dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Toolbox/Toolbox-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;

@@ -15,9 +15,9 @@ class BaseViewController: UIViewController {
 
         let settingItem  = UIBarButtonItem (image: UIImage (named: "gear_(settings)_icon"), style: .plain, target: self, action: #selector(rightItemButtonAction(_:)))
         let fiexditem = UIBarButtonItem.init(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        fiexditem.width = 20
+        fiexditem.width = 30
         
-        navigationItem.rightBarButtonItems = [fiexditem,settingItem]
+        navigationItem.rightBarButtonItems = [fiexditem,settingItem,fiexditem]
     }
 
     

@@ -24,8 +24,15 @@ class ManagerCell: UITableViewCell {
     
     @IBOutlet weak var hide_width: NSLayoutConstraint!
     
+    @IBOutlet weak var updateLable: UILabel!
+    
+    @IBOutlet weak var update_dateLable: UILabel!
+    
     var selectedInEdit:Bool = false
     var imgv : UIImageView?
+    
+    var cellOpenButtonClickedHandler:((Void) -> Void)?
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,13 +42,36 @@ class ManagerCell: UITableViewCell {
         layer.borderWidth = 0.5
         
         titleLable.backgroundColor = UIColor (red: 43/255.0, green: 123/255.0, blue: 181/255.0, alpha: 0.7)
+        
+        updateLable.isHidden = true
+        update_dateLable.isHidden = true
     }
 
+    @IBAction func openBtnAction(_ sender: UIButton) {
+        if let handler = cellOpenButtonClickedHandler {
+            handler();
+        }
+        
+        
+    }
+    
+    
     override func prepareForReuse() {
         _init()
     }
     
-    func fillCell(model:PublicationsModel,title:String = "airplaneRegistry") {
+    func fillCell(model:PublicationsModel,section:Int ,title:String = "airplaneRegistry") {
+        if section == 0 {
+            openButton.setImage(UIImage (named: "bookmark_note"), for: .normal)
+            
+            updateLable.isHidden = false
+            update_dateLable.isHidden = false
+
+        }else{
+            openButton.setImage(UIImage (named: "cheveron-normal_gry"), for: .normal);
+        }
+        
+        
         titleLable.text = model.display_title
         stitleLable.text = model.display_title
         sownerLable.text = model.document_owner
@@ -119,6 +149,9 @@ class ManagerCell: UITableViewCell {
         srevLable.textColor = textColor
         sdateLable.textColor = textColor
  
+        updateLable.isHidden = true
+        update_dateLable.isHidden = true
+
     }
     
     func cellIsSelected(_ selected : Bool) {
@@ -142,9 +175,6 @@ class ManagerCell: UITableViewCell {
     }
 
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-    }
+
     
 }

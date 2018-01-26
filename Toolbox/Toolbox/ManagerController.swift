@@ -34,6 +34,9 @@ class ManagerController: BaseViewControllerWithTable{
     var rightItemBtn:UIButton?//== rightItemSelectAll
     var editButton:UIButton?
     
+
+    var willInstall_dataArray = [Any]()
+    
     //MARK:
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,8 +64,10 @@ class ManagerController: BaseViewControllerWithTable{
     func initNavigationBarItem(){
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
-        btn.setImage(UIImage (named: "green_update_button"), for: .normal)//23.23
+        btn.setImage(UIImage (named: "green_update_button"), for: .normal)//42.32
         btn.setImage(UIImage (named: "inprogress_update_button"), for: .selected)
+        btn.imageEdgeInsets = UIEdgeInsetsMake(8, 5, 10, 5)
+        
         btn.addTarget(self, action: #selector(downloadBtnClicked(_:)), for: .touchUpInside)
         _update_btn = btn
 
@@ -72,7 +77,7 @@ class ManagerController: BaseViewControllerWithTable{
         rightItems_old = itemArr;
         
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        fixed.width = 8
+        fixed.width = 15
         //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
         navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80)
     }
@@ -85,9 +90,9 @@ class ManagerController: BaseViewControllerWithTable{
         btn.setTitle(title_2[index], for: .selected)
         btn.tag = 100 + index
         btn.addTarget(self, action: #selector(navigationItemBtnAction(_ :)), for: .touchUpInside)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .normal)
-        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .selected)
+        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .normal)
+//        btn.setBackgroundImage(UIImage (named: "buttonBg2"), for: .selected)
         btn.adjustsImageWhenHighlighted = false
         if index == 0{
             editButton = btn
@@ -107,7 +112,7 @@ class ManagerController: BaseViewControllerWithTable{
         case 101:
             selectedInEditModelArr.removeAll()
             if btn.isSelected {//全选
-                for m in dataArray {
+                for m in dataArray + willInstall_dataArray {
                     let s = (m as! PublicationsModel).book_uuid
                     selectedInEditModelArr.append(s!)
                 }
@@ -272,14 +277,19 @@ class ManagerController: BaseViewControllerWithTable{
     //MARK:
     func loadData(opt:String = "book_uuid") {
         dataArray.removeAll()
+        willInstall_dataArray.removeAll()
         selectedDataArray.removeAll()
         
         //字段为空的放在最后
         let arr = PublicationsModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray  + arr!
+        dataArray.removeLast()
         
-        let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
-        dataArray = dataArray + arr2!
+        willInstall_dataArray.append(arr?.last)
+        
+        /*let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
+        installed_dataArray = installed_dataArray + arr2!*/
+        
         tableview?.reloadData()
     }
     
@@ -321,10 +331,9 @@ class ManagerController: BaseViewControllerWithTable{
         //view.addSubview(topview)
 
         tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 0)
-        sectionHeadtitle =  "Publications on Device"
+        sectionHeadtitle =  "Installed"
         tableview?.register(UINib(nibName: "ManagerCell", bundle: nil), forCellReuseIdentifier: managerCellIdentifier)
         tableview?.register(UINib (nibName:"ManagerDetailCell", bundle: nil), forCellReuseIdentifier: managerDetailCellReuseIdentifier)
-        
     }
     
     //popView选择排序项
@@ -360,61 +369,94 @@ class ManagerController: BaseViewControllerWithTable{
         self.present(nav, animated: true)
     }
     
+    //MARK:
+    func showDateSelect() {
+        let frame = CGRect (x: 0, y: 0, width: 500, height: 240)
+        
+        let vc = DatePickerController()
+        vc.view.frame = frame
+        vc.pickerDidSelectedHandler = { s in
+            
+            
+        }
+        
+        let nav = BaseNavigationController(rootViewController:vc)
+        nav.modalPresentationStyle = .formSheet
+        nav.preferredContentSize = frame.size
+        self.present(nav, animated: true, completion: nil)
+    }
     
     //MARK:
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0{
+            return willInstall_dataArray.count
+        }
+        
+        return dataArray.count == 0 ? 1:dataArray.count
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
-        if dataArray.count == 0 {
+        if  dataArray.count == 0  {
             return getCellForNodata(tableView, info: "NO PUBLICATIONS ON DEVICE")
         }
         
-        let value = dataArray[indexPath.row]
+        var value:Any
         
-        if value is Int {
-            let value = dataArray[indexPath.row - 1]
-            let  model:PublicationsModel! = value as! PublicationsModel
-            let cell = tableview?.dequeueReusableCell(withIdentifier: managerDetailCellReuseIdentifier, for: indexPath) as! ManagerDetailCell
-            cell.selectionStyle = .none
-            cell.fillCell(model: model)
-            return cell
-        }
-        else
-        {
-            let  model:PublicationsModel! = value as! PublicationsModel
-            let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
-            cell.selectionStyle = .none
-            
-            cell.fillCell(model: model)
+        if indexPath.section == 0 {
+            value = willInstall_dataArray[indexPath.row]
+  
+        }else{
+            value = dataArray[indexPath.row]
+            if value is Int {
+                let value = dataArray[indexPath.row - 1]
+                let  model:PublicationsModel! = value as! PublicationsModel
+                let cell = tableview?.dequeueReusableCell(withIdentifier: managerDetailCellReuseIdentifier, for: indexPath) as! ManagerDetailCell
+                cell.selectionStyle = .none
+                cell.fillCell(model: model)
+                return cell
+            }
 
-            
-            cell.cellIsSelected(self.selectedDataArray.index(of: model.book_uuid ) != nil)
-            
-            cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid))
-            
-            return cell
         }
+        
+        let  model:PublicationsModel! = value as! PublicationsModel
+        let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
+        cell.selectionStyle = .none
+        
+        cell.fillCell(model: model , section:indexPath.section)
+        
+        if indexPath.section == 0 {
+            if tableView.isEditing == false {
+                cell.cellOpenButtonClickedHandler = {[weak self] in
+                    guard let strongSelf = self else {return}
+                    strongSelf.showDateSelect();
+                    
+                }
+            }
+        }else{
+            cell.cellIsSelected(self.selectedDataArray.index(of: model.book_uuid ) != nil);
+        }
+        
+        cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid))
+        
+        return cell
         
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if dataArray.count == 0 {
-            return 70;
-        }
-        
-        let tmp = dataArray[indexPath.row] as? Int
-        if let isdetail = tmp
-        {
-            if isdetail == 0 {
-                return 90;
-            }
-        }
-        
-        return 70;
+        guard indexPath.section == 1 && dataArray.count > 0 else {return 70}
+        guard let tmp = dataArray[indexPath.row] as? Int, tmp == 0 else {return 70}
+        return 90
     }
     
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       guard dataArray[indexPath.row] as? Int != 0 else { return }
-       let value = dataArray[indexPath.row] as! PublicationsModel
+        //guard dataArray[indexPath.row] as? Int != 0 else { return }
+        let value = indexPath.section == 0 ? willInstall_dataArray[indexPath.row] as! PublicationsModel : dataArray[indexPath.row] as! PublicationsModel
+        
+        //tableView处于编辑模式
         if tableView.isEditing {
             let s = value.book_uuid
             if let s = s{
@@ -424,7 +466,7 @@ class ManagerController: BaseViewControllerWithTable{
                 else{
                     self.selectedInEditModelArr.append(s)
                 }
-                if selectedInEditModelArr.count == dataArray.count{
+                if selectedInEditModelArr.count == dataArray.count + willInstall_dataArray.count {
                     rightItemBtn?.isSelected = true
                 }
                 if selectedInEditModelArr.count == 0{
@@ -433,10 +475,11 @@ class ManagerController: BaseViewControllerWithTable{
             }
             self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
             self.deleteButton?.setTitle("Delete" + (selectedInEditModelArr.count > 0 ? " (\(selectedInEditModelArr.count))":""), for: .normal)
-            self.tableview?.reloadData()
-            return
+            self.tableview?.reloadData();return
         }
-        
+       
+       //正常情况下操作-展开子页面
+       guard indexPath.section > 0 else {return }
        if self.selectedDataArray.index(of: value.book_uuid) != nil {
             selectedDataArray.remove(at: selectedDataArray.index(of: value.book_uuid)!)
             self.dataArray.remove(at: indexPath.row + 1)
@@ -464,13 +507,20 @@ class ManagerController: BaseViewControllerWithTable{
             let title = UILabel (frame: CGRect (x: 0, y: 0, width: v.frame.width, height: 30))
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
-            title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count - (selectedDataArray.count))"
+            if section == 0 {
+                title.text = "\t\twill Update \t\t\(willInstall_dataArray.count)"
+            }else{
+                title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count - (selectedDataArray.count))"
+            }
+            
             v.addSubview(title)
             return v
             }()
     }
     
-    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 0 ? (willInstall_dataArray.count == 0 ? 0 : 30) : 30
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

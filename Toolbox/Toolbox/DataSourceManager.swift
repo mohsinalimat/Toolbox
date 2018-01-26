@@ -317,7 +317,12 @@ class DataSourceManager: NSObject {
                     print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
                     strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
+                    
+                    //////.....提前下载，不需要立即更新的处理
+                    
                     strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
+                    
+                    
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
                     if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
                         ret.ds_file_percent = 0.0
