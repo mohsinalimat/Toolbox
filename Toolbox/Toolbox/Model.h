@@ -111,6 +111,7 @@
 @property(nonatomic,copy)NSString * useApModelMap;
 @property(nonatomic,copy)NSString * booklocalurl;
 @property(nonatomic,copy)NSString * metadataurl;
+
 @end
 
 //目录
@@ -197,6 +198,30 @@
 @property (nonatomic, copy)NSString * threshold_unit;
 @property (nonatomic, copy)NSString * data_source;
 @end
+
+
+@interface InstallLaterModel : Model
+@property (nonatomic, copy)NSString * book_uuid;
+@property (nonatomic, copy)NSString * display_model;
+@property (nonatomic, copy)NSString * display_title;
+@property (nonatomic, copy)NSString * dm_version;
+@property (nonatomic, copy)NSString * doc_abbreviation;
+@property (nonatomic, copy)NSString * doc_number;
+@property (nonatomic, copy)NSString * document_owner;
+@property (nonatomic, copy)NSString * file_loc;
+@property (nonatomic, copy)NSString * last_modified_datetime;
+@property (nonatomic, copy)NSString * model_major;
+@property (nonatomic, copy)NSString * order_datetime;
+@property (nonatomic, copy)NSString * publication_id;
+@property (nonatomic, copy)NSString * revision_date;
+@property (nonatomic, copy)NSString * revision_number;
+
+
+
+@end
+
+
+
 
 #pragma mark - other
 //表更新记录

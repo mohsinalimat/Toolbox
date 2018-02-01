@@ -60,6 +60,35 @@ class ManagerCell: UITableViewCell {
         _init()
     }
     
+    func fillCell2(model:InstallLaterModel,section:Int ,title:String = "airplaneRegistry") {
+        if section == 0 {
+            openButton.setImage(UIImage (named: "bookmark_note"), for: .normal)
+            
+            updateLable.isHidden = false
+            update_dateLable.isHidden = false
+            
+        }else{
+            openButton.setImage(UIImage (named: "cheveron-normal_gry"), for: .normal);
+        }
+        
+        
+        titleLable.text = model.display_title
+        stitleLable.text = model.display_title
+        sownerLable.text = model.document_owner
+        //smodelLable.text = model.model
+        sdocLable.text = model.doc_number
+        srevLable.text = model.revision_number
+        sdateLable.text = model.revision_date
+        
+        let docabbr = model.doc_abbreviation
+        guard let type = docabbr else {
+            return
+        }
+        
+        colorFlagLable.backgroundColor = kDOCTYPEColor[type]
+    }
+    
+    
     func fillCell(model:PublicationsModel,section:Int ,title:String = "airplaneRegistry") {
         if section == 0 {
             openButton.setImage(UIImage (named: "bookmark_note"), for: .normal)
@@ -151,6 +180,7 @@ class ManagerCell: UITableViewCell {
  
         updateLable.isHidden = true
         update_dateLable.isHidden = true
+        //cellOpenButtonClickedHandler = nil
 
     }
     

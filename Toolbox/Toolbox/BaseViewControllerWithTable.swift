@@ -162,7 +162,8 @@ class BaseViewControllerWithTable: BaseViewController,UITableViewDelegate,UITabl
         }
         cell?.textLabel?.text = info
         cell?.textLabel?.textAlignment = .center
-        cell?.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        cell?.textLabel?.font = UIFont.systemFont(ofSize: 15)
+        cell?.textLabel?.textColor = UIColor.darkGray
         cell?.isUserInteractionEnabled = false
         cell?.backgroundColor = UIColor.clear
         return cell!

@@ -34,6 +34,8 @@ class DS_Delegate: NSObject, DSManagerDelegate {
                     strongSelf._showAlert(withurl)
                 }
             }else{//处于后台通知提醒
+                UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
+                UserDefaults.standard.synchronize()
                 let appdelegate =  UIApplication.shared.delegate as? AppDelegate
                 appdelegate?.sendLocalNotification()
             

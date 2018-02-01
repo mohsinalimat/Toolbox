@@ -105,7 +105,7 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     func navigationItemBtnAction(_ btn:UIButton) {
-        guard dataArray.count > 0 else {return}
+        guard dataArray.count > 0 || willInstall_dataArray.count > 0 else {return}
         btn.isSelected = !btn.isSelected
         switch btn.tag {
         case 100:setEdited(btn.isSelected);break
@@ -283,9 +283,18 @@ class ManagerController: BaseViewControllerWithTable{
         //字段为空的放在最后
         let arr = PublicationsModel.search(with: "\(opt)!=\"\"", orderBy: "\(opt) asc")
         dataArray = dataArray  + arr!
-        dataArray.removeLast()
         
-        willInstall_dataArray.append(arr?.last)
+        //未来要更新的
+        let wil = InstallLaterModel.search(with: nil, orderBy: nil)
+        if let w = wil {
+            willInstall_dataArray = willInstall_dataArray + w;
+            
+           if let m = w.first as? InstallLaterModel {
+                print(m.revision_date);
+            }
+        }
+        
+        //willInstall_dataArray.append(arr?.last)
         
         /*let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         installed_dataArray = installed_dataArray + arr2!*/
@@ -396,20 +405,37 @@ class ManagerController: BaseViewControllerWithTable{
             return willInstall_dataArray.count
         }
         
-        return dataArray.count == 0 ? 1:dataArray.count
+        return dataArray.count == 0 ? (willInstall_dataArray.count == 0 ? 1:0):dataArray.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
-        if  dataArray.count == 0  {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if dataArray.count == 0 && indexPath.section == 1 {
             return getCellForNodata(tableView, info: "NO PUBLICATIONS ON DEVICE")
         }
-        
+
+        let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
+        cell.selectionStyle = .none
         var value:Any
         
         if indexPath.section == 0 {
             value = willInstall_dataArray[indexPath.row]
-  
+            let  model =  value as! InstallLaterModel
+            if tableView.isEditing == false {
+                cell.cellOpenButtonClickedHandler = {[weak self] in
+                    guard let strongSelf = self else {return}
+                    strongSelf.showDateSelect();
+                    //....修改更新日期
+                    
+                }
+            }else{
+                cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid));
+            }
+            
+            cell.fillCell2(model: model , section:indexPath.section)
+            return cell;
         }else{
+
             value = dataArray[indexPath.row]
             if value is Int {
                 let value = dataArray[indexPath.row - 1]
@@ -417,34 +443,25 @@ class ManagerController: BaseViewControllerWithTable{
                 let cell = tableview?.dequeueReusableCell(withIdentifier: managerDetailCellReuseIdentifier, for: indexPath) as! ManagerDetailCell
                 cell.selectionStyle = .none
                 cell.fillCell(model: model)
+                cell.isUserInteractionEnabled = false
                 return cell
             }
-
-        }
-        
-        let  model:PublicationsModel! = value as! PublicationsModel
-        let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
-        cell.selectionStyle = .none
-        
-        cell.fillCell(model: model , section:indexPath.section)
-        
-        if indexPath.section == 0 {
-            if tableView.isEditing == false {
-                cell.cellOpenButtonClickedHandler = {[weak self] in
-                    guard let strongSelf = self else {return}
-                    strongSelf.showDateSelect();
-                    
-                }
+            
+            let  model =  value as! PublicationsModel
+            cell.fillCell(model: model , section:indexPath.section)
+            
+            if selectedInEditModelArr.count > 0 {
+                cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid));
             }
-        }else{
-            cell.cellIsSelected(self.selectedDataArray.index(of: model.book_uuid ) != nil);
+          
+            return cell
         }
-        
-        cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid))
-        
-        return cell
+
         
     }
+    
+    
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard indexPath.section == 1 && dataArray.count > 0 else {return 70}
@@ -453,13 +470,18 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //guard dataArray[indexPath.row] as? Int != 0 else { return }
-        let value = indexPath.section == 0 ? willInstall_dataArray[indexPath.row] as! PublicationsModel : dataArray[indexPath.row] as! PublicationsModel
-        
         //tableView处于编辑模式
         if tableView.isEditing {
-            let s = value.book_uuid
-            if let s = s{
+            var _s:String?
+            if indexPath.section == 0 {
+                let _v = willInstall_dataArray[indexPath.row] as! InstallLaterModel;
+                _s = _v.book_uuid
+            }else{
+                let _v = dataArray[indexPath.row] as! PublicationsModel;
+                _s = _v.book_uuid
+            }
+
+            if let s = _s{
                 if self.selectedInEditModelArr.contains(s){
                     self.selectedInEditModelArr.remove(at: self.selectedInEditModelArr.index(of: s)!)
                 }
@@ -480,6 +502,8 @@ class ManagerController: BaseViewControllerWithTable{
        
        //正常情况下操作-展开子页面
        guard indexPath.section > 0 else {return }
+        let value = dataArray[indexPath.row] as! PublicationsModel
+        
        if self.selectedDataArray.index(of: value.book_uuid) != nil {
             selectedDataArray.remove(at: selectedDataArray.index(of: value.book_uuid)!)
             self.dataArray.remove(at: indexPath.row + 1)
@@ -501,6 +525,7 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
         return {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 30))
             v.backgroundColor = kTableview_headView_bgColor
@@ -508,7 +533,7 @@ class ManagerController: BaseViewControllerWithTable{
             title.textColor = UIColor.white
             title.font = UIFont.boldSystemFont(ofSize: 18)
             if section == 0 {
-                title.text = "\t\twill Update \t\t\(willInstall_dataArray.count)"
+                title.text = "\t\twill Install \t\t\(willInstall_dataArray.count)"
             }else{
                 title.text = "\t\t\(sectionHeadtitle!)\t\t\(dataArray.count - (selectedDataArray.count))"
             }
@@ -519,8 +544,16 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? (willInstall_dataArray.count == 0 ? 0 : 30) : 30
+        return section == 0 ? (willInstall_dataArray.count == 0 ? 0 : 30) : (dataArray.count > 0 ? 30 : 0)
     }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 2
+    }
+    
+    
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

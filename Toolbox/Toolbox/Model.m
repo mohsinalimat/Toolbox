@@ -266,3 +266,11 @@
 @end
 
 
+@implementation InstallLaterModel
+
+-(NSString *)getPrimarykey{
+    return @"book_uuid";
+}
+
+@end
+

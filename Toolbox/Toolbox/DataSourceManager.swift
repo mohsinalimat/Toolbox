@@ -155,7 +155,7 @@ class DataSourceManager: NSObject {
         }
     }
     
-    func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {
+    /*func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {///////// "publication_id": "AMUA320AMUTSM_","revision_number": "52",
         guard info.keys.count == 3 else {return}
         guard let server_syncArr = info["sync_manifest.json"] as? [[String:String]] else {return}
         if let m = DataSourceModel.searchSingle(withWhere: "location_url='\(url)'", orderBy: nil) as? DataSourceModel
@@ -220,9 +220,80 @@ class DataSourceManager: NSObject {
                     let fileurl = url + "\(zip!)"
                     updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
                     PublicationVersionModel.saveToDb(with: dic)
+                    //return
                 }
             }
+    }*/
+    
+    func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {///////// "publication_id": "AMUA320AMUTSM_","revision_number": "52",
+        guard info.keys.count == 3 else {return}
+        guard let server_syncArr = info["sync_manifest.json"] as? [[String:String]] else {return}
+        if let m = DataSourceModel.searchSingle(withWhere: "location_url='\(url)'", orderBy: nil) as? DataSourceModel
+        {
+            for dic in server_syncArr{
+                let file = dic["file_loc"]!;
+                guard let pid = dic["publication_id"] else{return}
+                let old = PublicationVersionModel.searchSingle(withWhere: "publication_id='\(pid)'", orderBy: nil) as? PublicationVersionModel
+                //比较ID，版本号。判断是否已存在
+                if let old = old{
+                    //如果已存在,比较版本号
+                    guard let v_new = dic["revision_number"] else{return}
+                    guard let v_old = old.revision_number else{return}
+                    if UInt16.init(v_new)! > UInt16.init(v_old)! {
+                        var dic = dic
+                        dic["data_source"] = url
+                        //删除原记录，保存新的记录
+                        PublicationVersionModel.delete(with: "publication_id='\(pid)'")
+                        PublicationVersionModel.saveToDb(with: dic)
+                        
+                        //添加到下载
+                        let fileurl = url + "\(file)"
+                        updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                        m.update_status = DSStatus.wait_update.rawValue
+                    }
+                }else{
+                    var dic = dic
+                    dic["data_source"] = url
+                    PublicationVersionModel.saveToDb(with: dic)
+                    let fileurl = url + "\(file)"
+                    updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                    m.update_status = DSStatus.wait_update.rawValue//更新状态
+                }
+            }
+            
+            m.time = "\(Date.timeIntervalSinceReferenceDate)"
+            m.updateToDB()
+        }else{//不存在，(不同的数据源会不会有相同的数据？？？,有待验证)
+            let m = DataSourceModel()
+            for(key,value) in info{
+                do{
+                    let data =  try JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
+                    let jsonStr = String.init(data: data, encoding: String.Encoding.utf8)
+                    switch key {
+                    case ksync_manifest: m.sync_manifest = jsonStr;break
+                    case kpackage_info: m.package_info = jsonStr;break
+                    case ktdafactorymobilebaseline:m.server_baseline = jsonStr;break
+                    default: break
+                    }
+                }catch{
+                    print("\(key): \(error.localizedDescription)")
+                }
+            }
+            m.location_url = url
+            m.update_status = DSStatus.wait_update.rawValue
+            m.time = "\(Date.timeIntervalSinceReferenceDate)"
+            m.saveToDB();
+            
+            //添加到下载
+            for dic in server_syncArr{
+                let zip:String! = dic["file_loc"]
+                let fileurl = url + "\(zip!)"
+                updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
+                PublicationVersionModel.saveToDb(with: dic)
+            }
+        }
     }
+
     
 
     /// 更新下载列表
@@ -316,11 +387,41 @@ class DataSourceManager: NSObject {
                     let zip = des?.lastPathComponent
                     print("完成下载 : \(des!)")
                     guard let strongSelf = self else{return}
+                    //下载完成，删除下载队列中该条记录
                     strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(des!)", isAdd: false,datatype:.download)
                     
-                    //////.....提前下载，不需要立即更新的处理
+                    //判断是否是提前下载的(不需要立即更新的)，否则加入解压队列等待更新
+                    if let vm = PublicationVersionModel.searchSingle(withWhere: "file_loc='\(zip!)'", orderBy: nil) as? PublicationVersionModel {
+                        let now = strongSelf.dateToString(Date())
+                        
+                        if vm.revision_date < now {
+                            strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
+                        }else {
+                            if let _old = InstallLaterModel.searchSingle(withWhere: "publication_id='\(vm.publication_id!)'", orderBy: nil) as? InstallLaterModel {
+                                _old.deleteToDB();
+                            }
+                            
+                            let laterM = InstallLaterModel()
+                            laterM.revision_date = vm.revision_date
+                            laterM.revision_number = vm.revision_number
+                            laterM.file_loc = vm.file_loc
+                            laterM.publication_id = vm.publication_id
+                            laterM.book_uuid = vm.book_uuid
+                            laterM.doc_number = vm.doc_number
+                            laterM.document_owner = vm.document_owner
+                            laterM.model_major = vm.model_major
+                            laterM.doc_abbreviation = vm.doc_abbreviation
+                            laterM.display_model = vm.display_model
+                            laterM.display_title = vm.display_title
+                            
+                            laterM.saveToDB()
+                        }
+                    }
                     
-                    strongSelf.updatedsQueueWith(key:"\(base!)",filePath: "\(zip!)", datatype:.unzip)
+                    
+                    
+                    
+                    
                     
                     
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
@@ -423,6 +524,14 @@ class DataSourceManager: NSObject {
         return (filesDic.isEmpty,filesDic)
     }
    
+    
+    func dateToString(_ date:Date, formatter:String = "yyyyMMdd") -> String {
+        let dateFormatter = DateFormatter.init()
+        dateFormatter.dateFormat = formatter
+        
+        return dateFormatter.string(from: date)
+    }
+
     
     //MARK: - delete book
     class func deleteBooksWithId(_ uids:[String]) {
