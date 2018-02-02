@@ -414,11 +414,13 @@ class ManagerController: BaseViewControllerWithTable{
             return getCellForNodata(tableView, info: "NO PUBLICATIONS ON DEVICE")
         }
 
-        let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
-        cell.selectionStyle = .none
+
         var value:Any
         
         if indexPath.section == 0 {
+            let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
+            cell.selectionStyle = .none
+
             value = willInstall_dataArray[indexPath.row]
             let  model =  value as! InstallLaterModel
             if tableView.isEditing == false {
@@ -435,7 +437,6 @@ class ManagerController: BaseViewControllerWithTable{
             cell.fillCell2(model: model , section:indexPath.section)
             return cell;
         }else{
-
             value = dataArray[indexPath.row]
             if value is Int {
                 let value = dataArray[indexPath.row - 1]
@@ -446,21 +447,25 @@ class ManagerController: BaseViewControllerWithTable{
                 cell.isUserInteractionEnabled = false
                 return cell
             }
-            
-            let  model =  value as! PublicationsModel
-            cell.fillCell(model: model , section:indexPath.section)
-            
-            if selectedInEditModelArr.count > 0 {
-                cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid));
+            else {
+                let  model =  value as! PublicationsModel
+                let cell = tableview?.dequeueReusableCell(withIdentifier: managerCellIdentifier, for: indexPath) as! ManagerCell
+                cell.selectionStyle = .none
+
+                cell.fillCell(model: model , section:indexPath.section)
+                
+                if selectedInEditModelArr.count > 0 {
+                    cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid));
+                }else{
+                    cell.setSelectInEdit(false);
+                }
+                
+                return cell
             }
-          
-            return cell
         }
 
         
     }
-    
-    
     
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

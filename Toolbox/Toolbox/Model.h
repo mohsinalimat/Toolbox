@@ -215,7 +215,7 @@
 @property (nonatomic, copy)NSString * publication_id;
 @property (nonatomic, copy)NSString * revision_date;
 @property (nonatomic, copy)NSString * revision_number;
-
+@property (nonatomic, copy)NSString * data_source;
 
 
 @end

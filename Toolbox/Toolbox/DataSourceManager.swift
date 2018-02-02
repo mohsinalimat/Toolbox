@@ -352,6 +352,46 @@ class DataSourceManager: NSObject {
         objc_sync_exit(self)
     }
 
+    ///待更新检测,如果有需要更新，加入解压队列等待更新
+    func ds_checkIfHasUpdate() -> Bool {
+        guard !ds_startupdating else {
+            return false
+        }
+        
+        let wil = InstallLaterModel.search(with: nil, orderBy: nil)
+        guard let w = wil as? [InstallLaterModel] , w.count > 0 else {return false;}
+        
+        /////添加到解压队列
+        let now = self.dateToString(Date())
+        for m in w {
+            if m.revision_date <= now {
+                if let ds = m.data_source {
+                    self.updatedsQueueWith(key:ds,filePath: "\(m.file_loc!)", datatype:.unzip)
+                    m.deleteToDB()
+                }
+                
+            }
+        }
+        
+        guard !unzipQueueIsEmpty().0 else {return false}
+        _ds_update_loc()
+        
+       return true
+    }
+    
+    /// 更新有效期内的数据
+    func _ds_update_loc() {
+        let plist = kUnzip_queue_path
+        let files = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
+        guard let urls = files?.keys  else{ return}
+
+        for _u in urls {
+            self.delegate?.ds_startUnzipFile(_u);
+        }
+        
+    }
+    
+    
     //MARK:
     func startDownload() {
         let plist = ds_download_queue_path
@@ -413,15 +453,10 @@ class DataSourceManager: NSObject {
                             laterM.doc_abbreviation = vm.doc_abbreviation
                             laterM.display_model = vm.display_model
                             laterM.display_title = vm.display_title
-                            
+                            laterM.data_source = "\(base!)"
                             laterM.saveToDB()
                         }
                     }
-                    
-                    
-                    
-                    
-                    
                     
                     
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
@@ -436,7 +471,10 @@ class DataSourceManager: NSObject {
                             ret.saveToDB()
                             
                             ///一个数据源下载完成
-                            strongSelf.delegate?.ds_startUnzipFile(base!.absoluteString)
+                            if !strongSelf.unzipQueueIsEmpty().0 {
+                                strongSelf.delegate?.ds_startUnzipFile(base!.absoluteString)
+                            }
+                            
                             strongSelf.ds_isdownloading = false
                             semaphore.signal()
                         }else{
@@ -444,7 +482,6 @@ class DataSourceManager: NSObject {
                                 
                             }
                         }
-                        
                     }
                     
                     semaphore.signal()
@@ -535,12 +572,11 @@ class DataSourceManager: NSObject {
     
     //MARK: - delete book
     class func deleteBooksWithId(_ uids:[String]) {
-        guard uids.count > 0 else {
-            return
-        }
+        guard uids.count > 0 else { return}
         
         //未考虑删除人为中断的情况????
         for uid in uids {
+            
             if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
                 guard let doc_owner = pub.customer_code else{return}
                 print("start delete \(uid) - \(Date())")

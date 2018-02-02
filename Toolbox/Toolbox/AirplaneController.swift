@@ -35,7 +35,10 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             show();
         }
 
-    
+        if DataSourceManager.default.ds_checkIfHasUpdate(){
+            print("111")
+        }
+        
     }
 
     func allbookupdatecomplete(_ noti:Notification)  {
