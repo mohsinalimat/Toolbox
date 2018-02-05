@@ -35,6 +35,7 @@ class ManagerController: BaseViewControllerWithTable{
     
 
     var willInstall_dataArray = [Any]()
+    var willInstall_selected_index:Int = 0 //未安装列表选中索引
     
     //MARK:
     override func viewDidLoad() {
@@ -390,13 +391,18 @@ class ManagerController: BaseViewControllerWithTable{
     }
     
     //MARK:
-    func showDateSelect() {
+    func showDateSelect(_ index:Int) {
         let frame = CGRect (x: 0, y: 0, width: 500, height: 240)
         
         let vc = DatePickerController()
         vc.view.frame = frame
         vc.pickerDidSelectedHandler = { s in
-            
+           print(s)
+           let m = self.willInstall_dataArray[index] as? InstallLaterModel
+            if let mid = m?.book_uuid {
+                let old = InstallLaterModel.searchSingle(withWhere: "book_uuid='\(mid)'", orderBy: nil) as! InstallLaterModel;
+                print(old.publication_id)
+            }
             
         }
         
@@ -437,7 +443,7 @@ class ManagerController: BaseViewControllerWithTable{
             if tableView.isEditing == false {
                 cell.cellOpenButtonClickedHandler = {[weak self] in
                     guard let strongSelf = self else {return}
-                    strongSelf.showDateSelect();
+                    strongSelf.showDateSelect(indexPath.row);
                     //....修改更新日期
                     
                 }

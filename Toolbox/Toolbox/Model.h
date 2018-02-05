@@ -216,7 +216,7 @@
 @property (nonatomic, copy)NSString * revision_date;
 @property (nonatomic, copy)NSString * revision_number;
 @property (nonatomic, copy)NSString * data_source;
-
+@property(nonatomic,copy)NSString * mark_valid_data; //修改生效日期
 
 @end
 

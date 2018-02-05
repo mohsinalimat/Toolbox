@@ -80,11 +80,15 @@ class ManagerCell: UITableViewCell {
         srevLable.text = model.revision_number
         sdateLable.text = model.revision_date
         
-        let docabbr = model.doc_abbreviation
-        guard let type = docabbr else {
-            return
+        //显示生效日期
+        if let mark_data = model.mark_valid_data {
+            update_dateLable.text = mark_data;
+        }else {
+            update_dateLable.text = model.revision_date;
         }
         
+        let docabbr = model.doc_abbreviation
+        guard let type = docabbr else {return}
         colorFlagLable.backgroundColor = kDOCTYPEColor[type]
     }
     

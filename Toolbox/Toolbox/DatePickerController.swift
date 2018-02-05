@@ -46,7 +46,7 @@ class DatePickerController: BasePickerViewController {
     override func finishedBtnAction()  {
 
         if let handler = pickerDidSelectedHandler {
-            let str = dateToString(datePicker.date,formatter: "yyyy-MM-dd")
+            let str = dateToString(datePicker.date,formatter: "yyyyMMdd")
             handler(str);
         }
         
