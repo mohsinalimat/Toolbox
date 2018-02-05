@@ -31,14 +31,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
-        if UserDefaults.standard.value(forKey: "user_should_show_alert_update") != nil{
-            show();
-        }
-
-        if DataSourceManager.default.ds_checkIfHasUpdate(){
-            print("111")
-        }
-        
     }
 
     func allbookupdatecomplete(_ noti:Notification)  {
@@ -54,18 +46,23 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         }
     }
     
-    func show() {
+    func show( _ type:Int = 1) {
         if ktabbarVCIndex != 6{
             RootControllerChangeWithIndex(6)
         }
         
-        //let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
+        let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
         let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
-            UNZIPFile.default.update()
+            if type == 1 {
+                UNZIPFile.default.update()
+            }else if type == 2 {
+                DataSourceManager.default._ds_update_loc()
+            }
+            
         })
         
-        let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
-        //ac.addAction(action_1)
+        let ac = UIAlertController.init(title: "提示", message: "有文件需要安装更新,是否安装?", preferredStyle: .alert)
+        ac.addAction(action_1)
         ac.addAction(action_2)
         UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
     }
@@ -73,6 +70,18 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //检测是否有更新
+        if UserDefaults.standard.value(forKey: "user_should_show_alert_update") != nil{
+            show();
+        }
+        
+        if DataSourceManager.default.ds_checkIfHasUpdate(){
+            print("有文件需要解压安装!")
+            show(2)
+        }
+        
+        ///加载数据刷新列表
         loadData()
         if let hasSelectedAir = kSelectedAirplane{
             for (index_0,value)  in dataArray.enumerated() {
@@ -260,7 +269,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         return true
     }
     
-    //MARK:数据源
+    //MARK: - 数据源
     func get_ds(_ index:Int) -> [Any] {
         guard dataArray.count > 0 ,let d = dataArray[index] as? [String:[Any]] else {
             return []

@@ -9,10 +9,9 @@
 import UIKit
 
 class ManagerController: BaseViewControllerWithTable{
-
     var selectedDataArray = [String]()
-    var selectedInEditModelArr = [String]()//编辑模式下选中的数据
-    
+    var selectedInEditModelArr = [String]()//编辑模式下选中的数据-已安装的
+    var selectedNotInstallArr = [String]()//选中的未安装的数据
     var selectButton : UIButton?
     var deleteButton:UIButton?
     
@@ -112,7 +111,7 @@ class ManagerController: BaseViewControllerWithTable{
         case 101:
             selectedInEditModelArr.removeAll()
             if btn.isSelected {//全选
-                for m in dataArray + willInstall_dataArray {
+                for m in dataArray /*+ willInstall_dataArray*/ {
                     let s = (m as! PublicationsModel).book_uuid
                     selectedInEditModelArr.append(s!)
                 }
@@ -177,8 +176,12 @@ class ManagerController: BaseViewControllerWithTable{
         let action_2 = UIAlertAction.init(title: "删除", style: .destructive, handler: { [weak self](action) in
             guard let strongSelf = self else{return}
             DispatchQueue.main.async {
-                strongSelf.showUpdateVC(strongSelf.selectedInEditModelArr.count, type: 1)
+                strongSelf.showUpdateVC(strongSelf.selectedInEditModelArr.count + strongSelf.selectedNotInstallArr.count, type: 1)
                 DispatchQueue.global().async {
+                    //未安装
+                    DataSourceManager.deleteBooksWillInstall(strongSelf.selectedNotInstallArr)
+                    
+                    //删除已安装的手册
                     DataSourceManager.deleteBooksWithId(strongSelf.selectedInEditModelArr)
                 }
             }
@@ -197,6 +200,8 @@ class ManagerController: BaseViewControllerWithTable{
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkdsUpdate), name: NSNotification.Name (rawValue: "knotification_check_ds_update"), object: nil)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(notification_reloadData), name: Notification.Name.init(kNotificationName_willInstall_downloadCompletion), object: nil)
+        
         DataSourceManager.default.addObserver(self, forKeyPath: "ds_startupdating", options: .new, context: nil)
     }
     
@@ -212,6 +217,12 @@ class ManagerController: BaseViewControllerWithTable{
             }
         }
     }
+    
+    func notification_reloadData() {
+        loadData()
+    }
+    
+    
     
     //检测服务器是否更新
     func checkdsUpdate() {
@@ -431,7 +442,7 @@ class ManagerController: BaseViewControllerWithTable{
                     
                 }
             }else{
-                cell.setSelectInEdit(selectedInEditModelArr.contains(model.book_uuid));
+                cell.setSelectInEdit(selectedNotInstallArr.contains(model.book_uuid));
             }
             
             cell.fillCell2(model: model , section:indexPath.section)
@@ -487,20 +498,31 @@ class ManagerController: BaseViewControllerWithTable{
             }
 
             if let s = _s{
-                if self.selectedInEditModelArr.contains(s){
-                    self.selectedInEditModelArr.remove(at: self.selectedInEditModelArr.index(of: s)!)
-                }
-                else{
-                    self.selectedInEditModelArr.append(s)
-                }
-                if selectedInEditModelArr.count == dataArray.count + willInstall_dataArray.count {
-                    rightItemBtn?.isSelected = true
-                }
-                if selectedInEditModelArr.count == 0{
-                    rightItemBtn?.isSelected = false
+                if indexPath.section == 0 {
+                    ///未安装
+                    if selectedNotInstallArr.contains(s) {
+                        selectedNotInstallArr.remove(at: selectedNotInstallArr.index(of: s)!);
+                    }else {
+                        selectedNotInstallArr.append(s);
+                    }
+                } else{
+                    ///已安装
+                    if self.selectedInEditModelArr.contains(s){
+                        self.selectedInEditModelArr.remove(at: self.selectedInEditModelArr.index(of: s)!)
+                    }
+                    else{
+                        self.selectedInEditModelArr.append(s)
+                    }
+                    if selectedInEditModelArr.count == dataArray.count + willInstall_dataArray.count {
+                        rightItemBtn?.isSelected = true
+                    }
+                    if selectedInEditModelArr.count == 0{
+                        rightItemBtn?.isSelected = false
+                    }
                 }
             }
-            self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0
+            
+            self.deleteButton?.isEnabled = selectedInEditModelArr.count > 0 || selectedNotInstallArr.count > 0
             self.deleteButton?.setTitle("Delete" + (selectedInEditModelArr.count > 0 ? " (\(selectedInEditModelArr.count))":""), for: .normal)
             self.tableview?.reloadData();return
         }

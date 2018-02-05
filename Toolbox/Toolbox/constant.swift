@@ -91,12 +91,10 @@ var kUnzipProgressStatus:Float = 0.0
  CCAA320CCAAIPC20161101/aipc"
  */
 let DocumentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-
 let LibraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
 let ROOTPATH = LibraryPath.appending("/TDLibrary")
 let HTMLPATH = LibraryPath.appending("/HTML")
 let ROOTSUBPATH = "/CCA/" //待确定唯一性?
-
 let PATH = ROOTPATH + ROOTSUBPATH
 
 //sub
@@ -118,7 +116,7 @@ let ktdafactorymobilebaseline = "tdafactorymobilebaseline.json"
 
 #endif
 
-
+let kHasDataUpdateAsValidDate = "kHasDataUpdateAsValidDate" //标记是否有生效日期的手册需要更新
 
 
 

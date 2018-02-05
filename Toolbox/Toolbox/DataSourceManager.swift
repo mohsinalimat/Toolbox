@@ -23,6 +23,8 @@ enum DataQueueType {
     case unzip //解压
 }
 
+let kNotificationName_willInstall_downloadCompletion = "kNotificationName_willInstall_downloadCompletion"
+
 class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
     private let _subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
@@ -82,7 +84,15 @@ class DataSourceManager: NSObject {
     }
     
     func ds_checkupdate() {
-        guard !ds_startupdating else {return}
+        let hasUpdate = UserDefaults.standard.value(forKey: kHasDataUpdateAsValidDate) as? Bool
+        if let b = hasUpdate{
+            if b {
+                return;
+            }
+            
+        }
+        
+        guard !ds_startupdating  else {return}
         DispatchQueue.global().async {
             self._checkupdateFromServer()
             
@@ -354,10 +364,16 @@ class DataSourceManager: NSObject {
 
     ///待更新检测,如果有需要更新，加入解压队列等待更新
     func ds_checkIfHasUpdate() -> Bool {
-        guard !ds_startupdating else {
-            return false
-        }
+        guard !ds_startupdating else {return false}
         
+        let hasUpdate = UserDefaults.standard.value(forKey: kHasDataUpdateAsValidDate) as? Bool
+        if let b = hasUpdate{
+            if b {
+                return true;
+            }
+            
+        }
+
         let wil = InstallLaterModel.search(with: nil, orderBy: nil)
         guard let w = wil as? [InstallLaterModel] , w.count > 0 else {return false;}
         
@@ -368,13 +384,16 @@ class DataSourceManager: NSObject {
                 if let ds = m.data_source {
                     self.updatedsQueueWith(key:ds,filePath: "\(m.file_loc!)", datatype:.unzip)
                     m.deleteToDB()
+                    
+                    UserDefaults.standard.set(true, forKey: kHasDataUpdateAsValidDate)
+                    UserDefaults.standard.synchronize()
                 }
                 
             }
         }
         
         guard !unzipQueueIsEmpty().0 else {return false}
-        _ds_update_loc()
+        //_ds_update_loc()
         
        return true
     }
@@ -385,7 +404,10 @@ class DataSourceManager: NSObject {
         let files = NSKeyedUnarchiver.unarchiveObject(withFile: plist) as? [String:[String]]
         guard let urls = files?.keys  else{ return}
 
+        UserDefaults.standard.removeObject(forKey: kHasDataUpdateAsValidDate)
         for _u in urls {
+            _update_ds_status(url: _u, key: "update_status", value: DSStatus.unzipping.rawValue)
+
             self.delegate?.ds_startUnzipFile(_u);
         }
         
@@ -456,6 +478,13 @@ class DataSourceManager: NSObject {
                             laterM.data_source = "\(base!)"
                             laterM.saveToDB()
                         }
+                        
+                        ///刷新数据通知
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: NSNotification.Name.init(kNotificationName_willInstall_downloadCompletion), object: nil)
+                        }
+
+                        
                     }
                     
                     
@@ -571,12 +600,12 @@ class DataSourceManager: NSObject {
 
     
     //MARK: - delete book
+    ///删除已安装的手册
     class func deleteBooksWithId(_ uids:[String]) {
         guard uids.count > 0 else { return}
         
         //未考虑删除人为中断的情况????
         for uid in uids {
-            
             if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
                 guard let doc_owner = pub.customer_code else{return}
                 print("start delete \(uid) - \(Date())")
@@ -626,6 +655,45 @@ class DataSourceManager: NSObject {
         kSelectedSegment = nil
         kseg_hasopened_arr.removeAll()
     }
+    
+    ///删除已下载未完成安装的手册
+    class func deleteBooksWillInstall(_ uids:[String]) {
+        guard uids.count > 0 else { return}
+        for uid in uids {
+            if let pub = InstallLaterModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? InstallLaterModel {
+                
+                //delete Publication
+                pub.deleteToDB()
+                
+                //delete PublicationVersionModel
+                let pid = pub.publication_id
+                PublicationVersionModel.delete(with: "publication_id='\(pid!)'")
+
+                //恢复数据源状态
+                let ds = pub.data_source
+                self.default._update_ds_status(url: ds!, key: "update_status", value: DSStatus.completed.rawValue)
+                
+                
+                //delete files in Library
+                let file_loc = pub.file_loc
+                let path = ROOTPATH.appending("/tmp/\(file_loc!)")
+                FILESManager.default.deleteFileAt(path: path)
+                print("end  delete \(uid) - \(Date())")
+                
+                
+                DataSourceManager.default.setValue(false, forKey: "ds_startupdating")
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                }
+                
+            }
+        
+        }
+        
+        
+    }
+    
     
     
     
