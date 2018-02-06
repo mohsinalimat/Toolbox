@@ -300,14 +300,8 @@ class ManagerController: BaseViewControllerWithTable{
         let wil = InstallLaterModel.search(with: nil, orderBy: nil)
         if let w = wil {
             willInstall_dataArray = willInstall_dataArray + w;
-            
-           if let m = w.first as? InstallLaterModel {
-                print(m.revision_date);
-            }
         }
-        
-        //willInstall_dataArray.append(arr?.last)
-        
+
         /*let arr2 = PublicationsModel.search(with: "\(opt)=\"\"", orderBy: "\(opt) asc")
         installed_dataArray = installed_dataArray + arr2!*/
         
@@ -317,7 +311,7 @@ class ManagerController: BaseViewControllerWithTable{
     
     override func initSubview(){
         title = "Manager"
-        let topview : UIView  = {
+        /*let topview : UIView  = {
             let v = UIView (frame: CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: 60))
             v.backgroundColor = UIColor.white
             let button = UIButton (frame: CGRect (x: 20, y: 10, width: popButtonWidth, height: 40))
@@ -348,10 +342,10 @@ class ManagerController: BaseViewControllerWithTable{
             searchBtn.leftView = leftview
             v.addSubview(searchBtn)
             return v
-        }()
+        }()*/
         //view.addSubview(topview)
 
-        tableview?.frame = CGRect (x: 0, y: topview.frame.minY, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64 - 0)
+        tableview?.frame = CGRect (x: 0, y: 0, width: kCurrentScreenWidth, height: kCurrentScreenHeight - 64)
         sectionHeadtitle =  "Installed"
         tableview?.register(UINib(nibName: "ManagerCell", bundle: nil), forCellReuseIdentifier: managerCellIdentifier)
         tableview?.register(UINib (nibName:"ManagerDetailCell", bundle: nil), forCellReuseIdentifier: managerDetailCellReuseIdentifier)
@@ -396,14 +390,16 @@ class ManagerController: BaseViewControllerWithTable{
         
         let vc = DatePickerController()
         vc.view.frame = frame
-        vc.pickerDidSelectedHandler = { s in
-           print(s)
-           let m = self.willInstall_dataArray[index] as? InstallLaterModel
+        vc.pickerDidSelectedHandler = { [weak self]s in
+           guard let strongSelf = self else { return}
+           let m = strongSelf.willInstall_dataArray[index] as? InstallLaterModel
             if let mid = m?.book_uuid {
                 let old = InstallLaterModel.searchSingle(withWhere: "book_uuid='\(mid)'", orderBy: nil) as! InstallLaterModel;
                 print(old.publication_id)
+                old.mark_valid_data = s
+                old.saveToDB()
+                strongSelf.loadData()
             }
-            
         }
         
         let nav = BaseNavigationController(rootViewController:vc)
@@ -444,8 +440,6 @@ class ManagerController: BaseViewControllerWithTable{
                 cell.cellOpenButtonClickedHandler = {[weak self] in
                     guard let strongSelf = self else {return}
                     strongSelf.showDateSelect(indexPath.row);
-                    //....修改更新日期
-                    
                 }
             }else{
                 cell.setSelectInEdit(selectedNotInstallArr.contains(model.book_uuid));

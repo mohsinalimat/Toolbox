@@ -431,8 +431,8 @@ extension UNZIPFile  {
                                     guard let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String:String]] else{return}
                                     for dic in arr{
                                         let file = dic["file_loc"]!;
-                                        let uid = dic["book_uuid"]
-                                        let old = PublicationVersionModel.searchSingle(withWhere: "book_uuid='\(uid!)'", orderBy: nil) as? PublicationVersionModel
+                                        let pid = dic["publication_id"]
+                                        let old = PublicationVersionModel.searchSingle(withWhere: "publication_id='\(pid!)'", orderBy: nil) as? PublicationVersionModel
                                         
                                         //比较ID，版本号。判断是否已存在
                                         if let old = old{
@@ -445,7 +445,7 @@ extension UNZIPFile  {
                                                 var dic = dic
                                                 dic["data_source"] = "itunes import"
                                             //删除原记录，保存新的记录
-                                              PublicationVersionModel.delete(with: "book_uuid='\(uid!)'")
+                                              PublicationVersionModel.delete(with: "publication_id='\(pid!)'")
                                               PublicationVersionModel.saveToDb(with: dic)
                                                 
                                                 //move zip

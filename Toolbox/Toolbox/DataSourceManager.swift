@@ -16,6 +16,8 @@ protocol DSManagerDelegate : NSObjectProtocol {
     func ds_checkoutFromDocument()
     
     func ds_hasCheckedUpdate(_ shouldHud:Bool)
+    
+    
 }
 
 enum DataQueueType {
@@ -165,75 +167,6 @@ class DataSourceManager: NSObject {
         }
     }
     
-    /*func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {///////// "publication_id": "AMUA320AMUTSM_","revision_number": "52",
-        guard info.keys.count == 3 else {return}
-        guard let server_syncArr = info["sync_manifest.json"] as? [[String:String]] else {return}
-        if let m = DataSourceModel.searchSingle(withWhere: "location_url='\(url)'", orderBy: nil) as? DataSourceModel
-        {
-                for dic in server_syncArr{
-                    let file = dic["file_loc"]!;
-                    guard let uid = dic["book_uuid"] else{return}
-                    let old = PublicationVersionModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationVersionModel
-                    //比较ID，版本号。判断是否已存在
-                    if let old = old{
-                        //如果已存在,比较版本号
-                        guard let v_new = dic["revision_number"] else{return}
-                        guard let v_old = old.revision_number else{return}
-                        if UInt16.init(v_new)! > UInt16.init(v_old)! {
-                            var dic = dic
-                            dic["data_source"] = url
-                            //删除原记录，保存新的记录
-                            PublicationVersionModel.delete(with: "book_uuid='\(uid)'")
-                            PublicationVersionModel.saveToDb(with: dic)
-                            
-                            //添加到下载
-                            let fileurl = url + "\(file)"
-                            updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                            m.update_status = DSStatus.wait_update.rawValue
-                        }
-                    }else{
-                        var dic = dic
-                        dic["data_source"] = url
-                        PublicationVersionModel.saveToDb(with: dic)
-                        let fileurl = url + "\(file)"
-                        updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                        m.update_status = DSStatus.wait_update.rawValue//更新状态
-                    }
-            }
-            
-            m.time = "\(Date.timeIntervalSinceReferenceDate)"
-            m.updateToDB()
-        }else{//不存在，(不同的数据源会不会有相同的数据？？？,有待验证)
-                let m = DataSourceModel()
-                for(key,value) in info{
-                    do{
-                        let data =  try JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
-                        let jsonStr = String.init(data: data, encoding: String.Encoding.utf8)
-                        switch key {
-                        case ksync_manifest: m.sync_manifest = jsonStr;break
-                        case kpackage_info: m.package_info = jsonStr;break
-                        case ktdafactorymobilebaseline:m.server_baseline = jsonStr;break
-                        default: break
-                        }
-                    }catch{
-                        print("\(key): \(error.localizedDescription)")
-                    }
-                }
-                m.location_url = url
-                m.update_status = DSStatus.wait_update.rawValue
-                m.time = "\(Date.timeIntervalSinceReferenceDate)"
-                m.saveToDB();
-                
-                //添加到下载
-                for dic in server_syncArr{
-                    let zip:String! = dic["file_loc"]
-                    let fileurl = url + "\(zip!)"
-                    updatedsQueueWith(key:url,filePath: fileurl,datatype:.download)
-                    PublicationVersionModel.saveToDb(with: dic)
-                    //return
-                }
-            }
-    }*/
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {///////// "publication_id": "AMUA320AMUTSM_","revision_number": "52",
         guard info.keys.count == 3 else {return}
@@ -380,7 +313,16 @@ class DataSourceManager: NSObject {
         /////添加到解压队列
         let now = self.dateToString(Date())
         for m in w {
-            if m.revision_date <= now {
+            var date_time:String!;
+            
+            //生效日期
+            if let mark_data = m.mark_valid_data {
+                date_time = mark_data;
+            }else {
+                date_time = m.revision_date;
+            }
+            
+            if date_time <= now {
                 if let ds = m.data_source {
                     self.updatedsQueueWith(key:ds,filePath: "\(m.file_loc!)", datatype:.unzip)
                     m.deleteToDB()
@@ -388,13 +330,10 @@ class DataSourceManager: NSObject {
                     UserDefaults.standard.set(true, forKey: kHasDataUpdateAsValidDate)
                     UserDefaults.standard.synchronize()
                 }
-                
             }
         }
         
         guard !unzipQueueIsEmpty().0 else {return false}
-        //_ds_update_loc()
-        
        return true
     }
     
@@ -483,10 +422,7 @@ class DataSourceManager: NSObject {
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: NSNotification.Name.init(kNotificationName_willInstall_downloadCompletion), object: nil)
                         }
-
-                        
                     }
-                    
                     
                     strongSelf.ds_currentDownloadCnt = strongSelf.ds_currentDownloadCnt + 1
                     if let ret = DataSourceModel.search(with: "location_url='\(base!)'", orderBy: nil).first as? DataSourceModel{
@@ -602,96 +538,12 @@ class DataSourceManager: NSObject {
     //MARK: - delete book
     ///删除已安装的手册
     class func deleteBooksWithId(_ uids:[String]) {
-        guard uids.count > 0 else { return}
-        
-        //未考虑删除人为中断的情况????
-        for uid in uids {
-            if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
-                guard let doc_owner = pub.customer_code else{return}
-                print("start delete \(uid) - \(Date())")
-                UNZIPFile.default.deleteApModelMap(with: uid)
-                
-                //delete Publication
-                pub.deleteToDB()
-                
-                //delete PublicationVersionModel
-                PublicationVersionModel.delete(with: "book_uuid='\(uid)'")
-
-                //SegmentModel
-                SegmentModel.delete(with: "book_id='\(uid)'")
-                
-                //APMMap,Airplane
-                let mapArr = APMMap.search(with: "bookid='\(uid)'", orderBy: nil)as! [APMMap]
-                for map in mapArr{
-                    let msn = map.msn
-                    let msnArr = APMMap.search(with: "msn='\(msn!)'", orderBy: nil) as![APMMap]
-                    if msnArr.count == 1{
-                        AirplaneModel.delete(with: "airplaneSerialNumber='\(msn!)'")
-                    }
-                    map.deleteToDB()
-                }
-                
-                
-                //bookmark
-                if BookmarkModel.isExistTable() {
-                    BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
-                }
-                
-                //delete files in Library
-                let path = ROOTPATH.appending("/\(doc_owner)/\(uid)")
-                FILESManager.default.deleteFileAt(path: path)
-                print("end  delete \(uid) - \(Date())")
-                
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                    NotificationCenter.default.post(name: knotification_publication_changed, object: nil)
-                }
-            }
-            
-        }
-        
-        kSelectedAirplane = nil
-        kSelectedPublication = nil
-        kSelectedSegment = nil
-        kseg_hasopened_arr.removeAll()
+        self.default.delegate?.ds_deleteBooksWithId(uids);
     }
     
     ///删除已下载未完成安装的手册
     class func deleteBooksWillInstall(_ uids:[String]) {
-        guard uids.count > 0 else { return}
-        for uid in uids {
-            if let pub = InstallLaterModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? InstallLaterModel {
-                
-                //delete Publication
-                pub.deleteToDB()
-                
-                //delete PublicationVersionModel
-                let pid = pub.publication_id
-                PublicationVersionModel.delete(with: "publication_id='\(pid!)'")
-
-                //恢复数据源状态
-                let ds = pub.data_source
-                self.default._update_ds_status(url: ds!, key: "update_status", value: DSStatus.completed.rawValue)
-                
-                
-                //delete files in Library
-                let file_loc = pub.file_loc
-                let path = ROOTPATH.appending("/tmp/\(file_loc!)")
-                FILESManager.default.deleteFileAt(path: path)
-                print("end  delete \(uid) - \(Date())")
-                
-                
-                DataSourceManager.default.setValue(false, forKey: "ds_startupdating")
-                
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                }
-                
-            }
-        
-        }
-        
-        
+        self.default.delegate?.ds_deleteBooksWillInstall(uids);
     }
     
     

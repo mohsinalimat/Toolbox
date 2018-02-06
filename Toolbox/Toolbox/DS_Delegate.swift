@@ -13,6 +13,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     var unzipfile_arr = [String]()
     
     //MARK:- DSManagerDelegate
+    ///执行解压操作
     func ds_startUnzipFile(_ withurl: String) {
         guard !unzipfile_arr.contains(withurl) else{return}
         unzipfile_arr.append(withurl)
@@ -77,9 +78,103 @@ class DS_Delegate: NSObject, DSManagerDelegate {
         }
     }
     
+    //MARK: - 删除操作
+    ///删除已安装的手册
+    func ds_deleteBooksWithId(_ uids:[String]) {
+        guard uids.count > 0 else { return}
+        
+        //未考虑删除人为中断的情况????
+        for uid in uids {
+            if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
+                guard let doc_owner = pub.customer_code else{return}
+                print("start delete \(uid) - \(Date())")
+                UNZIPFile.default.deleteApModelMap(with: uid)
+                
+                //delete Publication
+                pub.deleteToDB()
+                
+                //delete PublicationVersionModel
+                PublicationVersionModel.delete(with: "book_uuid='\(uid)'")
+                
+                //SegmentModel
+                SegmentModel.delete(with: "book_id='\(uid)'")
+                
+                //APMMap,Airplane
+                let mapArr = APMMap.search(with: "bookid='\(uid)'", orderBy: nil)as! [APMMap]
+                for map in mapArr{
+                    let msn = map.msn
+                    let msnArr = APMMap.search(with: "msn='\(msn!)'", orderBy: nil) as![APMMap]
+                    if msnArr.count == 1{
+                        AirplaneModel.delete(with: "airplaneSerialNumber='\(msn!)'")
+                    }
+                    map.deleteToDB()
+                }
+                
+                
+                //bookmark
+                if BookmarkModel.isExistTable() {
+                    BookmarkModel.delete(with: "pub_book_uuid='\(uid)'")
+                }
+                
+                //delete files in Library
+                let path = ROOTPATH.appending("/\(doc_owner)/\(uid)")
+                FILESManager.default.deleteFileAt(path: path)
+                print("end  delete \(uid) - \(Date())")
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                    NotificationCenter.default.post(name: knotification_publication_changed, object: nil)
+                }
+            }
+            
+        }
+        
+        kSelectedAirplane = nil
+        kSelectedPublication = nil
+        kSelectedSegment = nil
+        kseg_hasopened_arr.removeAll()
+
+    }
     
     
-    //MARK:
+    ///删除未安装的手册数据
+    func ds_deleteBooksWillInstall(_ uids:[String]) {
+        guard uids.count > 0 else { return}
+        for uid in uids {
+            if let pub = InstallLaterModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? InstallLaterModel {
+                
+                //delete Publication
+                pub.deleteToDB()
+                
+                //delete PublicationVersionModel
+                let pid = pub.publication_id
+                PublicationVersionModel.delete(with: "publication_id='\(pid!)'")
+                
+                //恢复数据源状态
+                let ds = pub.data_source
+                DataSourceManager.default._update_ds_status(url: ds!, key: "update_status", value: DSStatus.completed.rawValue)
+                
+                
+                //delete files in Library
+                let file_loc = pub.file_loc
+                let path = ROOTPATH.appending("/tmp/\(file_loc!)")
+                FILESManager.default.deleteFileAt(path: path)
+                print("end  delete \(uid) - \(Date())")
+                
+                
+                DataSourceManager.default.setValue(false, forKey: "ds_startupdating")
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    
+    //MARK: - 外部调用方法
     func _showAlert(_ withurl: String) {
         print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
         unzipfile_arr.removeAll()
