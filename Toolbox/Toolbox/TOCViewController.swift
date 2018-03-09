@@ -232,6 +232,9 @@ class TOCViewController: BaseViewControllerWithTable {
         dataArray.removeAll()
         dataArray.append(currentPublication)
         
+        print(Date())
+        HUD.show()
+        
         if let  f = flushDir {
             if f {
                 kseg_parentnode_arr.removeAll()
@@ -267,6 +270,9 @@ class TOCViewController: BaseViewControllerWithTable {
         
 
         tableview?.reloadSections(IndexSet.init(integer: 0), with: .fade)
+        
+        print(Date())
+        HUD.dismiss()
     }
 
  
