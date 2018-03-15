@@ -40,8 +40,8 @@
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="QaF-YM-fXP">
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="400" id="JF8-ua-pFv"/>
-                        <constraint firstAttribute="height" constant="200" id="jfT-nX-Zly"/>
+                        <constraint firstAttribute="width" constant="460" id="JF8-ua-pFv"/>
+                        <constraint firstAttribute="height" constant="220" id="jfT-nX-Zly"/>
                     </constraints>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="8" maxY="0.0"/>
                 </tableView>
@@ -51,7 +51,7 @@
                 <constraint firstAttribute="bottom" secondItem="iAY-da-mhG" secondAttribute="bottom" id="GY5-nG-bdR"/>
                 <constraint firstItem="iAY-da-mhG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JTM-3V-1y0"/>
                 <constraint firstItem="iAY-da-mhG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="JVQ-Qt-Ued"/>
-                <constraint firstItem="QaF-YM-fXP" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="160" id="bGS-h3-bmS"/>
+                <constraint firstItem="QaF-YM-fXP" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="150" id="bGS-h3-bmS"/>
                 <constraint firstItem="epT-0i-uik" firstAttribute="leading" secondItem="QaF-YM-fXP" secondAttribute="leading" id="dFQ-EL-OJO"/>
                 <constraint firstItem="epT-0i-uik" firstAttribute="top" secondItem="QaF-YM-fXP" secondAttribute="bottom" constant="1" id="eK6-Wy-dJc"/>
                 <constraint firstAttribute="trailing" secondItem="QaF-YM-fXP" secondAttribute="trailing" constant="100" id="edh-1A-isC"/>

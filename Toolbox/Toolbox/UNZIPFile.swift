@@ -806,7 +806,7 @@ extension UNZIPFile  {
     //解析BOOK
     func _parseBook(bookpath:String,bookname:String){
         autoreleasepool(invoking: { () -> () in
-        HUD.show(withStatus: "数据更新中...")
+        //HUD.show(withStatus: "数据更新中...")
         getBookData(withPath: bookpath)
         getAirplanesData(withPath: bookpath,bookName:bookname as String)
         #if false
@@ -816,7 +816,7 @@ extension UNZIPFile  {
             UserDefaults.standard.removeObject(forKey: "book_path")
             DispatchQueue.main.async {
                 print("单个手册数据处理完成")
-                HUD.dismiss()
+                //HUD.dismiss()
                 NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
             }
         })

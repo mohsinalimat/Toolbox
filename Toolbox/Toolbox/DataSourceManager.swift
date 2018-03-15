@@ -458,9 +458,9 @@ class DataSourceManager: NSObject {
         if let downloadfiles = downloadfiles {//多个数据源地址
             UIApplication.shared.isIdleTimerDisabled = true
             
-            DispatchQueue.main.async {
-                HUD.show(withStatus: "正在连接飞机网络...")
-            }
+//            DispatchQueue.main.async {
+//                HUD.show(withStatus: "正在连接飞机网络...")
+//            }
             
             for (key,value) in downloadfiles {
                 semaphore.wait()

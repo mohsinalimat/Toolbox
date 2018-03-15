@@ -32,11 +32,15 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
         //checkConnectAirplaneNet()
+        if let airid = UserDefaults.standard.value(forKey: the_last_connected_airplaneId) as? String{
+            let m = AirplaneModel.searchSingle(withWhere: "airplaneId='\(airid)'", orderBy: nil) as? AirplaneModel
+            kSelectedAirplane = m
+        }
         
     }
 
     //http://192.168.3.72:82/share/airbus/wyg5/CCA/
-    func checkConnectAirplaneNet()  {
+    /*func checkConnectAirplaneNet()  {
         guard kDataSourceLocations.count > 0 ,Tools.isReachable() else {
             _Test_Show("请先在设置中连接飞机网络!");return
         }
@@ -83,7 +87,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     func _Test_Show(_ msg:String) {
         let ac = UIAlertController.init(title: msg, message: nil, preferredStyle: .alert)
         UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
-    }
+    }*/
     
     
     
@@ -138,11 +142,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     
     func _refreshData() {
         
-        if let airid = UserDefaults.standard.value(forKey: the_last_connected_airplaneId) as? String{
-                let m = AirplaneModel.searchSingle(withWhere: "airplaneId='\(airid)'", orderBy: nil) as? AirplaneModel
-                kSelectedAirplane = m
-        }
-        
+
         ///加载数据刷新列表
         loadData()
         if let hasSelectedAir = kSelectedAirplane{
@@ -418,14 +418,18 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             cell.selectionStyle = .none
             cell.fillCell(model: model ,title: currentFieldName)// && !is_in_search
             
-            if model.airplaneId == kSelectedAirplane?.airplaneId {
+            
+            if self.hasContains(key!, value: model.airplaneId) /*|| ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int) )*/ {
+                cell.cellSelectedInit()
+            }
+            /*if model.airplaneId == kSelectedAirplane?.airplaneId {
                 cell.cellSelectedInit()
                 selectedindexPath = indexPath
-            }else{
+            }*/else{
                 cell._init()
             }
             
-            /*cell.clickCellBtnAction = {[weak self] isSelected in
+            cell.clickCellBtnAction = {[weak self] isSelected in
                 guard let strongSelf = self else { return }
                 if isSelected{
                     _dataArray?.insert(0, at: indexPath.row + 1)
@@ -440,7 +444,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 
                 strongSelf.updateSelectedDataWith(key!, value: model.airplaneId)
                 strongSelf.tableview?.reloadData()
-            }*/
+            }
             
             return cell
         }
@@ -461,7 +465,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
 
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        return
         
         let arr = get_ds(indexPath.section)
         let value:Any! = arr[indexPath.row]
