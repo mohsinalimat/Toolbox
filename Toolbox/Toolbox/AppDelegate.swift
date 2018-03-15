@@ -18,8 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow (frame: UIScreen.main.bounds)
 
-        let tabBarController = BaseTabbarController()
-        window?.rootViewController = tabBarController
+        //let tabBarController = BaseTabbarController()
+        //window?.rootViewController = tabBarController
+
+        let home = HomeViewController()
+        let nav = BaseNavigationController(rootViewController:home)
+        window?.rootViewController = nav
+        
         window?.backgroundColor = UIColor.white
         window?.makeKeyAndVisible()
         
@@ -88,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     if location.lengthOfBytes(using: .utf8) > 0 && location.hasPrefix("http://"){
                         print("Location:\(location)")
                         if !location.hasSuffix("/") {
-                            location = location.appending("/")
+                            location = location.appending("/CCA/")
                         }
                         if !kDataSourceLocations.contains(location){
                             kDataSourceLocations.append(location)
@@ -169,7 +174,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(#function)
         APP_IS_BACKGROUND = false
         //checkupdate
-        DataSourceManager.default.ds_checkupdate()
+        //DataSourceManager.default.ds_checkupdate()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

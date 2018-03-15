@@ -37,15 +37,21 @@ class Tools: NSObject,SSZipArchiveDelegate {
     //MARK: - 获取文件路径
     func getFilePath(_ location:String?) -> String? {
         objc_sync_enter(self)
-        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = location else {
+        guard let pub_url = kSelectedPublication?.book_uuid,let seg_url = location else {
             return nil
         }
         
-        let s1 = ROOTPATH
-        let s2 = pub_url
+
+        let s0 = kDataSourceLocations[0] //ROOTPATH
+        let s1 = pub_url + "/"
+        
+        guard let s2 = kSelectedPublication?.doc_abbreviation!.lowercased() else { return nil}
+        
         let s3 = seg_url
-        let htmlfullpath = s1 + s2 + s3
-        let htmlzippath = htmlfullpath + ".zip"
+        
+        let htmlfullpath = s0 + s1 + s2 + s3
+        
+        /*let htmlzippath = htmlfullpath + ".zip"
         let htmldirpath = s1 + s2 + s3.substring(to: (s3.index((s3.startIndex), offsetBy: 3))) + "/images"
         let fileExist = FileManager.default.fileExists(atPath: htmlfullpath)
         if !fileExist
@@ -62,7 +68,7 @@ class Tools: NSObject,SSZipArchiveDelegate {
                 })
             }
             
-        }
+        }*/
         
         objc_sync_exit(self)
         return htmlfullpath

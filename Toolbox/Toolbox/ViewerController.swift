@@ -95,6 +95,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let key:String = "cec"
         let value:String! = kSelectedAirplane?.value(forKey: "customerEffectivity") as! String
         let newurl = urlStr.appending("?airplane=\(value!)&idType=\(key)")
+        
+        //let req = URLRequest.init(url: URL.init(string: newurl)!, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60)
+        
         webview.loadRequest(URLRequest.init(url: URL.init(string: newurl)!))
 
         addModel(m: model())
@@ -235,7 +238,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
     
     //MARK: - 获取文件路径
     func getFilePath() -> String? {
-        guard let pub_url = kSelectedPublication?.booklocalurl,let seg_url = kSelectedSegment?.content_location else {return nil}
+        guard let pub_url = kSelectedPublication?.document_owner,let seg_url = kSelectedSegment?.content_location else {return nil}
         guard let seg_id = kSelectedSegment?.primary_id else {return nil}
         if let currenthtmlid = _current_segment_id {
             guard currenthtmlid != seg_id else {return nil}
@@ -245,9 +248,9 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         /*
          /var/mobile/Containers/Data/Application/3DE63D99-03B4-40D6-8CA5-581FD04C1AF1/Library/TDLibrary
          /CCA/CCAA320CCAAIPC20161101/aipc
-         /75/EN75244880B.html
+         /75/EN75244880B.html kDataSourceLocations
         */
-        let s1 = ROOTPATH
+        /*let s1 = ROOTPATH
         let s2 = pub_url
         let s3 = seg_url
         let htmlfullpath = s1 + s2 + s3
@@ -266,8 +269,16 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                 SSZipArchive.unzipFile(atPath: htmlzippath, toDestination: htmldirpath, delegate: self)
             }
             
-        }
+        }*/
         
+        let s0 = kDataSourceLocations[0] //+ pub_url
+        guard let s1 = kSelectedPublication?.book_uuid else { return nil}
+        guard let s2 = kSelectedPublication?.doc_abbreviation!.lowercased() else { return nil}
+
+        let s3 = seg_url
+        
+        let htmlfullpath = s0.appending("\(s1)/\(s2)\(s3)")
+
         return htmlfullpath
     }
     
@@ -427,7 +438,7 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
         let seg_toc_code = pathCompents.last?.replacingOccurrences(of: ".html", with: "")
         let book = pathCompents[pathCompents.count - 4]
         let newSegId = book + seg_toc_code!
-        let _path = url.path + "?" + url.query!
+        let _path = "\(url)" //url.path + "?" + url.query!
         
         _current_html_fullpath = _path
         if !has_opened_filePath.contains(_path){

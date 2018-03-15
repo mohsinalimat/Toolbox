@@ -41,7 +41,8 @@ class XMLParseKit: NSObject,XMLParserDelegate {
     func parserStart(withBookPath path:String ,bookName:String,completeHandler:(()->())? = nil) {
         print("\(path)")
         
-        let path = path.appending("/resources/toc.xml")
+//        let path = path.appending("/resources/toc.xml")
+        let path = path.appending("/toc.xml")
         book_id = bookName
         if let handler = completeHandler{
             completeHandlers = handler

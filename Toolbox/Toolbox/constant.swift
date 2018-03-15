@@ -83,6 +83,9 @@ let knotification_segment_changed = Notification.Name(rawValue: "knotification_s
 var kUnzipprogress: UIProgressView!
 var kUnzipProgressStatus:Float = 0.0
 
+var kCurrent_connected_airplane:[String:Any]!
+
+var should_start_update = false
 
 ///PATH
 /*

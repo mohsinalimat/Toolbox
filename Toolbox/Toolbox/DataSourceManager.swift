@@ -29,7 +29,7 @@ let kNotificationName_willInstall_downloadCompletion = "kNotificationName_willIn
 
 class DataSourceManager: NSObject {
     static let `default` = DataSourceManager()
-    private let _subPathArr = [kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
+    private let _subPathArr = [ksync_manifest] //[kpackage_info,ksync_manifest,ktdafactorymobilebaseline]
     
     var ds_totalDownloadCnt:Int = 0;
     var ds_currentDownloadCnt:Int = 0;
@@ -37,7 +37,7 @@ class DataSourceManager: NSObject {
     var ds_serverupdatestatus:Int = 0
     var ds_serverlocationurl:String?
     var ds_isdownloading:Bool = false //正在下载
-    var ds_startupdating:Bool = false { //开始一次更新操作
+    var ds_startupdating:Bool = false /*{ //开始一次更新操作
         didSet{
             guard let vc = (UIApplication.shared.keyWindow?.rootViewController as! BaseTabbarController).viewControllers?.last else{
                 return;
@@ -53,14 +53,14 @@ class DataSourceManager: NSObject {
                 }
             }
         }
-    }
+    }*/
     
     var ds_checkupdatemanual:Bool = false //手动点击更新
     private let ds_from_itunes = "itunes import"
     
     private let kLibrary_tmp_path = LibraryPath.appending("/TDLibrary/tmp")
     private let ds_plist_basepath = LibraryPath.appending("/Application data")
-    private let ds_download_queue_path:String
+    let ds_download_queue_path:String
     let kUnzip_queue_path:String
     let ds_unzip_queue_itunes:String
     
@@ -98,7 +98,7 @@ class DataSourceManager: NSObject {
         DispatchQueue.global().async {
             self._checkupdateFromServer()
             
-            self._checkUpdateFromDocument()
+            //self._checkUpdateFromDocument()
  
         }
     }
@@ -169,7 +169,7 @@ class DataSourceManager: NSObject {
     
     
     func compareJsonInfoFromLocal(_ url:String , info:[String:Any]) {///////// "publication_id": "AMUA320AMUTSM_","revision_number": "52",
-        guard info.keys.count == 3 else {return}
+        guard info.keys.count == _subPathArr.count else {return}
         guard let server_syncArr = info["sync_manifest.json"] as? [[String:String]] else {return}
         if let m = DataSourceModel.searchSingle(withWhere: "location_url='\(url)'", orderBy: nil) as? DataSourceModel
         {
@@ -457,6 +457,11 @@ class DataSourceManager: NSObject {
         DataSourceManager.default.setValue(true, forKey: "ds_startupdating")
         if let downloadfiles = downloadfiles {//多个数据源地址
             UIApplication.shared.isIdleTimerDisabled = true
+            
+            DispatchQueue.main.async {
+                HUD.show(withStatus: "正在连接飞机网络...")
+            }
+            
             for (key,value) in downloadfiles {
                 semaphore.wait()
                 _update_ds_status(url: key, key: "update_status", value: DSStatus.downloading.rawValue)

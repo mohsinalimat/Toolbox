@@ -95,14 +95,14 @@ class UNZIPFile: NSObject {
         let customer_name = pub.customer_name;
         
         //获取apmodel
-        let _modelpath = ROOTPATH + "/\(pub.customer_code!)" + "/apModelMap.js"
-        var _apmodel = [String:[String:String]]()
-        if let m = readApModelMap(_modelpath) {
-            _apmodel = m 
-        }
+//        let _modelpath = ROOTPATH + "/\(pub.customer_code!)" + "/apModelMap.js"
+//        var _apmodel = [String:[String:String]]()
+//        if let m = readApModelMap(_modelpath) {
+//            _apmodel = m 
+//        }
         
         
-        UNZIPFile.parseJsonData(path: path.appending(APLISTJSONPATH), completionHandler: { (obj) in
+        UNZIPFile.parseJsonData(path: path.appending("/apList.json"), completionHandler: { (obj) in
             let obj =  obj as? [String:Any]
             guard let airplaneEntryArr = obj?["airplaneEntry"] as? [Any] else { return}
             //AirplaneModel.saveToDb(with: airplaneEntryArr)
@@ -116,19 +116,19 @@ class UNZIPFile: NSObject {
                         let dic = ["bookid":bookName,"msn":msn,"primary_id":bookName + "\(msn)"]
                         APMMap.saveToDb(with: dic)
                         ////
-                        if var model = _apmodel[msn]{
-                            model[pub.doc_abbreviation.lowercased()] = pub.book_uuid
-                            _apmodel[msn] = model
-                        }else{
-                            _apmodel[msn] = [pub.doc_abbreviation.lowercased():pub.book_uuid]
-                        }
+//                        if var model = _apmodel[msn]{
+//                            model[pub.doc_abbreviation.lowercased()] = pub.book_uuid
+//                            _apmodel[msn] = model
+//                        }else{
+//                            _apmodel[msn] = [pub.doc_abbreviation.lowercased():pub.book_uuid]
+//                        }
                     }
                     
                 }
             }
             
             //_apmodel 写入文件
-            updateApModelMap(with: _apmodel, atPath: _modelpath)
+           // updateApModelMap(with: _apmodel, atPath: _modelpath)
         })
     }
 
@@ -198,7 +198,7 @@ class UNZIPFile: NSObject {
             des["booklocalurl"] = booklocalurl
             des["metadataurl"] = metadataurl
             
-            path = path.appending("/resources/book.xml")
+            path = path.appending("/book.xml")
             do{
                 let jsonString = try String(contentsOfFile: path)
                 if let jsondata = jsonString.data(using: .utf8, allowLossyConversion: true){
@@ -704,9 +704,9 @@ extension UNZIPFile  {
         UserDefaults.standard.synchronize()
     }
     
-    //解析
+    //MARK: - 解析
     func _startUpdate() {
-    autoreleasepool(invoking: { () -> () in
+        
         let files = getFilesAt(path: ROOTPATH)
         let pubs = {(_ items: [String]) -> ([String]) in
             var zips = [String]()
@@ -722,50 +722,86 @@ extension UNZIPFile  {
         guard pubs.count > 0 else{return}
         for item in pubs {
             let path1 = ROOTPATH.appending("/\(item)")//150r4r4425435.64562
+            print("-------------------------- 0 :\(path1)")
+            
             let f2 = getFilesAt(path: path1)
             for item in f2{//cca
-                let path_cca = ROOTPATH.appending("/\(item)")
-                let path2 = path1.appending("/\(item)")
-                guard let bookname  = getFilesAt(path: path2).first else{return}
-                let srcpath = path2.appending("/\(bookname)")
-                let despath = path_cca.appending("/\(bookname)")
-                
-                UserDefaults.standard.setValue(item + "/\(bookname)", forKey: "book_path")
-                UserDefaults.standard.synchronize()
-                if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
-                    let cca_files = getFilesAt(path: path_cca)
-                    if !cca_files.contains(bookname) {
-                        FILESManager.moveFileAt(path: srcpath, to: despath)
-                    }else{
-                        print("已存在：\(bookname)")
-                        /*UserDefaults.standard.removeObject(forKey: "book_path")
-                        FILESManager.default.deleteFileAt(path: path1)*/
-                        //删除原版本
-                        DataSourceManager.deleteBooksWithId([bookname])
-                        //新版本
-                        FILESManager.moveFileAt(path: srcpath, to: despath)
-                        
-                        DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
-                        }
-                    }
-                }else{
-                    do{
-                        try fm.moveItem(atPath: srcpath, toPath: despath)
-                    }catch{
-                        print(error)
-                    }
-                }
-                FILESManager.default.deleteFileAt(path: path1)
+                let bookname =  item
                 
                 /////解析
-                let bookpath = getBookPath(withRelPath: despath)
+                let bookpath = path1.appending("/\(bookname)")
                 _parseBook(bookpath: bookpath, bookname: bookname)
             }
-       
+           
+            FILESManager.default.deleteFileAt(path: path1)
+            
+            print("-------------------------- 1 :\(path1)")
         }
-      })
+    
     }
+    
+    
+//    func _startUpdate() {
+//    autoreleasepool(invoking: { () -> () in
+//        let files = getFilesAt(path: ROOTPATH)
+//        let pubs = {(_ items: [String]) -> ([String]) in
+//            var zips = [String]()
+//            for item in items {
+//                if Double(item as String) != nil {
+//                    zips.append(item)
+//                }
+//            }
+//            return zips
+//        }(files)
+//        
+//        updateUnzipStatusData("", isadd: false, flush: true)
+//        guard pubs.count > 0 else{return}
+//        for item in pubs {
+//            let path1 = ROOTPATH.appending("/\(item)")//150r4r4425435.64562
+//            let f2 = getFilesAt(path: path1)
+//            for item in f2{//cca
+//                let path_cca = ROOTPATH.appending("/\(item)")
+//                let path2 = path1.appending("/\(item)")
+//                guard let bookname  = getFilesAt(path: path2).first else{return}
+//                let srcpath = path2.appending("/\(bookname)")
+//                let despath = path_cca.appending("/\(bookname)")
+//                
+//                UserDefaults.standard.setValue(item + "/\(bookname)", forKey: "book_path")
+//                UserDefaults.standard.synchronize()
+//                if FILESManager.default.fileExistsAt(path: path_cca){//owner 已存在
+//                    let cca_files = getFilesAt(path: path_cca)
+//                    if !cca_files.contains(bookname) {
+//                        FILESManager.moveFileAt(path: srcpath, to: despath)
+//                    }else{
+//                        print("已存在：\(bookname)")
+//                        /*UserDefaults.standard.removeObject(forKey: "book_path")
+//                        FILESManager.default.deleteFileAt(path: path1)*/
+//                        //删除原版本
+//                        DataSourceManager.deleteBooksWithId([bookname])
+//                        //新版本
+//                        FILESManager.moveFileAt(path: srcpath, to: despath)
+//                        
+//                        DispatchQueue.main.async {
+//                            NotificationCenter.default.post(name: NSNotification.Name (rawValue: "kNotification_book_update_complete"), object: nil, userInfo: nil)
+//                        }
+//                    }
+//                }else{
+//                    do{
+//                        try fm.moveItem(atPath: srcpath, toPath: despath)
+//                    }catch{
+//                        print(error)
+//                    }
+//                }
+//                FILESManager.default.deleteFileAt(path: path1)
+//                
+//                /////解析
+//                let bookpath = getBookPath(withRelPath: despath)
+//                _parseBook(bookpath: bookpath, bookname: bookname)
+//            }
+//       
+//        }
+//      })
+//    }
     
     //解析BOOK
     func _parseBook(bookpath:String,bookname:String){

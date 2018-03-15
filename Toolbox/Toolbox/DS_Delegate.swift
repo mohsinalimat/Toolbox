@@ -26,23 +26,46 @@ class DS_Delegate: NSObject, DSManagerDelegate {
             if !APP_IS_BACKGROUND{//全解压完成，可以更新
                 DispatchQueue.main.async {[weak self] in
                     guard let strongSelf = self else{return}
-                    if ktabbarVCIndex != 6{
-                        RootControllerChangeWithIndex(6)
-                    }
+                     strongSelf._showAlert_new(withurl)
                     
-                    UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
-                    UserDefaults.standard.synchronize()
-                    strongSelf._showAlert(withurl)
                 }
-            }else{//处于后台通知提醒
-                UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
-                UserDefaults.standard.synchronize()
-                let appdelegate =  UIApplication.shared.delegate as? AppDelegate
-                appdelegate?.sendLocalNotification()
-            
             }
         }
     }
+    /*
+     
+     func ds_startUnzipFile(_ withurl: String) {
+     guard !unzipfile_arr.contains(withurl) else{return}
+     unzipfile_arr.append(withurl)
+     
+     //开始更新位置
+     let app = UIApplication.shared.delegate as? AppDelegate
+     app?.locationManager.startUpdateLocation()
+     
+     UNZIPFile.default.unzipWithCompleted(withurl:withurl) {
+     if !APP_IS_BACKGROUND{//全解压完成，可以更新
+     DispatchQueue.main.async {[weak self] in
+     guard let strongSelf = self else{return}
+     if ktabbarVCIndex != 6{
+     RootControllerChangeWithIndex(6)
+     }
+     
+     UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
+     UserDefaults.standard.synchronize()
+     ////
+     strongSelf._showAlert_new(withurl)
+     }
+     }else{//处于后台通知提醒
+     UserDefaults.standard.set(true, forKey: "user_should_show_alert_update")
+     UserDefaults.standard.synchronize()
+     let appdelegate =  UIApplication.shared.delegate as? AppDelegate
+     appdelegate?.sendLocalNotification()
+     
+     }
+     }
+     }
+     */
+    
     
     func ds_hasCheckedUpdate(_ shouldHud:Bool = true) {
         if !DataSourceManager.default.unzipQueueIsEmpty().0{
@@ -175,12 +198,22 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     
     
     //MARK: - 外部调用方法
+    func _showAlert_new(_ withurl: String) {
+        //HUD.dismiss()
+        
+        print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
+        unzipfile_arr.removeAll()
+        
+        UNZIPFile.default.update(url:withurl)
+    
+    }
+
     func _showAlert(_ withurl: String) {
         print("+++++++++++++ 全部解压完成，开始更新! +++++++++++++")
         unzipfile_arr.removeAll()
         let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
         let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
-            UNZIPFile.default.update(url:withurl)
+           UNZIPFile.default.update(url:withurl)
         })
         
         let ac = UIAlertController.init(title: "提示", message: "文件解压已完成,是否安装更新?", preferredStyle: .alert)
@@ -191,7 +224,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
     
     //更新完成后状态处理
     static func _updateCompletionHandler()  {
-        UIApplication.shared.isIdleTimerDisabled = false
+        //UIApplication.shared.isIdleTimerDisabled = false
         
         DataSourceManager.default.setValue(false, forKey: "ds_startupdating")//更新DS状态
         

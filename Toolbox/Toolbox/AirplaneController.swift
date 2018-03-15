@@ -20,9 +20,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     var searchKey:String = ""//search text
     var pub_customer_arr = [String]()//获取客户名称customer_name
     var selectedindexPath:IndexPath?
-    
     var is_in_search:Bool = false
     
+    let the_last_connected_airplaneId = "the_last_connected_airplaneId"
     
     //MARK:
     override func viewDidLoad() {
@@ -31,8 +31,62 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
+        //checkConnectAirplaneNet()
+        
     }
 
+    //http://192.168.3.72:82/share/airbus/wyg5/CCA/
+    func checkConnectAirplaneNet()  {
+        guard kDataSourceLocations.count > 0 ,Tools.isReachable() else {
+            _Test_Show("请先在设置中连接飞机网络!");return
+        }
+        
+        HUD.show(withStatus: "正在连接...")
+        let url = kDataSourceLocations[0] + "apInfo.json"
+        Alamofire.request(url).responseJSON(completionHandler: { (response) in
+            DispatchQueue.main.async {[weak self]  in
+                if let value = response.result.value as? [String:Any] {
+                    kCurrent_connected_airplane = value
+                    UserDefaults.standard.setValue(value["airplaneId"]!, forKey: "the_last_connected_airplaneId");
+                    UserDefaults.standard.synchronize()
+                    
+                    let action_1 = UIAlertAction.init(title: "取消", style: .cancel)
+                    let action_2 = UIAlertAction.init(title: "更新数据", style: .default, handler: {(action) in
+                        DispatchQueue.main.async {[weak self]  in
+                            Model.getUsingLKDBHelper().dropAllTable()
+                            
+                            if let s = self {
+                                s.loadData()
+                                s.tableview?.reloadData();
+                            }
+                            
+                            DataSourceManager.default.ds_checkupdate()
+                        }
+                    })
+                    
+                    let ac = UIAlertController.init(title: "已连接到飞机:\(kCurrent_connected_airplane["airplaneRegistry"]!),更新数据?", message: nil, preferredStyle: .alert)
+                    ac.addAction(action_1)
+                    ac.addAction(action_2)
+                    UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
+                }else if response.result.isFailure {
+                    print("Request Error:\(String(describing: response.result.error?.localizedDescription))")
+                    HUD.show(info: "请求服务器超时!")
+                }
+            }
+            
+        })
+        
+        
+    }
+    
+    
+    func _Test_Show(_ msg:String) {
+        let ac = UIAlertController.init(title: msg, message: nil, preferredStyle: .alert)
+        UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
+    }
+    
+    
+    
     func allbookupdatecomplete(_ noti:Notification)  {
         if let type = noti.userInfo?["type"] as? Int {
             if type == 0 {
@@ -47,9 +101,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     }
     
     func show( _ type:Int = 1) {
-        if ktabbarVCIndex != 6{
-            RootControllerChangeWithIndex(6)
-        }
+        if ktabbarVCIndex != 6{ RootControllerChangeWithIndex(6)}
         
         let action_1 = UIAlertAction.init(title: "取消", style: .cancel, handler: nil)
         let action_2 = UIAlertAction.init(title: "立即更新", style: .default, handler: { (action) in
@@ -81,6 +133,16 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             show(2)
         }
         
+        _refreshData()
+    }
+    
+    func _refreshData() {
+        
+        if let airid = UserDefaults.standard.value(forKey: the_last_connected_airplaneId) as? String{
+                let m = AirplaneModel.searchSingle(withWhere: "airplaneId='\(airid)'", orderBy: nil) as? AirplaneModel
+                kSelectedAirplane = m
+        }
+        
         ///加载数据刷新列表
         loadData()
         if let hasSelectedAir = kSelectedAirplane{
@@ -98,7 +160,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                         updateSelectedDataWith(key!, value: hasSelectedAir.airplaneId);break
                     }
                 }
-
+                
             }
         }
         
@@ -106,7 +168,9 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         if let indexpath = selectedindexPath{
             tableview?.scrollToRow(at: indexpath, at: .top, animated: true);
         }
+ 
     }
+    
     
     //MARK:-
     func loadData(opt:String = "airplaneRegistry") {
@@ -142,13 +206,14 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             }
             
             if total_arr.count > 0 {
+
                 let dic = [customer_name:total_arr]
                 dataArray.append(dic)
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-             HUD.dismiss()    
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.005) {
+             HUD.dismiss()
         }
     }
     
@@ -293,6 +358,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
     }
     
     func hasContains(_ key:String,value:String) -> Bool {
+        
         if let arr = selectedDataDic[key] {
             if arr.contains(value){
                 return true;
@@ -351,13 +417,15 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
             let cell = tableview?.dequeueReusableCell(withIdentifier: "AirplaneCellIdentifierId", for: indexPath) as! AirplaneCell
             cell.selectionStyle = .none
             cell.fillCell(model: model ,title: currentFieldName)// && !is_in_search
-            if self.hasContains(key!, value: model.airplaneId) /*|| ((kSelectedAirplane?.airplaneId == model.airplaneId) && (_dataArray?[indexPath.row + 1] is Int) )*/ {
+            
+            if model.airplaneId == kSelectedAirplane?.airplaneId {
                 cell.cellSelectedInit()
+                selectedindexPath = indexPath
             }else{
                 cell._init()
             }
             
-            cell.clickCellBtnAction = {[weak self] isSelected in
+            /*cell.clickCellBtnAction = {[weak self] isSelected in
                 guard let strongSelf = self else { return }
                 if isSelected{
                     _dataArray?.insert(0, at: indexPath.row + 1)
@@ -372,7 +440,7 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
                 
                 strongSelf.updateSelectedDataWith(key!, value: model.airplaneId)
                 strongSelf.tableview?.reloadData()
-            }
+            }*/
             
             return cell
         }
@@ -393,6 +461,8 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
 
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        return
+        
         let arr = get_ds(indexPath.section)
         let value:Any! = arr[indexPath.row]
         if  value is Int{
@@ -409,7 +479,6 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         RootControllerChangeWithIndex(1)
     }
     
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

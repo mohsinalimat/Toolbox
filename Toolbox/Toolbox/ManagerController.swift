@@ -62,6 +62,8 @@ class ManagerController: BaseViewControllerWithTable{
 
     //MARK:- navigation Item
     func initNavigationBarItem(){
+        return
+        
         var itemArr = navigationItem.rightBarButtonItems;
         let btn = UIButton (frame: CGRect (x: 0, y: 0, width: 40, height: 40))
         btn.setImage(UIImage (named: "green_update_button"), for: .normal)//42.32
@@ -78,8 +80,7 @@ class ManagerController: BaseViewControllerWithTable{
         
         let fixed = UIBarButtonItem (barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         fixed.width = 15
-        //navigationItem.leftBarButtonItems = [fixed, litem_1,fixed]
-        navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80)
+        //navigationItem.leftBarButtonItem = navigationItemWith(index: 0, width: 80)
     }
     
     func navigationItemWith(index:Int,width:CGFloat) -> UIBarButtonItem {
