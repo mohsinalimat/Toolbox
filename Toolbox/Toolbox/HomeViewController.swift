@@ -65,7 +65,7 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
         enterBtn.addSubview(_progeresslable)
         
         //////
-        _timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        _timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
         _timer.fireDate = Date.distantFuture
     
     }
@@ -81,14 +81,17 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
         
         var new:CGFloat = old_width
         
-        if old_width <= real {
+        if old_width < real {
             new = real
-        }else if old_width < enterBtn.frame.size.width * 0.7 {
+        }else if old_width < enterBtn.frame.size.width * 0.85 {
             new =  new + 1;
         }
         
-        _progeresslable.frame.size.width = new
         
+        UIView.animate(withDuration: 0.8) {[weak self] in
+            guard let strongSelf = self else {return }
+            strongSelf._progeresslable.frame.size.width = new
+        }
         
     }
     

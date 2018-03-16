@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="450" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <frame key="frameInset" width="450" height="59"/>
+                <frame key="frameInset" width="450" height="60"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sue-tt-3ED">
@@ -52,10 +52,10 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="4W7-Kc-4rv" firstAttribute="leading" secondItem="0NX-7O-IFF" secondAttribute="trailing" constant="5" id="1zh-4m-hWx"/>
-                    <constraint firstItem="slH-Le-9aI" firstAttribute="leading" secondItem="4W7-Kc-4rv" secondAttribute="trailing" constant="8" id="BdZ-iP-SqT"/>
+                    <constraint firstItem="slH-Le-9aI" firstAttribute="leading" secondItem="4W7-Kc-4rv" secondAttribute="trailing" constant="10" id="BdZ-iP-SqT"/>
                     <constraint firstItem="sue-tt-3ED" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="CCH-Yp-A2F"/>
                     <constraint firstItem="nAP-Bc-Lqx" firstAttribute="leading" secondItem="0NX-7O-IFF" secondAttribute="leading" id="FHi-9I-XZD"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="slH-Le-9aI" secondAttribute="trailing" constant="15" id="J3o-g2-Cea"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="slH-Le-9aI" secondAttribute="trailing" constant="20" id="J3o-g2-Cea"/>
                     <constraint firstItem="0NX-7O-IFF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="JH8-TM-hJ5"/>
                     <constraint firstItem="nAP-Bc-Lqx" firstAttribute="width" secondItem="0NX-7O-IFF" secondAttribute="width" id="MJg-QA-3RN"/>
                     <constraint firstItem="pzf-EU-9BK" firstAttribute="centerY" secondItem="nAP-Bc-Lqx" secondAttribute="centerY" id="N2Z-95-fky"/>
