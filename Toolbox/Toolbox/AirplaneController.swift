@@ -31,66 +31,20 @@ class AirplaneController:BaseViewControllerWithTable ,UITextFieldDelegate{
         
         NotificationCenter.default.addObserver(self, selector: #selector(allbookupdatecomplete(_:)), name: NSNotification.Name (rawValue: "kNotification_allbooksupdate_complete"), object: nil)
         
+        if let arr = UserDefaults.standard.value(forKey: "willdelete_bookid") as? [String] {
+            DS_Delegate().ds_deleteBooksWithId(arr);
+        }
+        
         //checkConnectAirplaneNet()
         if let airid = UserDefaults.standard.value(forKey: the_last_connected_airplaneId) as? String{
             let m = AirplaneModel.searchSingle(withWhere: "airplaneId='\(airid)'", orderBy: nil) as? AirplaneModel
             kSelectedAirplane = m
         }
+
+        //Model.getUsingLKDBHelper().executeSQL("VACUUM", arguments: nil)
         
     }
 
-    //http://192.168.3.72:82/share/airbus/wyg5/CCA/
-    /*func checkConnectAirplaneNet()  {
-        guard kDataSourceLocations.count > 0 ,Tools.isReachable() else {
-            _Test_Show("请先在设置中连接飞机网络!");return
-        }
-        
-        HUD.show(withStatus: "正在连接...")
-        let url = kDataSourceLocations[0] + "apInfo.json"
-        Alamofire.request(url).responseJSON(completionHandler: { (response) in
-            DispatchQueue.main.async {[weak self]  in
-                if let value = response.result.value as? [String:Any] {
-                    kCurrent_connected_airplane = value
-                    UserDefaults.standard.setValue(value["airplaneId"]!, forKey: "the_last_connected_airplaneId");
-                    UserDefaults.standard.synchronize()
-                    
-                    let action_1 = UIAlertAction.init(title: "取消", style: .cancel)
-                    let action_2 = UIAlertAction.init(title: "更新数据", style: .default, handler: {(action) in
-                        DispatchQueue.main.async {[weak self]  in
-                            Model.getUsingLKDBHelper().dropAllTable()
-                            
-                            if let s = self {
-                                s.loadData()
-                                s.tableview?.reloadData();
-                            }
-                            
-                            DataSourceManager.default.ds_checkupdate()
-                        }
-                    })
-                    
-                    let ac = UIAlertController.init(title: "已连接到飞机:\(kCurrent_connected_airplane["airplaneRegistry"]!),更新数据?", message: nil, preferredStyle: .alert)
-                    ac.addAction(action_1)
-                    ac.addAction(action_2)
-                    UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
-                }else if response.result.isFailure {
-                    print("Request Error:\(String(describing: response.result.error?.localizedDescription))")
-                    HUD.show(info: "请求服务器超时!")
-                }
-            }
-            
-        })
-        
-        
-    }
-    
-    
-    func _Test_Show(_ msg:String) {
-        let ac = UIAlertController.init(title: msg, message: nil, preferredStyle: .alert)
-        UIApplication.shared.keyWindow?.rootViewController?.present(ac, animated: false, completion: nil)
-    }*/
-    
-    
-    
     func allbookupdatecomplete(_ noti:Notification)  {
         if let type = noti.userInfo?["type"] as? Int {
             if type == 0 {

@@ -807,6 +807,8 @@ extension UNZIPFile  {
     func _parseBook(bookpath:String,bookname:String){
         autoreleasepool(invoking: { () -> () in
         //HUD.show(withStatus: "数据更新中...")
+            
+        print("bookname : \(bookname)")
         getBookData(withPath: bookpath)
         getAirplanesData(withPath: bookpath,bookName:bookname as String)
         #if false

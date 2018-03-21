@@ -4,7 +4,7 @@
 //
 //  Created by gener on 2018/3/14.
 //  Copyright © 2018年 Light. All rights reserved.
-//
+//     //http://192.168.3.72:82/share/airbus/wyg5/CCA/
 
 import UIKit
 import Alamofire
@@ -39,6 +39,29 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
         }
     }
     
+    @IBAction func deleteAll(_ sender: AnyObject) {
+        
+//        let vc = UIAlertController.init(title: "确定退出?",message: nil, preferredStyle: .alert)
+//        let action = UIAlertAction.init(title:"取消", style: .default)
+//        let action2 = UIAlertAction.init(title: "确定", style: .default) { (action) in
+//            
+//            
+//        }
+//        
+//        vc.addAction(action)
+//        vc.addAction(action2)
+//        self.navigationController?.present(vc, animated: true, completion: nil);
+        
+        
+        HUD.show()
+        Model.getUsingLKDBHelper().dropAllTable()
+        
+        //checkConnectAirplaneNet()
+        _tableView.reloadData()
+
+        
+        HUD.show(successInfo: "已全部清空")
+    }
     
     var _severVersoinInfoArr = [[String:String]]()
     var _progeresslable:UILabel = UILabel()
@@ -252,6 +275,12 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
         _timer = nil
         
         enterBtn.isEnabled = true
+        
+        if let arr = UserDefaults.standard.value(forKey: "willdelete_bookid") as? [String] {
+            DS_Delegate().ds_deleteBooksWithId(arr);
+            Model.getUsingLKDBHelper().executeSQL("VACUUM", arguments: nil)
+        }
+        
         self.enterBtn.tag = 1;
         self.enterBtn.setTitle("进入", for: .normal)
         self.enterBtn.backgroundColor = kNormalBgColor

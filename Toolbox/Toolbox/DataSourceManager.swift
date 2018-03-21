@@ -186,6 +186,11 @@ class DataSourceManager: NSObject {
                         var dic = dic
                         dic["data_source"] = url
                         //删除原记录，保存新的记录
+                        
+                        let oldbookid = old.book_uuid
+                        saveWillDeleteBookId(oldbookid!)
+                        
+                        
                         PublicationVersionModel.delete(with: "publication_id='\(pid)'")
                         PublicationVersionModel.saveToDb(with: dic)
                         
@@ -550,6 +555,27 @@ class DataSourceManager: NSObject {
     class func deleteBooksWillInstall(_ uids:[String]) {
         self.default.delegate?.ds_deleteBooksWillInstall(uids);
     }
+    
+    
+    
+    
+    
+    ////////bookid
+    func saveWillDeleteBookId(_ s: String)  {
+        if var arr = UserDefaults.standard.value(forKey: "willdelete_bookid") as? [String] {
+            if !arr.contains(s){
+                arr.append(s);
+                
+                UserDefaults.standard.setValue(arr, forKey: "willdelete_bookid")
+                UserDefaults.standard.synchronize()
+            }
+        }else{
+            UserDefaults.standard.setValue([s], forKey: "willdelete_bookid")
+            UserDefaults.standard.synchronize()
+        }
+
+    }
+    
     
     
     

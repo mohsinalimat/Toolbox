@@ -111,7 +111,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
             if let pub = PublicationsModel.searchSingle(withWhere: "book_uuid='\(uid)'", orderBy: nil) as? PublicationsModel{
                 guard let doc_owner = pub.customer_code else{return}
                 print("start delete \(uid) - \(Date())")
-                UNZIPFile.default.deleteApModelMap(with: uid)
+                //UNZIPFile.default.deleteApModelMap(with: uid)
                 
                 //delete Publication
                 pub.deleteToDB()
@@ -184,6 +184,7 @@ class DS_Delegate: NSObject, DSManagerDelegate {
                 FILESManager.default.deleteFileAt(path: path)
                 print("end  delete \(uid) - \(Date())")
                 
+                deleteHasDeletedBookId(uid)
                 
                 DataSourceManager.default.setValue(false, forKey: "ds_startupdating")
                 DispatchQueue.main.async {
@@ -195,6 +196,19 @@ class DS_Delegate: NSObject, DSManagerDelegate {
         }
         
     }
+    
+    func deleteHasDeletedBookId(_ s:String) {
+        if var arr = UserDefaults.standard.value(forKey: "willdelete_bookid") as? [String] {
+            if arr.contains(s){
+                arr.remove(at: arr.index(of: s)!);
+                
+                UserDefaults.standard.setValue(arr, forKey: "willdelete_bookid")
+                UserDefaults.standard.synchronize()
+            }
+        }
+    }
+
+    
     
     
     //MARK: - 外部调用方法
