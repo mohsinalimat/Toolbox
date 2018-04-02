@@ -10,6 +10,8 @@ import UIKit
 import Alamofire
 
 let kNormalBgColor = UIColor (red: 0/255.0, green: 154/255.0, blue: 220/255.0, alpha: 1)
+let ds_plist_download = LibraryPath.appending("/Application data/downloadqueuelist.plist")
+
 
 
 class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewDataSource {
@@ -41,26 +43,27 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
     
     @IBAction func deleteAll(_ sender: AnyObject) {
         
-//        let vc = UIAlertController.init(title: "确定退出?",message: nil, preferredStyle: .alert)
-//        let action = UIAlertAction.init(title:"取消", style: .default)
-//        let action2 = UIAlertAction.init(title: "确定", style: .default) { (action) in
-//            
-//            
-//        }
-//        
-//        vc.addAction(action)
-//        vc.addAction(action2)
-//        self.navigationController?.present(vc, animated: true, completion: nil);
-        
-        
-        HUD.show()
-        Model.getUsingLKDBHelper().dropAllTable()
-        
-        //checkConnectAirplaneNet()
-        _tableView.reloadData()
+        let vc = UIAlertController.init(title: "清空本地全部数据?",message: nil, preferredStyle: .alert)
+        let action = UIAlertAction.init(title:"取消", style: .default)
+        let action2 = UIAlertAction.init(title: "确定", style: .default) { (action) in
+            DispatchQueue.main.async{ [weak self]  in
+                guard let strongSelf = self else { return }
+                HUD.show()
+                Model.getUsingLKDBHelper().dropAllTable()
+                
+                FILESManager.default.deleteFileAt(path: ds_plist_download)
+                
+                //checkConnectAirplaneNet()
+                strongSelf._tableView.reloadData()
+                
+                HUD.show(successInfo: "已全部清空")
+            }
 
+        }
         
-        HUD.show(successInfo: "已全部清空")
+        vc.addAction(action)
+        vc.addAction(action2)
+        self.navigationController?.present(vc, animated: true, completion: nil);
     }
     
     var _severVersoinInfoArr = [[String:String]]()
@@ -171,7 +174,10 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
     
     func checkVersoinInfo()  {
         let url = kDataSourceLocations[0] + ksync_manifest
-        Alamofire.request(url).responseJSON(completionHandler: {(response) in
+        
+        let req = URLRequest.init(url: URL.init(string: url)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60)
+        
+        Alamofire.SessionManager.default.request(req).responseJSON { (response) in
             HUD.dismiss()
             
             DispatchQueue.main.async{ [weak self]  in
@@ -181,7 +187,23 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
                 strongSelf._severVersoinInfoArr = value
                 strongSelf._checkCompletedHandler(value)
             }
-        })
+
+        }
+        
+        
+        
+        
+        /*Alamofire.request(url).responseJSON(completionHandler: {(response) in
+            HUD.dismiss()
+            
+            DispatchQueue.main.async{ [weak self]  in
+                guard let value = response.result.value as? [[String:String]] else {return}
+                guard let strongSelf = self else { return }
+                
+                strongSelf._severVersoinInfoArr = value
+                strongSelf._checkCompletedHandler(value)
+            }
+        })*/
     }
     
     
@@ -239,12 +261,6 @@ class HomeViewController: BaseViewController,UITableViewDelegate,UITableViewData
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.001
     }
-    
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("....")
-        
-    }
-    
     
     
     //MARK: -

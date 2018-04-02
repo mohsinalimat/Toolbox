@@ -92,16 +92,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if var location = str {
                     if location.lengthOfBytes(using: .utf8) > 0 && location.hasPrefix("http://"){
                         print("Location:\(location)")
-                        if !location.hasSuffix("/") {
-                            location = location.appending("/CCA/")
-                        }
+//                        if !location.hasSuffix("/") {
+//                            location = location.appending("/share/CCA/")
+//                        }
                         if !kDataSourceLocations.contains(location){
                             kDataSourceLocations.append(location)
                         }
+                    }else {
+                        if let _default = d["DefaultValue"] as? String {
+                            print(_default);
+                            if !kDataSourceLocations.contains(_default){
+                                kDataSourceLocations.append(_default)
+                            }
+                        }
+                        
                     }
+
                 }
             }
+            
+            
         }
+    
+    //获取系统设置
+    var newDic1 = [String:String]()
+    for d in dataprefers{
+        let key = d["Key"] as? String
+        if let key = key {
+            if let value = UserDefaults.standard.value(forKey: key) as? String {
+                if !kDataSourceLocations.contains(value){
+                    kDataSourceLocations.append(value)
+                }
+                
+                UserDefaults.standard.setValue(value, forKey: key)
+                UserDefaults.standard.synchronize()
+
+            } else {
+                let v = d["DefaultValue"] as? String
+                newDic1[key] = v
+                
+                if (v?.hasPrefix("http://"))! {
+                    if !kDataSourceLocations.contains(v!){
+                        kDataSourceLocations.append(v!)
+                    }
+                }
+                
+                UserDefaults.standard.setValue(d["DefaultValue"], forKey: key)
+                UserDefaults.standard.synchronize()
+
+            }
+            
+            
+        }
+    }
     
         let arr = DataSourceModel.search(with: nil, orderBy: nil) as?[DataSourceModel]
         if let arr = arr{
