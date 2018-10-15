@@ -137,6 +137,7 @@
 		AD10FEA71F88961700B9B10C /* DownloadDetailtop.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */; };
 		AD10FEA91F88962B00B9B10C /* DownloadDetailtop.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */; };
 		AD2318471F814277002FA89B /* buttonBg2.png in Resources */ = {isa = PBXBuildFile; fileRef = AD2318461F814277002FA89B /* buttonBg2.png */; };
+		ADA8108421748BA30024F43B /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA8108321748BA30024F43B /* libxml2.tbd */; };
 		ADD42E7C1F87E585000E9078 /* DownloadDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */; };
 		ADD42E7D1F87E585000E9078 /* DownloadDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */; };
 		ADF9DA481F92645800C1919D /* LargePicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9DA471F92645800C1919D /* LargePicViewController.swift */; };
@@ -301,6 +302,7 @@
 		AD10FEA61F88961700B9B10C /* DownloadDetailtop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailtop.swift; sourceTree = "<group>"; };
 		AD10FEA81F88962B00B9B10C /* DownloadDetailtop.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailtop.xib; sourceTree = "<group>"; };
 		AD2318461F814277002FA89B /* buttonBg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBg2.png; sourceTree = "<group>"; };
+		ADA8108321748BA30024F43B /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		ADD42E7A1F87E585000E9078 /* DownloadDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadDetailCell.swift; sourceTree = "<group>"; };
 		ADD42E7B1F87E585000E9078 /* DownloadDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadDetailCell.xib; sourceTree = "<group>"; };
 		ADF9DA471F92645800C1919D /* LargePicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargePicViewController.swift; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADA8108421748BA30024F43B /* libxml2.tbd in Frameworks */,
 				A1B928DC1F4E71F600E45EBE /* WebKit.framework in Frameworks */,
 				580FA73E81F8CBC9254CF0E4 /* Pods_Toolbox.framework in Frameworks */,
 			);
@@ -619,6 +622,7 @@
 		B495764C74D6D6E244280D7C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ADA8108321748BA30024F43B /* libxml2.tbd */,
 				A1B928DB1F4E71F600E45EBE /* WebKit.framework */,
 				F082408167EDD359A7B14175 /* Pods_Toolbox.framework */,
 			);
@@ -837,13 +841,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Toolbox-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9BB4C3DC92B6CB58D44AE16C /* [CP] Copy Pods Resources */ = {
@@ -867,9 +874,28 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Toolbox/Pods-Toolbox-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CoreDataHelper/CoreDataHelper.framework",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+				"${BUILT_PRODUCTS_DIR}/KissXML/KissXML.framework",
+				"${BUILT_PRODUCTS_DIR}/LKDBHelper/LKDBHelper.framework",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/zipzap/zipzap.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoreDataHelper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KissXML.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LKDBHelper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zipzap.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
