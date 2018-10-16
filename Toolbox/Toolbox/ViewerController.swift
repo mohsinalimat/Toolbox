@@ -288,10 +288,35 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                         if !key_arr.contains(m.primary_id){
                             key_arr.append(m.primary_id)
                             ///过滤数据有效性
-                            let msn = Int((kSelectedAirplane?.customerEffectivity)!)
-                            if let eff = m.effrg,let msn = msn{
-                                if  eff.characters.count > 0{
-                                    let arr = eff.components(separatedBy: " ")
+                            ///eff_markup_type 标记章节有效类型字段
+                            ///msn : 新增350有效性字段(airplaneSerialNumber)2018106
+                            ///cec : 320字段（customerEffectivity）
+                            
+                            let eff_markup_type = kSelectedPublication?.eff_markup_type
+                            if eff_markup_type == nil {continue}
+                            let eff = m.effrg
+                            if eff == nil {continue}
+                            if eff!.lengthOfBytes(using: String.Encoding.utf8) == 0  {continue}
+
+                            if eff_markup_type == "msn" {
+                                let msn = Int((kSelectedAirplane?.airplaneSerialNumber)!)
+                                if eff == "ALL" && m.mime_type == "image/svg"{
+                                    tmpArr.append(m);
+                                }
+                                else
+                                    if let msn = msn{
+                                        let arr = eff!.components(separatedBy: "|")
+                                        for e in arr {
+                                            if let _e = Int(e) , msn == _e ,  m.mime_type == "image/svg" {
+                                               tmpArr.append(m);
+                                            }
+                                        }
+                                }
+                                
+                            }else if eff_markup_type == "cec" {
+                                let msn = Int((kSelectedAirplane?.customerEffectivity)!)
+                                if let msn = msn{
+                                    let arr = eff!.components(separatedBy: " ")
                                     for e in arr {
                                         let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
                                         let s2 = e.substring(from: s1.endIndex)
@@ -299,8 +324,12 @@ class ViewerController: BaseViewControllerWithTable ,SSZipArchiveDelegate,UIWebV
                                             tmpArr.append(m);break
                                         }
                                     }
+                                    
                                 }
+                            }else{
+                                
                             }
+
                         }
                     }
                 }

@@ -55,11 +55,32 @@ class SegmentCell: UITableViewCell {
             return
         }
         
-        let msn = Int((kSelectedAirplane?.customerEffectivity)!)
-        let eff = model.effrg
-        if let eff = eff,let msn = msn{
-            if  eff.characters.count > 0{
-                var b = false
+        ///eff_markup_type 标记章节有效类型字段
+        ///msn : 新增350有效性字段(airplaneSerialNumber)2018106
+        ///cec : 320字段（customerEffectivity）
+        guard let eff_markup_type = kSelectedPublication?.eff_markup_type else {return}
+        guard let eff = model.effrg else {return}
+        guard eff.lengthOfBytes(using: String.Encoding.utf8) > 0 else {return}
+        
+        ///标记当前内容是否有效
+        var b = false
+        if eff_markup_type == "msn" {
+            let msn = Int((kSelectedAirplane?.airplaneSerialNumber)!)
+            if eff == "ALL" {
+                b = true
+            }
+            else
+            if let msn = msn{
+                let arr = eff.components(separatedBy: "|")
+                for e in arr {
+                    if let _e = Int(e) , msn == _e {
+                        b = true;break;
+                    }
+                }
+            }
+        }else if eff_markup_type == "cec" {
+            let msn = Int((kSelectedAirplane?.customerEffectivity)!)
+            if let msn = msn{
                 let arr = eff.components(separatedBy: " ")
                 for e in arr {
                     let s1 = e.substring(to: e.index(e.startIndex, offsetBy: 3))
@@ -68,13 +89,14 @@ class SegmentCell: UITableViewCell {
                         b = true;break
                     }
                 }
-                
-                if !b {
-                    self.backgroundView = UIImageView.init(image: UIImage (named: "hashrow"))
-                }
             }
+        }else{
+            return
         }
-      
+        
+        
+        guard b else {return}
+        self.backgroundView = UIImageView.init(image: UIImage (named: "hashrow"))
     }
     
     //MARK: - 
